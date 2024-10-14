@@ -1,24 +1,13 @@
 const express = require('express');
-const { Sequelize } = require('sequelize');
+const sequelize = require('./config/db');
+const dotenv = require('dotenv');
+dotenv.config(); 
 
 // Inicializar la aplicación de Express
 const app = express();
+const companyRoutes = require('./routes/companyRoutes');
 
-// Conectar a la base de datos usando Sequelize
-const sequelize = new Sequelize('database_name', 'username', 'password', {
-  host: 'localhost',
-  dialect: 'mysql',
-});
-
-// Probar la conexión a la base de datos
-sequelize.authenticate()
-  .then(() => console.log('Conexión a la base de datos exitosa.'))
-  .catch(err => console.error('No se pudo conectar a la base de datos:', err));
-
-// Ruta básica
-app.get('/', (req, res) => {
-  res.send('¡Hola Mundo desde Express!');
-});
+app.use('/api/companies', companyRoutes);
 
 // Definir el puerto en el que la aplicación escucha
 const PORT = process.env.PORT || 3000;
