@@ -1,14 +1,11 @@
-// src/routes/index.js
 const express = require('express');
 const router = express.Router();
-
 const busesRoutes = require('./busesRoutes');
 const companiesRoutes = require('./companiesRoutes');
-
-//const routesRoutes = require('./routes');
-//const stopsRoutes = require('./stops');
+const stopsRoutes = require('./stopsRoutes'); // Importa las rutas de paradas
 
 router.use('/buses', busesRoutes);
 router.use('/companies', companiesRoutes);
+router.use('/stops', stopsRoutes); // Agrega las rutas de paradas
 
 module.exports = router;
