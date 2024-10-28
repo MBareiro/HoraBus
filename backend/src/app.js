@@ -1,27 +1,29 @@
 const express = require('express');
-const { Sequelize } = require('sequelize');
-
-// Inicializar la aplicación de Express
 const app = express();
+const bodyParser = require('body-parser');
+const cors = require('cors');
+const sequelize = require('./config/db'); // conexión de Sequelize
+const routes = require('./routes'); 
 
-// Conectar a la base de datos usando Sequelize
-const sequelize = new Sequelize('database_name', 'username', 'password', {
-  host: 'localhost',
-  dialect: 'mysql',
-});
+// Middleware
+app.use(cors());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
-// Probar la conexión a la base de datos
-sequelize.authenticate()
-  .then(() => console.log('Conexión a la base de datos exitosa.'))
-  .catch(err => console.error('No se pudo conectar a la base de datos:', err));
+// Rutas
+app.use('/api', routes); // Prefijo para las rutas de la API
 
-// Ruta básica
-app.get('/', (req, res) => {
-  res.send('¡Hola Mundo desde Express!');
-});
-
-// Definir el puerto en el que la aplicación escucha
+// Iniciar la conexión a la base de datos y el servidor
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Servidor corriendo en el puerto ${PORT}`);
-});
+sequelize.authenticate()
+    .then(() => {
+        console.log('Conexión a la base de datos establecida correctamente.');
+        app.listen(PORT, () => {
+            console.log(`Servidor en ejecución en http://localhost:${PORT}`);
+        });
+    })
+    .catch(err => {
+        console.error('No se pudo conectar a la base de datos:', err);
+    });
+
+module.exports = app; // Exportar la aplicación para pruebas
