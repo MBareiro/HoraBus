@@ -16,12 +16,20 @@ module.exports = function(sequelize, DataTypes) {
       }
     },
     origin: {
-      type: DataTypes.STRING(255),
-      allowNull: false
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'stops',
+        key: 'id'
+      }
     },
     destination: {
-      type: DataTypes.STRING(255),
-      allowNull: false
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'stops',
+        key: 'id'
+      }
     }
   }, {
     sequelize,
@@ -41,6 +49,20 @@ module.exports = function(sequelize, DataTypes) {
         using: "BTREE",
         fields: [
           { name: "company_id" },
+        ]
+      },
+      {
+        name: "origin",
+        using: "BTREE",
+        fields: [
+          { name: "origin" },
+        ]
+      },
+      {
+        name: "destination",
+        using: "BTREE",
+        fields: [
+          { name: "destination" },
         ]
       },
     ]

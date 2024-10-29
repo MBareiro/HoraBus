@@ -28,13 +28,13 @@ sequelize.authenticate()
         console.error('No se pudo conectar a la base de datos:', err);
     });
 
-  /*   db.sequelize.sync({ force: false }) // Cambia a true si quieres eliminar las tablas y recrearlas
+    db.sequelize.sync({ force: false }) // Cambia a true si quieres eliminar las tablas y recrearlas
   .then(() => {
     console.log('Base de datos sincronizada.');
   })
   .catch(err => {
     console.error('Error al sincronizar la base de datos:', err);
   });
- */
+
 
 module.exports = app; // Exportar la aplicación para pruebas
