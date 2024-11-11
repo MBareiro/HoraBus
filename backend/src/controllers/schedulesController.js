@@ -1,6 +1,7 @@
 const db = require('../../db/models');
+const { Op } = require('sequelize');
 const Schedule = db.schedules;
-const { schedules, routes, stops, companies } = require('../../db/models'); // Asegúrate de que estas tablas estén importadas
+const { routes, stops, companies } = require('../../db/models'); // Asegúrate de que estas tablas estén importadas
 
 // Obtener todos los horarios
 exports.getAllSchedules = async (req, res) => {
@@ -76,12 +77,11 @@ exports.deleteSchedule = async (req, res) => {
     }
 };
 
-const { Op } = require('sequelize');
-
 exports.getSchedules = async (req, res) => {
   try {
     const { from, to, day, company } = req.query;
-
+    console.log(company);
+    
     // Buscar los IDs de las paradas (origin y destination)
     const fromStop = await stops.findOne({ where: { name: from } });
     const toStop = await stops.findOne({ where: { name: to } });
@@ -90,32 +90,37 @@ exports.getSchedules = async (req, res) => {
       return res.status(404).json({ message: 'Las paradas no se encontraron.' });
     }
 
-    // Realizar la consulta a la tabla schedules, filtrando por los parámetros
-    const schedulesData = await schedules.findAll({
+    // Realizar la consulta a la tabla schedules, filtrando por los parámetros y seleccionando solo ciertos campos
+    const schedulesData = await Schedule.findAll({
+      attributes: ['id', 'day_of_week', 'departure_time'], // Define solo los campos necesarios de Schedule
       where: {
         day_of_week: day,
       },
       include: [
         {
           model: routes,
-          as: 'route', // Usar el alias correcto 'route'
+          as: 'route',
+          attributes: ['id'], 
           where: {
             origin: fromStop.id,
             destination: toStop.id,
-            company_id: company ? company : { [Op.ne]: null }, // Filtra por la compañía si está presente
+            company_id: company ? company : { [Op.ne]: null },
           },
           include: [
             {
               model: stops,
               as: 'originStop',
+              attributes: ['name'], // Campos específicos de la parada de origen
             },
             {
               model: stops,
               as: 'destinationStop',
+              attributes: ['name'], // Campos específicos de la parada de destino
             },
             {
               model: companies,
-              as: 'company', // Usar el alias correcto 'company'
+              as: 'company',
+              attributes: ['name'], // Campos específicos de la compañía
             },
           ],
         },
@@ -131,6 +136,7 @@ exports.getSchedules = async (req, res) => {
     console.error('Error al obtener los horarios:', error);
     res.status(500).json({ message: 'Error al obtener los horarios.' });
   }
-}
+};
+
 
 

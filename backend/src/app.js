@@ -1,40 +1,36 @@
+// src/app.js
 const express = require('express');
-const app = express();
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const sequelize = require('../config/db'); // conexión de Sequelize
-const db = require('../db/models');
-
+const swaggerUi = require('swagger-ui-express');
+const swaggerDocs = require('../config/swaggerConfig');
+const { authenticateDB, syncDB } = require('../config/db'); 
 const routes = require('./routes'); 
 
-// Middleware
-app.use(cors());
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+const app = express();
 
-// Rutas
+app.use(cors()); // Habilita CORS
+app.use(bodyParser.json()); // Parseo de JSON en las peticiones
+app.use(bodyParser.urlencoded({ extended: true })); // Parseo de datos urlencoded
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+
 app.use('/api', routes); // Prefijo para las rutas de la API
 
-// Iniciar la conexión a la base de datos y el servidor
 const PORT = process.env.PORT || 3000;
-sequelize.authenticate()
-    .then(() => {
-        console.log('Conexión a la base de datos establecida correctamente.');
-        app.listen(PORT, () => {
-            console.log(`Servidor en ejecución en http://localhost:${PORT}`);
-        });
-    })
-    .catch(err => {
-        console.error('No se pudo conectar a la base de datos:', err);
-    });
 
-    db.sequelize.sync({ force: false }) // Cambia a true si quieres eliminar las tablas y recrearlas
+// Conexión a la base de datos y sincronización
+authenticateDB()
+  .then(() => syncDB()) // Sincronización de los modelos
   .then(() => {
-    console.log('Base de datos sincronizada.');
+    // Inicia el servidor
+    app.listen(PORT, () => {
+      console.log(`Servidor en ejecución en http://localhost:${PORT}`);
+    });
   })
   .catch(err => {
-    console.error('Error al sincronizar la base de datos:', err);
+    console.error('Error al conectar o sincronizar la base de datos:', err);
+    process.exit(1); 
   });
 
-
-module.exports = app; // Exportar la aplicación para pruebas
+module.exports = app; 
