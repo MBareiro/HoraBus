@@ -1,5 +1,6 @@
 const db = require('../../db/models');
 const Schedule = db.schedules;
+const { schedules, routes, stops, companies } = require('../../db/models'); // Asegúrate de que estas tablas estén importadas
 
 // Obtener todos los horarios
 exports.getAllSchedules = async (req, res) => {
@@ -10,7 +11,7 @@ exports.getAllSchedules = async (req, res) => {
         console.error('Error al obtener los horarios:', error);
         res.status(500).json({ error: 'Error al obtener los horarios.' });
     }
-};
+}; 
 
 // Obtener un horario por ID
 exports.getScheduleById = async (req, res) => {
@@ -74,3 +75,62 @@ exports.deleteSchedule = async (req, res) => {
         res.status(500).json({ error: 'Error al eliminar el horario.' });
     }
 };
+
+const { Op } = require('sequelize');
+
+exports.getSchedules = async (req, res) => {
+  try {
+    const { from, to, day, company } = req.query;
+
+    // Buscar los IDs de las paradas (origin y destination)
+    const fromStop = await stops.findOne({ where: { name: from } });
+    const toStop = await stops.findOne({ where: { name: to } });
+
+    if (!fromStop || !toStop) {
+      return res.status(404).json({ message: 'Las paradas no se encontraron.' });
+    }
+
+    // Realizar la consulta a la tabla schedules, filtrando por los parámetros
+    const schedulesData = await schedules.findAll({
+      where: {
+        day_of_week: day,
+      },
+      include: [
+        {
+          model: routes,
+          as: 'route', // Usar el alias correcto 'route'
+          where: {
+            origin: fromStop.id,
+            destination: toStop.id,
+            company_id: company ? company : { [Op.ne]: null }, // Filtra por la compañía si está presente
+          },
+          include: [
+            {
+              model: stops,
+              as: 'originStop',
+            },
+            {
+              model: stops,
+              as: 'destinationStop',
+            },
+            {
+              model: companies,
+              as: 'company', // Usar el alias correcto 'company'
+            },
+          ],
+        },
+      ],
+    });
+
+    if (schedulesData.length === 0) {
+      return res.status(404).json({ message: 'No se encontraron horarios para los filtros proporcionados.' });
+    }
+
+    res.json(schedulesData);
+  } catch (error) {
+    console.error('Error al obtener los horarios:', error);
+    res.status(500).json({ message: 'Error al obtener los horarios.' });
+  }
+}
+
+

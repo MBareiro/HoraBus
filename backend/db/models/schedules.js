@@ -1,6 +1,5 @@
-const Sequelize = require('sequelize');
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('schedules', {
+  const Schedule = sequelize.define('schedules', {
     id: {
       autoIncrement: true,
       type: DataTypes.INTEGER,
@@ -11,7 +10,7 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: 'routes',
+        model: 'routes', // Relacionado con la tabla routes
         key: 'id'
       }
     },
@@ -23,26 +22,13 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.TIME,
       allowNull: false
     }
-  }, {
-    sequelize,
-    tableName: 'schedules',
-    timestamps: true,
-    indexes: [
-      {
-        name: "PRIMARY",
-        unique: true,
-        using: "BTREE",
-        fields: [
-          { name: "id" },
-        ]
-      },
-      {
-        name: "route_id",
-        using: "BTREE",
-        fields: [
-          { name: "route_id" },
-        ]
-      },
-    ]
   });
+
+  // Relación: un horario pertenece a una ruta
+  Schedule.associate = function(models) {
+    Schedule.belongsTo(models.routes, { foreignKey: 'route_id', as: 'route' });
+    
+  };
+
+  return Schedule;
 };

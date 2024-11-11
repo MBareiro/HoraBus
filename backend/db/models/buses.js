@@ -1,6 +1,5 @@
-const Sequelize = require('sequelize');
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('buses', {
+  const Bus = sequelize.define('buses', {
     id: {
       autoIncrement: true,
       type: DataTypes.INTEGER,
@@ -22,27 +21,27 @@ module.exports = function(sequelize, DataTypes) {
     bus_type: {
       type: DataTypes.STRING(255),
       allowNull: false
+    },
+    route_id: {  
+      // Se asume que hay una clave foránea `route_id` que apunta a `routes.id`
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'routes',
+        key: 'id'
+      }
     }
   }, {
     sequelize,
     tableName: 'buses',
-    timestamps: true,
-    indexes: [
-      {
-        name: "PRIMARY",
-        unique: true,
-        using: "BTREE",
-        fields: [
-          { name: "id" },
-        ]
-      },
-      {
-        name: "company_id",
-        using: "BTREE",
-        fields: [
-          { name: "company_id" },
-        ]
-      },
-    ]
+    timestamps: true
   });
+
+  // Relación: un bus pertenece a una compañía
+  Bus.associate = function(models) {
+    Bus.belongsTo(models.companies, { foreignKey: 'company_id', as: 'company' });
+    Bus.belongsTo(models.routes, { foreignKey: 'route_id', as: 'route' });
+  };
+
+  return Bus;
 };

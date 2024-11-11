@@ -12,8 +12,18 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false
     },
     role: {
-      type: DataTypes.ENUM('Administrator','Operator','Driver','User'),
+      type: DataTypes.ENUM('Administrator', 'Operator', 'Driver', 'User'),
       allowNull: false
+    },
+    company_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'companies', 
+        key: 'id'
+      },
+      onUpdate: 'CASCADE',
+      onDelete: 'CASCADE'
     }
   }, {
     sequelize,

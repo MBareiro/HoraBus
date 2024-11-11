@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize');
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('companies', {
+  const Company = sequelize.define('companies', {
     id: {
       autoIncrement: true,
       type: DataTypes.INTEGER,
@@ -26,4 +26,11 @@ module.exports = function(sequelize, DataTypes) {
       },
     ]
   });
+
+  // Relación: Una compañía tiene muchos buses
+  Company.associate = function(models) {
+    Company.hasMany(models.buses, { foreignKey: 'company_id', as: 'buses' });
+  };
+
+  return Company;
 };

@@ -5,6 +5,7 @@ const busesController = require('../controllers/busesController');
 
 // Rutas para los buses
 router.post('/', busesController.createBus); // Crear un bus
+router.get('/buses-by-route', busesController.getBusesByRoute); // Ruta para obtener buses por ruta específica
 router.get('/', busesController.getAllBuses); // Obtener todos los buses
 router.get('/:id', busesController.getBusById); // Obtener un bus por ID
 router.put('/:id', busesController.updateBus); // Actualizar un bus

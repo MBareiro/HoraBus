@@ -1,6 +1,5 @@
-const Sequelize = require('sequelize');
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('stops', {
+  const Stop = sequelize.define('stops', {
     id: {
       autoIncrement: true,
       type: DataTypes.INTEGER,
@@ -8,22 +7,24 @@ module.exports = function(sequelize, DataTypes) {
       primaryKey: true
     },
     name: {
-      type: DataTypes.STRING(255),
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    latitude: {
+      type: DataTypes.FLOAT,
+      allowNull: false
+    },
+    longitude: {
+      type: DataTypes.FLOAT,
       allowNull: false
     }
-  }, {
-    sequelize,
-    tableName: 'stops',
-    timestamps: true,
-    indexes: [
-      {
-        name: "PRIMARY",
-        unique: true,
-        using: "BTREE",
-        fields: [
-          { name: "id" },
-        ]
-      },
-    ]
   });
+
+  // Relación: una parada puede estar asociada a muchas rutas
+  Stop.associate = function(models) {
+    Stop.hasMany(models.routes, { foreignKey: 'origin', as: 'originRoutes' });
+    Stop.hasMany(models.routes, { foreignKey: 'destination', as: 'destinationRoutes' });
+  };
+
+  return Stop;
 };
