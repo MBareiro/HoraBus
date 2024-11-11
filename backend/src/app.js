@@ -13,7 +13,7 @@ app.use(cors()); // Habilita CORS
 app.use(bodyParser.json()); // Parseo de JSON en las peticiones
 app.use(bodyParser.urlencoded({ extended: true })); // Parseo de datos urlencoded
 
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs, { explorer: true }));
 
 app.use('/api', routes); // Prefijo para las rutas de la API
 
