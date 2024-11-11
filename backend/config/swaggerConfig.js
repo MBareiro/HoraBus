@@ -9,13 +9,17 @@ const swaggerOptions = {
       version: '1.0.0',
       description: 'Documentación para la API construida con Express y Node.js',
     },
-    basePath: '/api/', // Ruta base de la API
+    servers: [
+      {
+        url: '/api', 
+        description: 'API base URL',
+      },
+    ],
     components: {
       schemas: {
-        // Definimos correctamente el esquema 'Company'
         Company: {
           type: 'object',
-          required: ['id', 'name'], // Propiedades requeridas
+          required: ['id', 'name'], 
           properties: {
             id: {
               type: 'integer',

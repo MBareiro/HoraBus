@@ -50,7 +50,7 @@ router.get('/:id', companiesController.getCompanyById);
 
 /**
  * @swagger
- * /api/companies:
+ * /companies:
  *   post:
  *     summary: Crea una nueva compañía.
  *     description: Permite crear una nueva compañía proporcionando su nombre.
@@ -80,7 +80,7 @@ router.post('/', companiesController.createCompany);
 
 /**
  * @swagger
- * /api/companies/{id}:
+ * /companies/{id}:
  *   put:
  *     summary: Actualiza una compañía existente.
  *     description: Permite actualizar los detalles de una compañía existente por su ID.
@@ -117,7 +117,7 @@ router.put('/:id', companiesController.updateCompany);
 
 /**
  * @swagger
- * /api/companies/{id}:
+ * /companies/{id}:
  *   delete:
  *     summary: Elimina una compañía por su ID.
  *     description: Elimina la compañía especificada por su ID.
