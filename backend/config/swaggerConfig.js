@@ -2,7 +2,7 @@ const swaggerJSDoc = require('swagger-jsdoc');
 
 // Configuración de Swagger (OpenAPI)
 const swaggerOptions = {
-  swaggerDefinition: {
+  definition: {
     openapi: "3.0.0", // Definir la versión de OpenAPI
     info: {
       title: 'API de HoraBus',
@@ -65,11 +65,16 @@ const swaggerOptions = {
           },
           example: {
             id: 1,
-            name: 'Compañía ABC', // Ejemplo de cómo se vería una compañía
+            name: 'Compañía ABC',
           },
         },
       },
     },
+    tags: [
+      { name: 'Buses', description: 'Operaciones relacionadas con buses' },
+      { name: 'Companies', description: 'Operaciones relacionadas con compañías' },
+      // Agrega más tags según lo necesites
+    ],
   },
   apis: ['./src/routes/*.js'], // Rutas donde están los comentarios Swagger
 };

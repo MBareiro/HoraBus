@@ -14,13 +14,13 @@ exports.createBus = async (req, res) => {
   }
 };
 
-// Obtener todos los buses
+// Obtener todos los buses// Obtener todos los buses
 exports.getAllBuses = async (req, res) => {
   try {
     const allBuses = await Buses.findAll({
       include: [
-        { model: Companies, attributes: ['name'] },
-        { model: Routes, attributes: ['origin', 'destination'] }
+        { model: Companies, as: 'company', attributes: ['name'] },
+        { model: Routes, as: 'route', attributes: ['origin', 'destination'] }
       ]
     });
     return res.status(200).json(allBuses);
@@ -29,13 +29,14 @@ exports.getAllBuses = async (req, res) => {
   }
 };
 
+
 // Obtener un bus por ID
 exports.getBusById = async (req, res) => {
   try {
     const bus = await Buses.findByPk(req.params.id, {
       include: [
-        { model: Companies, attributes: ['name'] },
-        { model: Routes, attributes: ['origin', 'destination'] }
+        { model: Companies, as: 'company', attributes: ['name'] },
+        { model: Routes, as: 'route', attributes: ['origin', 'destination'] }
       ]
     });
     if (!bus) {
