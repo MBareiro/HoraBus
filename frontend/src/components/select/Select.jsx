@@ -1,6 +1,10 @@
 import { useState } from 'react'
+import {getHorarios} from '../../redux/actions/userActions/userActions';
+import { useDispatch } from 'react-redux';
+import Horarios from '../horarios/Horarios'
 
 function Select () {
+  const dispatch = useDispatch();
 
     const paradas =  [
         { value: "capiovi", label: "Capioví" },
@@ -10,6 +14,8 @@ function Select () {
     const [origen, setOrigen] = useState(''); 
     const [destino, setDestino] = useState('');
 
+  const [showHorarios, setShowHorarios] = useState(false)
+
 const handleDestinoChange = (event) =>{
     console.log(event.target.value)
     setDestino(event.target.value)
@@ -18,6 +24,11 @@ const handleDestinoChange = (event) =>{
 const handleOrigenChange = (event) =>{
     console.log(event.target.value)
     setOrigen(event.target.value)
+}
+
+const handleBuscarHorarios = () => {
+dispatch(getHorarios(origen, destino))
+setShowHorarios(true)
 }
 
 return (
@@ -47,7 +58,9 @@ return (
   ))}
 </select>
     
-    <button className="selector">BUSCAR</button>
+    <button className="selector" onClick={handleBuscarHorarios}>BUSCAR</button>
+{showHorarios && <Horarios/> }
+    
 </div>
 
 )

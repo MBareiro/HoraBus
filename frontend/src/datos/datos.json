@@ -1,0 +1,36 @@
+[
+    {
+      "id": 1,
+      "day_of_week": "Monday",
+      "departure_time": "08:00:00",
+      "route": {
+        "id": 1,
+        "originStop": {
+          "name": "Aristóbulo del Valle"
+        },
+        "destinationStop": {
+          "name": "Posadas"
+        },
+        "company": {
+          "name": "Horianski"
+        }
+      }
+    },
+    {
+      "id": 2,
+      "day_of_week": "Monday",
+      "departure_time": "12:00:00",
+      "route": {
+        "id": 1,
+        "originStop": {
+          "name": "Aristóbulo del Valle"
+        },
+        "destinationStop": {
+          "name": "Posadas"
+        },
+        "company": {
+          "name": "Horianski"
+        }
+      }
+    }
+  ]
