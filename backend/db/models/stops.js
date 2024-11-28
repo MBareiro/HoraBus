@@ -7,7 +7,7 @@ module.exports = function(sequelize, DataTypes) {
       primaryKey: true
     },
     name: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(255),
       allowNull: false
     },
     latitude: {
@@ -20,8 +20,8 @@ module.exports = function(sequelize, DataTypes) {
     }
   });
 
-  // Relación: una parada puede estar asociada a muchas rutas
   Stop.associate = function(models) {
+    // Relación con rutas
     Stop.hasMany(models.routes, { foreignKey: 'origin', as: 'originRoutes' });
     Stop.hasMany(models.routes, { foreignKey: 'destination', as: 'destinationRoutes' });
   };

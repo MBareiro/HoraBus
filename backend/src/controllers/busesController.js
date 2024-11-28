@@ -7,6 +7,16 @@ const Companies = db.companies;
 // Crear un nuevo bus
 exports.createBus = async (req, res) => {
   try {
+    const { company_id, line, bus_type, route_id } = req.body;
+    const bus = await Buses.findOne({
+      where: { company_id: company_id, line: line, bus_type: bus_type, route_id: route_id },
+    });
+
+    if (bus) {
+      return res
+        .status(409)
+        .json({ message: "El colectivo ya existe." });
+    }
     const newBus = await Buses.create(req.body);
     return res.status(201).json(newBus);
   } catch (error) {

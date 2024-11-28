@@ -6,28 +6,40 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false,
       primaryKey: true
     },
+    bus_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'buses',
+        key: 'id'
+      }
+    },
     route_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: 'routes', // Relacionado con la tabla routes
+        model: 'routes',
         key: 'id'
       }
-    },
-    day_of_week: {
-      type: DataTypes.STRING(50),
-      allowNull: false
     },
     departure_time: {
       type: DataTypes.TIME,
       allowNull: false
+    },
+    day_of_week: {
+      type: DataTypes.STRING(10),
+      allowNull: false
+    },
+    observations: {
+      type: DataTypes.STRING(255),  // Agregado el campo 'observations'
+      allowNull: true
     }
   });
 
-  // Relación: un horario pertenece a una ruta
+  // Relación con el bus y la ruta
   Schedule.associate = function(models) {
+    Schedule.belongsTo(models.buses, { foreignKey: 'bus_id', as: 'bus' });
     Schedule.belongsTo(models.routes, { foreignKey: 'route_id', as: 'route' });
-    
   };
 
   return Schedule;

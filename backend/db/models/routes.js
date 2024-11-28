@@ -32,13 +32,10 @@ module.exports = function(sequelize, DataTypes) {
     }
   });
 
-  // Relación: una ruta tiene un origen (Stop) y una destinación (Stop)
+  // Relación con 'Stop' para 'origin' y 'destination'
   Route.associate = function(models) {
-    // Relación con 'Stop' para 'origin' y 'destination'
     Route.belongsTo(models.stops, { foreignKey: 'origin', as: 'originStop' });
     Route.belongsTo(models.stops, { foreignKey: 'destination', as: 'destinationStop' });
-
-    // Relación con 'Company'
     Route.belongsTo(models.companies, { foreignKey: 'company_id', as: 'company' });
   };
   

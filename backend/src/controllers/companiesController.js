@@ -29,7 +29,17 @@ exports.getCompanyById = async (req, res) => {
 // Crear una nueva compañía
 exports.createCompany = async (req, res) => {
     const { name } = req.body;
-    console.log(name);
+
+    const company = await Company.findOne({
+        where: { name: name },
+      });
+  
+      if (company) {
+        return res
+          .status(409)
+          .json({ message: "La compañia ya existe." });
+      }
+
     try {
         const newCompany = await Company.create({ name });
         res.status(201).json(newCompany);

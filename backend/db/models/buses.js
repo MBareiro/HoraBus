@@ -22,8 +22,7 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING(255),
       allowNull: false
     },
-    route_id: {  
-      // Se asume que hay una clave foránea `route_id` que apunta a `routes.id`
+    route_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
@@ -37,7 +36,7 @@ module.exports = function(sequelize, DataTypes) {
     timestamps: true
   });
 
-  // Relación: un bus pertenece a una compañía
+  // Relación con 'Company' y 'Route'
   Bus.associate = function(models) {
     Bus.belongsTo(models.companies, { foreignKey: 'company_id', as: 'company' });
     Bus.belongsTo(models.routes, { foreignKey: 'route_id', as: 'route' });

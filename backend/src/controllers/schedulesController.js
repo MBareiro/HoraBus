@@ -45,7 +45,15 @@ exports.createSchedule = async (req, res) => {
     ) {
       return res.status(400).json({ message: "Faltan datos obligatorios." });
     }
+    const routeExist = await routes.findOne({
+      where: { company_id: company_id, origin: origin, destination: destination },
+    });
 
+    if (routeExist) {
+      return res
+        .status(409)
+        .json({ message: "La ruta ya existe." });
+    }
     // Buscar las paradas de origen y destino
     const originStop = await stops.findOne({ where: { name: origin } });
     const destinationStop = await stops.findOne({
@@ -136,19 +144,17 @@ exports.getSchedules = async (req, res) => {
   try {
     const { from, to, day, company } = req.query;
 
-    // Buscar los IDs de las paradas (origin y destination)
+    // Buscar las paradas de origen y destino
     const fromStop = await stops.findOne({ where: { id: from } });
     const toStop = await stops.findOne({ where: { id: to } });
 
     if (!fromStop || !toStop) {
-      return res
-        .status(404)
-        .json({ message: "Las paradas no se encontraron." });
+      return res.status(404).json({ message: "Las paradas no se encontraron." });
     }
 
-    // Realizar la consulta a la tabla schedules, filtrando por los parámetros y seleccionando solo ciertos campos
+    // Obtener las rutas, colectivos y horarios asociados
     const schedulesData = await Schedule.findAll({
-      attributes: ["id", "day_of_week", "departure_time"], // Define solo los campos necesarios de Schedule
+      attributes: ["departure_time", "day_of_week", "observations"],  // Incluir "observations"
       where: {
         day_of_week: day,
       },
@@ -156,7 +162,6 @@ exports.getSchedules = async (req, res) => {
         {
           model: routes,
           as: "route",
-          attributes: ["id"],
           where: {
             origin: fromStop.id,
             destination: toStop.id,
@@ -166,17 +171,29 @@ exports.getSchedules = async (req, res) => {
             {
               model: stops,
               as: "originStop",
-              attributes: ["name"], // Campos específicos de la parada de origen
+              attributes: ["name"],  // Origen de la ruta
             },
             {
               model: stops,
               as: "destinationStop",
-              attributes: ["name"], // Campos específicos de la parada de destino
+              attributes: ["name"],  // Destino de la ruta
             },
             {
               model: companies,
               as: "company",
-              attributes: ["name"], // Campos específicos de la compañía
+              attributes: ["name"],  // Compañía de la ruta
+            },
+            {
+              model: buses,
+              as: "buses",
+              attributes: ["line", "bus_type"],  // Colectivos (buses)
+              include: [
+                {
+                  model: companies,
+                  as: "company",
+                  attributes: ["name"],  // Empresa que opera el colectivo
+                }
+              ]
             },
           ],
         },
@@ -184,12 +201,9 @@ exports.getSchedules = async (req, res) => {
     });
 
     if (schedulesData.length === 0) {
-      return res
-        .status(404)
-        .json({
-          message:
-            "No se encontraron horarios para los filtros proporcionados.",
-        });
+      return res.status(404).json({
+        message: "No se encontraron horarios para los filtros proporcionados.",
+      });
     }
 
     res.json(schedulesData);
@@ -198,3 +212,4 @@ exports.getSchedules = async (req, res) => {
     res.status(500).json({ message: "Error al obtener los horarios." });
   }
 };
+

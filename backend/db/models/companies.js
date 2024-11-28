@@ -1,4 +1,3 @@
-const Sequelize = require('sequelize');
 module.exports = function(sequelize, DataTypes) {
   const Company = sequelize.define('companies', {
     id: {
@@ -11,25 +10,13 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING(255),
       allowNull: false
     }
-  }, {
-    sequelize,
-    tableName: 'companies',
-    timestamps: true,
-    indexes: [
-      {
-        name: "PRIMARY",
-        unique: true,
-        using: "BTREE",
-        fields: [
-          { name: "id" },
-        ]
-      },
-    ]
   });
 
-  // Relación: Una compañía tiene muchos buses
   Company.associate = function(models) {
+    // Relación con buses
     Company.hasMany(models.buses, { foreignKey: 'company_id', as: 'buses' });
+    // Relación con rutas
+    Company.hasMany(models.routes, { foreignKey: 'company_id', as: 'routes' });
   };
 
   return Company;

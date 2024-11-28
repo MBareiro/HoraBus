@@ -28,6 +28,15 @@ exports.getStopById = async (req, res) => {
 // Crear una nueva parada
 exports.createStop = async (req, res) => {
     const { name } = req.body;
+    const stop = await Stop.findOne({
+        where: { name: name },
+    });
+
+    if (stop) {
+        return res
+            .status(409)
+            .json({ message: "La parada ya existe." });
+    }
     try {
         const newStop = await Stop.create({ name });
         res.status(201).json(newStop);
