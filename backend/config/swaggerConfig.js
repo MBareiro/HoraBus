@@ -11,7 +11,7 @@ const swaggerOptions = {
     },
     servers: [
       {
-        url: '/api', 
+        url: '/api',
         description: 'API base URL',
       },
     ],
@@ -21,26 +21,11 @@ const swaggerOptions = {
           type: 'object',
           required: ['company_id', 'line', 'bus_type', 'route_id'],
           properties: {
-            id: {
-              type: 'integer',
-              description: 'ID único del bus',
-            },
-            company_id: {
-              type: 'integer',
-              description: 'ID de la compañía propietaria del bus',
-            },
-            line: {
-              type: 'string',
-              description: 'Número o nombre de la línea del bus',
-            },
-            bus_type: {
-              type: 'string',
-              description: 'Tipo de bus (Ej. urbano, interurbano)',
-            },
-            route_id: {
-              type: 'integer',
-              description: 'ID de la ruta a la que pertenece el bus',
-            },
+            id: { type: 'integer', description: 'ID único del bus' },
+            company_id: { type: 'integer', description: 'ID de la compañía propietaria del bus' },
+            line: { type: 'string', description: 'Número o nombre de la línea del bus' },
+            bus_type: { type: 'string', description: 'Tipo de bus (Ej. urbano, interurbano)' },
+            route_id: { type: 'integer', description: 'ID de la ruta a la que pertenece el bus' },
           },
           example: {
             id: 1,
@@ -52,16 +37,10 @@ const swaggerOptions = {
         },
         Company: {
           type: 'object',
-          required: ['id', 'name'], 
+          required: ['id', 'name'],
           properties: {
-            id: {
-              type: 'integer',
-              description: 'ID único de la compañía',
-            },
-            name: {
-              type: 'string',
-              description: 'Nombre de la compañía',
-            },
+            id: { type: 'integer', description: 'ID único de la compañía' },
+            name: { type: 'string', description: 'Nombre de la compañía' },
           },
           example: {
             id: 1,
@@ -73,10 +52,10 @@ const swaggerOptions = {
     tags: [
       { name: 'Buses', description: 'Operaciones relacionadas con buses' },
       { name: 'Companies', description: 'Operaciones relacionadas con compañías' },
-      // Agrega más tags según lo necesites
+      { name: 'Schedules', description: 'Operaciones relacionadas con horarios' }, // Asegúrate de incluir este tag
     ],
   },
-  apis: ['./src/routes/*.js'], // Rutas donde están los comentarios Swagger
+  apis: ['./src/routes/*.js'], // Incluir las rutas donde están los comentarios Swagger
 };
 
 // Genera la especificación Swagger

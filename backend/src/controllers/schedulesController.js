@@ -32,21 +32,22 @@ exports.getScheduleById = async (req, res) => {
 
 exports.createSchedule = async (req, res) => {
   try {
-    const { day_of_week, departure_time, origin, destination, company_id } =
+    const { observations, departure_time, origin, destination, company_id, bus_id } =
       req.body;
 
     // Validar datos obligatorios
     if (
-      !day_of_week ||
+      !observations ||
       !departure_time ||
       !origin ||
       !destination ||
-      !company_id
+      !company_id ||
+      !bus_id
     ) {
       return res.status(400).json({ message: "Faltan datos obligatorios." });
     }
     const routeExist = await routes.findOne({
-      where: { company_id: company_id, origin: origin, destination: destination },
+      where: { company_id: company_id, origin: origin, destination: destination, bus_id: bus_id },
     });
 
     if (routeExist) {
@@ -55,9 +56,9 @@ exports.createSchedule = async (req, res) => {
         .json({ message: "La ruta ya existe." });
     }
     // Buscar las paradas de origen y destino
-    const originStop = await stops.findOne({ where: { name: origin } });
+    const originStop = await stops.findOne({ where: { id: origin } });
     const destinationStop = await stops.findOne({
-      where: { name: destination },
+      where: { id: destination },
     });
 
     if (!originStop || !destinationStop) {
@@ -86,7 +87,7 @@ exports.createSchedule = async (req, res) => {
 
     // Crear el nuevo horario asociado a la ruta
     const newSchedule = await Schedule.create({
-      day_of_week,
+      observations,
       departure_time,
       route_id: route.id,
     });
@@ -103,10 +104,10 @@ exports.createSchedule = async (req, res) => {
 
 // Actualizar un horario existente
 exports.updateSchedule = async (req, res) => {
-  const { day_of_week, departure_time } = req.body;
+  const { observations, departure_time } = req.body;
   try {
     const [updated] = await Schedule.update(
-      { day_of_week, departure_time },
+      { observations, departure_time },
       {
         where: { id: req.params.id },
       }
@@ -141,8 +142,10 @@ exports.deleteSchedule = async (req, res) => {
 };
 
 exports.getSchedules = async (req, res) => {
+  console.log(req.query);
+  
   try {
-    const { from, to, day, company } = req.query;
+    const { from, to, company } = req.query;
 
     // Buscar las paradas de origen y destino
     const fromStop = await stops.findOne({ where: { id: from } });
@@ -154,14 +157,12 @@ exports.getSchedules = async (req, res) => {
 
     // Obtener las rutas, colectivos y horarios asociados
     const schedulesData = await Schedule.findAll({
-      attributes: ["departure_time", "day_of_week", "observations"],  // Incluir "observations"
-      where: {
-        day_of_week: day,
-      },
+      attributes: ["id", "departure_time", "observation"],     
       include: [
         {
           model: routes,
           as: "route",
+          attributes: ["id"],
           where: {
             origin: fromStop.id,
             destination: toStop.id,
@@ -182,18 +183,6 @@ exports.getSchedules = async (req, res) => {
               model: companies,
               as: "company",
               attributes: ["name"],  // Compañía de la ruta
-            },
-            {
-              model: buses,
-              as: "buses",
-              attributes: ["line", "bus_type"],  // Colectivos (buses)
-              include: [
-                {
-                  model: companies,
-                  as: "company",
-                  attributes: ["name"],  // Empresa que opera el colectivo
-                }
-              ]
             },
           ],
         },

@@ -26,12 +26,8 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.TIME,
       allowNull: false
     },
-    day_of_week: {
-      type: DataTypes.STRING(10),
-      allowNull: false
-    },
     observations: {
-      type: DataTypes.STRING(255),  // Agregado el campo 'observations'
+      type: DataTypes.STRING(255),  
       allowNull: true
     }
   });

@@ -48,7 +48,7 @@ const schedulesController = require('../controllers/schedulesController');
  *                 properties:
  *                   id:
  *                     type: integer
- *                   day_of_week:
+ *                   observations:
  *                     type: string
  *                   departure_time:
  *                     type: string
@@ -80,7 +80,7 @@ router.get('/', schedulesController.getSchedules);
  *               properties:
  *                 id:
  *                   type: integer
- *                 day_of_week:
+ *                 observations:
  *                   type: string
  *                 departure_time:
  *                   type: string
@@ -102,16 +102,16 @@ router.get('/:id', schedulesController.getScheduleById);
  *           schema:
  *             type: object
  *             required:
- *               - day_of_week
+ *               - observations
  *               - departure_time
  *               - origin
  *               - destination
  *               - company_id
  *             properties:
- *               day_of_week:
+ *               observations:
  *                 type: string
- *                 description: Día de la semana en formato texto (e.g., "monday", "tuesday").
- *                 example: monday
+ *                 description: Observación sobre el horario (e.g., "Todos los días", "Fines de semana").
+ *                 example: "Todos los días"
  *               departure_time:
  *                 type: string
  *                 description: Hora de salida en formato HH:MM (24 horas).
@@ -146,10 +146,10 @@ router.get('/:id', schedulesController.getScheduleById);
  *                       type: integer
  *                       description: ID del horario recién creado.
  *                       example: 101
- *                     day_of_week:
+ *                     observations:
  *                       type: string
- *                       description: Día de la semana del horario.
- *                       example: monday
+ *                       description: Observación del horario.
+ *                       example: "Todos los días"
  *                     departure_time:
  *                       type: string
  *                       description: Hora de salida del horario.
@@ -189,7 +189,6 @@ router.get('/:id', schedulesController.getScheduleById);
  *                   type: string
  *                   example: Error al crear el horario o la ruta.
  */
-
 router.post('/', schedulesController.createSchedule);
 
 /**
@@ -212,11 +211,10 @@ router.post('/', schedulesController.createSchedule);
  *           schema:
  *             type: object
  *             properties:
- *               day_of_week:
+ *               observations:
  *                 type: string
  *               departure_time:
  *                 type: string
- *                 format: time
  *               route_id:
  *                 type: integer
  *     responses:
