@@ -137,8 +137,8 @@ exports.getSchedules = async (req, res) => {
     const { from, to, day, company } = req.query;
 
     // Buscar los IDs de las paradas (origin y destination)
-    const fromStop = await stops.findOne({ where: { name: from } });
-    const toStop = await stops.findOne({ where: { name: to } });
+    const fromStop = await stops.findOne({ where: { id: from } });
+    const toStop = await stops.findOne({ where: { id: to } });
 
     if (!fromStop || !toStop) {
       return res
