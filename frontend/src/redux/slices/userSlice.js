@@ -1,8 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-  paradas: {},
-  horarios: {}
+  paradas: [],
+  horarios: []
 };
 
 const userSlice = createSlice({
@@ -14,7 +14,7 @@ const userSlice = createSlice({
     },
     setHorarios: (state,action) => {
         state.horarios = action.payload
-    }
+    },
   },
 });
 

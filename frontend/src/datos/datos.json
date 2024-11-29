@@ -3,13 +3,15 @@
       "id": 1,
       "day_of_week": "Monday",
       "departure_time": "08:00:00",
+      "arrival_time": "08:15:00",
+      "frequency": "Lunes a Domingo",
       "route": {
         "id": 1,
         "originStop": {
-          "name": "Aristóbulo del Valle"
+          "name": "Puerto Rico"
         },
         "destinationStop": {
-          "name": "Posadas"
+          "name": "Capiovi"
         },
         "company": {
           "name": "Horianski"
@@ -19,14 +21,149 @@
     {
       "id": 2,
       "day_of_week": "Monday",
-      "departure_time": "12:00:00",
+      "departure_time": "08:30:00",
+      "arrival_time": "08:45:00",
+      "frequency": "Lunes a Domingo",
       "route": {
         "id": 1,
         "originStop": {
-          "name": "Aristóbulo del Valle"
+          "name": "Puerto Rico"
         },
         "destinationStop": {
-          "name": "Posadas"
+          "name": "Capiovi"
+        },
+        "company": {
+          "name": "Horianski"
+        }
+      }
+    },
+    {
+      "id": 3,
+      "day_of_week": "Monday",
+      "departure_time": "09:00:00",
+      "arrival_time": "09:20:00",
+      "frequency": "Lunes a Domingo",
+      "route": {
+        "id": 1,
+        "originStop": {
+          "name": "Puerto Rico"
+        },
+        "destinationStop": {
+          "name": "Capiovi"
+        },
+        "company": {
+          "name": "Horianski"
+        }
+      }
+    },
+    {
+      "id": 4,
+      "day_of_week": "Monday",
+      "departure_time": "10:00:00",
+      "arrival_time": "10:20:00",
+      "frequency": "Lunes a Domingo",
+      "route": {
+        "id": 1,
+        "originStop": {
+          "name": "Puerto Rico"
+        },
+        "destinationStop": {
+          "name": "Capiovi"
+        },
+        "company": {
+          "name": "Horianski"
+        }
+      }
+    },
+    {
+      "id": 5,
+      "day_of_week": "Monday",
+      "departure_time": "10:45:00",
+      "arrival_time": "11:00:00",
+      "frequency": "Lunes a Domingo",
+      "route": {
+        "id": 1,
+        "originStop": {
+          "name": "Puerto Rico"
+        },
+        "destinationStop": {
+          "name": "Capiovi"
+        },
+        "company": {
+          "name": "Horianski"
+        }
+      }
+    },
+    {
+      "id": 6,
+      "day_of_week": "Monday",
+      "departure_time": "11:00:00",
+      "arrival_time": "11:20:00",
+      "frequency": "Lunes a Domingo",
+      "route": {
+        "id": 1,
+        "originStop": {
+          "name": "Puerto Rico"
+        },
+        "destinationStop": {
+          "name": "Capiovi"
+        },
+        "company": {
+          "name": "Horianski"
+        }
+      }
+    },
+    {
+      "id": 7,
+      "day_of_week": "Monday",
+      "departure_time": "11:15:00",
+      "arrival_time": "11:30:00",
+      "frequency": "Lunes a Domingo",
+      "route": {
+        "id": 1,
+        "originStop": {
+          "name": "Puerto Rico"
+        },
+        "destinationStop": {
+          "name": "Capiovi"
+        },
+        "company": {
+          "name": "Horianski"
+        }
+      }
+    },
+    {
+      "id": 8,
+      "day_of_week": "Monday",
+      "departure_time": "12:00:00",
+      "arrival_time": "12:15:00",
+      "frequency": "Lunes a Domingo",
+      "route": {
+        "id": 1,
+        "originStop": {
+          "name": "Puerto Rico"
+        },
+        "destinationStop": {
+          "name": "Capiovi"
+        },
+        "company": {
+          "name": "Horianski"
+        }
+      }
+    },
+    {
+      "id": 9,
+      "day_of_week": "Monday",
+      "departure_time": "12:30:00",
+      "arrival_time": "12:45:00",
+      "frequency": "Lunes a Domingo",
+      "route": {
+        "id": 1,
+        "originStop": {
+          "name": "Puerto Rico"
+        },
+        "destinationStop": {
+          "name": "Capiovi"
         },
         "company": {
           "name": "Horianski"

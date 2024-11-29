@@ -1,0 +1,42 @@
+.select-container {
+    display: flex;
+    flex-direction:column;
+    justify-content:space-between;
+    align-items: center;
+    background-color:rgba(216, 112, 147, 0); /* Fondo gris oscuro */
+    border-radius: 15px;
+    gap: 2em;
+    width: 50%;
+    height:auto;
+  }
+
+.select-container-buttons{
+    display: flex;
+    flex-direction:row;
+    align-items: center;
+    justify-content:space-around;
+    background-color: #6a6c6d;
+    width: 100%;
+    border-radius: 15px;
+    height: 4em;
+}
+
+/* Estilos para cada botón */
+.selector {
+    background-color: #fefefe; /* Fondo gris claro */
+    border: none;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    font-size: 1em;
+    font-weight: bold;
+    color:  1px solid #1b1b1b;
+    border-radius: 10px;
+    cursor: pointer;
+    height: 70%;
+    width: 20%;
+    transition: background-color 0.3s;
+    text-align: center;
+  }
+  
+  .selector:hover {
+    background-color: #b3b3b3; /* Color de hover */
+  }
