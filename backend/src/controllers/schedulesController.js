@@ -6,7 +6,6 @@ const { routes, stops, companies } = require("../../db/models"); // Asegúrate d
 // Obtener todos los horarios
 exports.getAllSchedules = async (req, res) => {
   try {
-    console.log("asdasd");
     const schedules = await Schedule.findAll();
     res.status(200).json(schedules);
   } catch (error) {
@@ -32,29 +31,29 @@ exports.getScheduleById = async (req, res) => {
 
 exports.createSchedule = async (req, res) => {
   try {
-    const { observations, departure_time, origin, destination, company_id, bus_id } =
+    const { observations, departure_time, arrival_time, origin, destination, company_id } =
       req.body;
 
     // Validar datos obligatorios
     if (
       !observations ||
       !departure_time ||
+      !arrival_time ||
       !origin ||
       !destination ||
-      !company_id ||
-      !bus_id
+      !company_id 
     ) {
       return res.status(400).json({ message: "Faltan datos obligatorios." });
     }
-    const routeExist = await routes.findOne({
-      where: { company_id: company_id, origin: origin, destination: destination, bus_id: bus_id },
+    /* const routeExist = await routes.findOne({
+      where: { company_id: company_id, origin: origin, destination: destination },
     });
 
     if (routeExist) {
       return res
         .status(409)
         .json({ message: "La ruta ya existe." });
-    }
+    } */
     // Buscar las paradas de origen y destino
     const originStop = await stops.findOne({ where: { id: origin } });
     const destinationStop = await stops.findOne({
@@ -89,6 +88,7 @@ exports.createSchedule = async (req, res) => {
     const newSchedule = await Schedule.create({
       observations,
       departure_time,
+      arrival_time,
       route_id: route.id,
     });
 
@@ -104,10 +104,10 @@ exports.createSchedule = async (req, res) => {
 
 // Actualizar un horario existente
 exports.updateSchedule = async (req, res) => {
-  const { observations, departure_time } = req.body;
+  const { observations, departure_time, arrival_time } = req.body;
   try {
     const [updated] = await Schedule.update(
-      { observations, departure_time },
+      { observations, departure_time, arrival_time },
       {
         where: { id: req.params.id },
       }
@@ -141,9 +141,7 @@ exports.deleteSchedule = async (req, res) => {
   }
 };
 
-exports.getSchedules = async (req, res) => {
-  console.log(req.query);
-  
+exports.getSchedules = async (req, res) => {  
   try {
     const { from, to, company } = req.query;
 
@@ -157,7 +155,7 @@ exports.getSchedules = async (req, res) => {
 
     // Obtener las rutas, colectivos y horarios asociados
     const schedulesData = await Schedule.findAll({
-      attributes: ["id", "departure_time", "observation"],     
+      attributes: ["id", "departure_time", "arrival_time", "observations"],     
       include: [
         {
           model: routes,

@@ -25,12 +25,7 @@ const schedulesController = require('../controllers/schedulesController');
  *         name: to
  *         schema:
  *           type: string
- *         description: Destino del horario
- *       - in: query
- *         name: day
- *         schema:
- *           type: string
- *         description: Día de la semana
+ *         description: Destino del horario *      
  *       - in: query
  *         name: company
  *         schema:
@@ -51,6 +46,8 @@ const schedulesController = require('../controllers/schedulesController');
  *                   observations:
  *                     type: string
  *                   departure_time:
+ *                     type: string
+ *                   arrival_time:
  *                     type: string
  *       404:
  *         description: No se encontraron horarios
@@ -84,6 +81,8 @@ router.get('/', schedulesController.getSchedules);
  *                   type: string
  *                 departure_time:
  *                   type: string
+ *                 arrival_time:
+ *                   type: string
  *       404:
  *         description: Horario no encontrado
  */
@@ -104,6 +103,7 @@ router.get('/:id', schedulesController.getScheduleById);
  *             required:
  *               - observations
  *               - departure_time
+ *               - arrival_time
  *               - origin
  *               - destination
  *               - company_id
@@ -116,6 +116,10 @@ router.get('/:id', schedulesController.getScheduleById);
  *                 type: string
  *                 description: Hora de salida en formato HH:MM (24 horas).
  *                 example: "08:30"
+ *               arrival_time:
+ *                 type: string
+ *                 description: Hora de llegada en formato HH:MM (24 horas).
+ *                 example: "10:30"
  *               origin:
  *                 type: string
  *                 description: Nombre de la parada de origen.
@@ -153,6 +157,10 @@ router.get('/:id', schedulesController.getScheduleById);
  *                     departure_time:
  *                       type: string
  *                       description: Hora de salida del horario.
+ *                       example: "08:30"
+ *                     arrival_time:
+ *                       type: string
+ *                       description: Hora de llegada del horario.
  *                       example: "08:30"
  *                     route_id:
  *                       type: integer
@@ -214,6 +222,8 @@ router.post('/', schedulesController.createSchedule);
  *               observations:
  *                 type: string
  *               departure_time:
+ *                 type: string
+ *               arrival_time:
  *                 type: string
  *               route_id:
  *                 type: integer

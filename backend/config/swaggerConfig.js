@@ -52,7 +52,7 @@ const swaggerOptions = {
     tags: [
       { name: 'Buses', description: 'Operaciones relacionadas con buses' },
       { name: 'Companies', description: 'Operaciones relacionadas con compañías' },
-      { name: 'Schedules', description: 'Operaciones relacionadas con horarios' }, // Asegúrate de incluir este tag
+      { name: 'Schedules', description: 'Operaciones relacionadas con horarios' }, 
     ],
   },
   apis: ['./src/routes/*.js'], // Incluir las rutas donde están los comentarios Swagger

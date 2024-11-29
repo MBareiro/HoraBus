@@ -6,14 +6,14 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false,
       primaryKey: true
     },
-    bus_id: {
+    /* bus_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
         model: 'buses',
         key: 'id'
       }
-    },
+    }, */
     route_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
@@ -26,6 +26,10 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.TIME,
       allowNull: false
     },
+    arrival_time: {
+      type: DataTypes.TIME,
+      allowNull: false
+    },
     observations: {
       type: DataTypes.STRING(255),  
       allowNull: true
@@ -34,7 +38,7 @@ module.exports = function(sequelize, DataTypes) {
 
   // Relación con el bus y la ruta
   Schedule.associate = function(models) {
-    Schedule.belongsTo(models.buses, { foreignKey: 'bus_id', as: 'bus' });
+    /* Schedule.belongsTo(models.buses, { foreignKey: 'bus_id', as: 'bus' }); */
     Schedule.belongsTo(models.routes, { foreignKey: 'route_id', as: 'route' });
   };
 
