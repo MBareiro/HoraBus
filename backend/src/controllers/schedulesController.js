@@ -1,12 +1,11 @@
 const db = require("../../db/models");
 const { Op } = require("sequelize");
-const Schedule = db.schedules;
-const { routes, stops, companies } = require("../../db/models"); // Asegúrate de que estas tablas estén importadas
+const { schedules, routes, stops, companies } = db;
 
 // Obtener todos los horarios
 exports.getAllSchedules = async (req, res) => {
   try {
-    const schedules = await Schedule.findAll();
+    const schedules = await schedules.findAll();
     res.status(200).json(schedules);
   } catch (error) {
     console.error("Error al obtener los horarios:", error);
@@ -17,7 +16,7 @@ exports.getAllSchedules = async (req, res) => {
 // Obtener un horario por ID
 exports.getScheduleById = async (req, res) => {
   try {
-    const schedule = await Schedule.findByPk(req.params.id);
+    const schedule = await schedules.findByPk(req.params.id);
     if (schedule) {
       res.status(200).json(schedule);
     } else {
@@ -29,91 +28,69 @@ exports.getScheduleById = async (req, res) => {
   }
 };
 
-exports.createSchedule = async (req, res) => {
-  try {
-    const { observations, departure_time, arrival_time, origin, destination, company_id } =
-      req.body;
+// Validar la existencia de una parada
+const getStopByName = async (name) => {
+  return await stops.findOne({ where: { name } });
+};
 
-    // Validar datos obligatorios
-    if (
-      !observations ||
-      !departure_time ||
-      !arrival_time ||
-      !origin ||
-      !destination ||
-      !company_id 
-    ) {
+// Crear un horario
+exports.createSchedule = async (req, res) => {
+  const { observations, departure_time, arrival_time, origin, destination, company_id } = req.body;
+  try {
+    // Validación de campos obligatorios
+    if (!observations || !departure_time || !arrival_time || !origin || !destination || !company_id) {
       return res.status(400).json({ message: "Faltan datos obligatorios." });
     }
-    /* const routeExist = await routes.findOne({
-      where: { company_id: company_id, origin: origin, destination: destination },
-    });
 
-    if (routeExist) {
-      return res
-        .status(409)
-        .json({ message: "La ruta ya existe." });
-    } */
-    // Buscar las paradas de origen y destino
-    const originStop = await stops.findOne({ where: { id: origin } });
-    const destinationStop = await stops.findOne({
-      where: { id: destination },
-    });
+    // Verificar si las paradas de origen y destino existen
+    const [originStop, destinationStop] = await Promise.all([
+      getStopByName(origin),
+      getStopByName(destination),
+    ]);
 
     if (!originStop || !destinationStop) {
-      return res
-        .status(404)
-        .json({ message: "Las paradas no se encontraron." });
+      return res.status(404).json({ message: "Las paradas no se encontraron." });
     }
 
-    // Verificar si existe una ruta para las paradas y la compañía
+    // Verificar si la ruta ya existe o crearla si no
     let route = await routes.findOne({
-      where: {
-        origin: originStop.id,
-        destination: destinationStop.id,
-        company_id: company_id,
-      },
+      where: { origin: originStop.id, destination: destinationStop.id, company_id }
     });
 
-    // Si la ruta no existe, crearla
     if (!route) {
       route = await routes.create({
         origin: originStop.id,
         destination: destinationStop.id,
-        company_id: company_id,
+        company_id,
       });
     }
 
-    // Crear el nuevo horario asociado a la ruta
-    const newSchedule = await Schedule.create({
+    // Crear el horario
+    const newSchedule = await schedules.create({
       observations,
       departure_time,
       arrival_time,
       route_id: route.id,
     });
 
-    res.status(201).json({
-      message: "Horario y ruta creados exitosamente.",
-      schedule: newSchedule,
-    });
+    res.status(201).json({ message: "Horario y ruta creados exitosamente.", schedule: newSchedule });
   } catch (error) {
     console.error("Error al crear el horario o la ruta:", error);
     res.status(500).json({ message: "Error al crear el horario o la ruta." });
   }
 };
 
-// Actualizar un horario existente
+// Actualizar un horario
 exports.updateSchedule = async (req, res) => {
   const { observations, departure_time, arrival_time } = req.body;
   try {
-    const [updated] = await Schedule.update(
+    const [updated] = await schedules.update(
       { observations, departure_time, arrival_time },
-      {
-        where: { id: req.params.id },
-      }
+      { where: { id: req.params.id } }
     );
+
     if (updated) {
-      const updatedSchedule = await Schedule.findByPk(req.params.id);
+      const updatedSchedule = await schedules.findByPk(req.params.id);
       res.status(200).json(updatedSchedule);
     } else {
       res.status(404).json({ error: "Horario no encontrado." });
@@ -127,7 +104,7 @@ exports.updateSchedule = async (req, res) => {
 // Eliminar un horario
 exports.deleteSchedule = async (req, res) => {
   try {
-    const deleted = await Schedule.destroy({
+    const deleted = await schedules.destroy({
       where: { id: req.params.id },
     });
     if (deleted) {
@@ -141,66 +118,56 @@ exports.deleteSchedule = async (req, res) => {
   }
 };
 
-exports.getSchedules = async (req, res) => {  
+// Obtener horarios filtrados por origen, destino y compañía
+exports.getSchedules = async (req, res) => {
+  const { from, to, company } = req.query;
   try {
-    const { from, to, company } = req.query;
-
-    // Buscar las paradas de origen y destino
-    const fromStop = await stops.findOne({ where: { id: from } });
-    const toStop = await stops.findOne({ where: { id: to } });
+    // Buscar paradas de origen y destino
+    const [fromStop, toStop] = await Promise.all([
+      getStopByName(from),
+      getStopByName(to),
+    ]);
 
     if (!fromStop || !toStop) {
       return res.status(404).json({ message: "Las paradas no se encontraron." });
     }
 
-    // Obtener las rutas, colectivos y horarios asociados
-    const schedulesData = await Schedule.findAll({
+    // Obtener horarios con rutas y compañías
+    const schedulesData = await schedules.findAll({
       attributes: ["id", "departure_time", "arrival_time", "observations"],
-      include: [
-        {
-          model: routes,
-          as: "route",
-          attributes: ["id", "company_id"],
-          where: {
-            origin: fromStop.id,
-            destination: toStop.id,
-            company_id: company ? company : { [Op.ne]: null },
-          },
-          include: [
-            {
-              model: companies,
-              as: "company",
-              attributes: ["name"], // Compañía de la ruta
-            },
-          ],
+      include: [{
+        model: routes,
+        as: "route",
+        attributes: ["id", "company_id"],
+        where: {
+          origin: fromStop.id,
+          destination: toStop.id,
+          company_id: company || { [Op.ne]: null },
         },
-      ],
+        include: [{
+          model: companies,
+          as: "company",
+          attributes: ["name"],
+        }],
+      }],
     });
-    
-    // Reestructurar la respuesta para mover `company` al nivel superior
-    const formattedSchedules = schedulesData.map(schedule => {
-      // Tomar los datos de la compañía de la ruta
-      const companyData = schedule.route?.company;
-    
-      return {
-        id: schedule.id,
-        departure_time: schedule.departure_time,
-        arrival_time: schedule.arrival_time,
-        observations: schedule.observations,
-        company: companyData, // Mover la compañía al nivel superior
-      };
-    });
-    
+
+    // Reestructurar los horarios para mover la compañía al nivel superior
+    const formattedSchedules = schedulesData.map(schedule => ({
+      id: schedule.id,
+      departure_time: schedule.departure_time,
+      arrival_time: schedule.arrival_time,
+      observations: schedule.observations,
+      company: schedule.route?.company,
+    }));
+
     if (formattedSchedules.length === 0) {
-      return res.status(404).json({
-        message: "No se encontraron horarios para los filtros proporcionados.",
-      });
+      return res.status(404).json({ message: "No se encontraron horarios para los filtros proporcionados." });
     }
 
-    res.json(formattedSchedules);
+    res.status(200).json(formattedSchedules);
   } catch (error) {
     console.error("Error al obtener los horarios:", error);
     res.status(500).json({ message: "Error al obtener los horarios." });
   }
 };
-

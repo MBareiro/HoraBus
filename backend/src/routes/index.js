@@ -8,7 +8,9 @@ const schedulesRoutes = require('./schedulesRoutes');
 const usersRoutes = require('./usersRoutes');
 const stopTimesRoutes = require('./stopTimesRoutes');
 const routeStopsRoutes = require('./routeStopsRoutes');
+const authRoutes = require('./authRoutes');
 
+router.use('/auth', authRoutes);
 router.use('/buses', busesRoutes);
 router.use('/companies', companiesRoutes);
 router.use('/stops', stopsRoutes);
