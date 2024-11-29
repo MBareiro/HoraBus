@@ -155,12 +155,12 @@ exports.getSchedules = async (req, res) => {
 
     // Obtener las rutas, colectivos y horarios asociados
     const schedulesData = await Schedule.findAll({
-      attributes: ["id", "departure_time", "arrival_time", "observations"],     
+      attributes: ["id", "departure_time", "arrival_time", "observations"],
       include: [
         {
           model: routes,
           as: "route",
-          attributes: ["id"],
+          attributes: ["id", "company_id"],
           where: {
             origin: fromStop.id,
             destination: toStop.id,
@@ -168,32 +168,36 @@ exports.getSchedules = async (req, res) => {
           },
           include: [
             {
-              model: stops,
-              as: "originStop",
-              attributes: ["name"],  // Origen de la ruta
-            },
-            {
-              model: stops,
-              as: "destinationStop",
-              attributes: ["name"],  // Destino de la ruta
-            },
-            {
               model: companies,
               as: "company",
-              attributes: ["name"],  // Compañía de la ruta
+              attributes: ["name"], // Compañía de la ruta
             },
           ],
         },
       ],
     });
-
-    if (schedulesData.length === 0) {
+    
+    // Reestructurar la respuesta para mover `company` al nivel superior
+    const formattedSchedules = schedulesData.map(schedule => {
+      // Tomar los datos de la compañía de la ruta
+      const companyData = schedule.route?.company;
+    
+      return {
+        id: schedule.id,
+        departure_time: schedule.departure_time,
+        arrival_time: schedule.arrival_time,
+        observations: schedule.observations,
+        company: companyData, // Mover la compañía al nivel superior
+      };
+    });
+    
+    if (formattedSchedules.length === 0) {
       return res.status(404).json({
         message: "No se encontraron horarios para los filtros proporcionados.",
       });
     }
 
-    res.json(schedulesData);
+    res.json(formattedSchedules);
   } catch (error) {
     console.error("Error al obtener los horarios:", error);
     res.status(500).json({ message: "Error al obtener los horarios." });
