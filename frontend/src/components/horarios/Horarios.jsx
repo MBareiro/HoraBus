@@ -32,6 +32,7 @@ useEffect(() => {
             <th>{origen}</th>
             <th>{destino}</th>
             <th>Frecuencia</th>
+            <th>Empresa</th>
           </tr>
         </thead>
         <tbody>
@@ -40,6 +41,7 @@ useEffect(() => {
               <td>{item.departure_time}</td>
               <td>{item.arrival_time}</td>
               <td>{item.frequency}</td>
+              <td>{item.company}</td>
             </tr>
           ))}
         </tbody>

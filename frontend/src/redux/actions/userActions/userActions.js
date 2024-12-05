@@ -13,7 +13,8 @@ export const getHorarios = (origen, destino) => async (dispatch) => {
       id: item.id,
       departure_time: item.departure_time.split(':').slice(0, 2).join(':'),
       arrival_time: item.arrival_time.split(':').slice(0, 2).join(':'),
-      frequency: item.observations
+      frequency: item.observations,
+      company: item.company.name
     }));
 
     // Usar la acción predefinida
