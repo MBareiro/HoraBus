@@ -41,5 +41,12 @@
     border-radius: 3px;
   }
 
+  .loading-text {
+    font-size: 1.2rem;
+    color: #232323;
+    text-align: center;
+    margin-top: 20px;
+  }
+
 
   

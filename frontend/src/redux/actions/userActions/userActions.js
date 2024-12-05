@@ -3,15 +3,24 @@ import { setHorarios, setParadas } from '../../slices/userSlice';
 import datos from '../../../datos/datos.json';
 import axios from 'axios';
 
-export const getHorarios = (origen, destino) => (dispatch) => {
-  const horarios = datos.map(item => ({
-    id: item.id,
-    departure_time: item.departure_time,
-    arrival_time: item.arrival_time,
-    frequency: item.frequency
-  }));
+export const getHorarios = (origen, destino) => async (dispatch) => {
+  try {
+    const response = await axios.get('https://horabus.onrender.com/api/schedules', {
+      params: { from: origen, to: destino }
+    });
 
-  dispatch(setHorarios(horarios));
+    const horarios = response.data.map(item => ({
+      id: item.id,
+      departure_time: item.departure_time.split(':').slice(0, 2).join(':'),
+      arrival_time: item.arrival_time.split(':').slice(0, 2).join(':'),
+      frequency: item.observations
+    }));
+
+    // Usar la acción predefinida
+    dispatch(setHorarios(horarios));
+  } catch (error) {
+    console.error("Error fetching horarios:", error);
+  }
 };
 
 export const getParadas = () => async (dispatch) => {

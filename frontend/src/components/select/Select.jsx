@@ -8,7 +8,7 @@ function Select () {
   const dispatch = useDispatch();
 
     const paradas =  [
-        { value: "Capioví", label: "Capioví" },
+        { value: "Capiovi", label: "Capioví" },
         { value: "Puerto Rico", label: "Puerto Rico" }
       ]
 
@@ -37,6 +37,7 @@ setShowHorarios(true)
 
 useEffect(() => {
 setDestino('')
+setShowHorarios(false)
 }, [origen])
 
 return (
@@ -47,8 +48,8 @@ return (
         {paradas.map((parada) => (
           <option 
           key={parada.value} 
-          value={parada.label}>
-            {parada.value.toUpperCase()}
+          value={parada.value}>
+            {parada.label.toUpperCase()}
           </option>
         ))}
       </select>
@@ -61,7 +62,7 @@ return (
         key={parada.value} 
         value={parada.value}
       >
-        {parada.value.toUpperCase()}
+        {parada.label.toUpperCase()}
       </option>
     )
   ))}
