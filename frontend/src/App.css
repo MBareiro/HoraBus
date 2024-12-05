@@ -1,15 +1,16 @@
 /* Estilos para toda la página */
+html, body { height: 100%; margin: 0; padding: 0; }
 .app {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-items:center;
+  justify-content:flex-start;
   background-color: #d3d3d3; /* Fondo gris claro para la página */
   background-size: cover;
   background-repeat:no-repeat;
   background-position: center;
   min-height: 100vh; /* Usa toda la altura de la pantalla */
-  width:100%;
+  width:100vw;
   box-sizing: border-box;
   gap: 4em;
 }
@@ -17,6 +18,7 @@
 /* Logo */
 .logo-container {
   background-color: rgba(255, 255, 255, 0); /* Fondo gris oscuro para el logo */
+  margin-top: 2em
 }
 
 .logo {
