@@ -42,6 +42,12 @@ exports.createSchedule = async (req, res) => {
       return res.status(400).json({ message: "Faltan datos obligatorios." });
     }
 
+    if (origin === destination) {
+      return res
+        .status(400)
+        .json({ message: "El origen y el destino no pueden ser iguales." });
+    }
+
     // Verificar si las paradas de origen y destino existen
     const [originStop, destinationStop] = await Promise.all([
       getStopByName(origin),
@@ -121,7 +127,13 @@ exports.deleteSchedule = async (req, res) => {
 // Obtener horarios filtrados por origen, destino y compañía
 exports.getSchedules = async (req, res) => {
   const { from, to, company } = req.query;
+  
   try {
+    if (from === to) {
+      return res
+        .status(400)
+        .json({ message: "El origen y el destino no pueden ser iguales." });
+    }
     // Buscar paradas de origen y destino
     const [fromStop, toStop] = await Promise.all([
       getStopByName(from),
