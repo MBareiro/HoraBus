@@ -1,10 +1,11 @@
 // src/redux/actions/userActions/userActions.js
-import { setHorarios, setParadas } from '../../slices/userSlice';
+import { setHorarios, setParadas, clearHorarios } from '../../slices/userSlice';
 import datos from '../../../datos/datos.json';
 import axios from 'axios';
 
 export const getHorarios = (origen, destino) => async (dispatch) => {
   try {
+    dispatch(clearHorarios());
     const response = await axios.get('https://horabus.onrender.com/api/schedules', {
       params: { from: origen, to: destino }
     });

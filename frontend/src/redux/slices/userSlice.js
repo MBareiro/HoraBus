@@ -15,9 +15,12 @@ const userSlice = createSlice({
     setHorarios: (state,action) => {
         state.horarios = action.payload
     },
+    clearHorarios: (state) => {
+      state.horarios = []; 
+    },
   },
 });
 
-export const { setParadas, setHorarios } = userSlice.actions;
+export const { setParadas, setHorarios, clearHorarios } = userSlice.actions;
 
 export default userSlice.reducer;

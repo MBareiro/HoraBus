@@ -36,14 +36,18 @@ useEffect(() => {
           </tr>
         </thead>
         <tbody>
-          {horarios.map((item) => (
-            <tr key={item.id}>
-              <td>{item.departure_time}</td>
-              <td>{item.arrival_time}</td>
-              <td>{item.frequency}</td>
-              <td>{item.company}</td>
-            </tr>
-          ))}
+        {horarios
+        .slice() // Crea una copia para evitar mutar el estado original
+        .sort((a, b) => a.departure_time.localeCompare(b.departure_time)) // Ordena por departure_time
+        .map((item) => (
+    <tr key={item.id}>
+      <td>{item.departure_time}</td>
+      <td>{item.arrival_time}</td>
+      <td>{item.frequency}</td>
+      <td>{item.company}</td>
+    </tr>
+  ))}
+
         </tbody>
       </table>
 }
