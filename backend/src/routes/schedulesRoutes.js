@@ -25,7 +25,12 @@ const schedulesController = require('../controllers/schedulesController');
  *         name: to
  *         schema:
  *           type: string
- *         description: Destino del horario *      
+ *         description: Destino del horario * 
+ *       - in: query
+ *         name: frequency
+ *         schema:
+ *           type: string
+ *         description: Dias de actividad    
  *       - in: query
  *         name: company
  *         schema:
@@ -43,7 +48,7 @@ const schedulesController = require('../controllers/schedulesController');
  *                 properties:
  *                   id:
  *                     type: integer
- *                   observations:
+ *                   frequency:
  *                     type: string
  *                   departure_time:
  *                     type: string
@@ -77,7 +82,7 @@ router.get('/', schedulesController.getSchedules);
  *               properties:
  *                 id:
  *                   type: integer
- *                 observations:
+ *                 frequency:
  *                   type: string
  *                 departure_time:
  *                   type: string
@@ -101,14 +106,14 @@ router.get('/:id', schedulesController.getScheduleById);
  *           schema:
  *             type: object
  *             required:
- *               - observations
+ *               - frequency
  *               - departure_time
  *               - arrival_time
  *               - origin
  *               - destination
  *               - company_id
  *             properties:
- *               observations:
+ *               frequency:
  *                 type: string
  *                 description: Observación sobre el horario (e.g., "Todos los días", "Fines de semana").
  *                 example: "Todos los días"
@@ -150,7 +155,7 @@ router.get('/:id', schedulesController.getScheduleById);
  *                       type: integer
  *                       description: ID del horario recién creado.
  *                       example: 101
- *                     observations:
+ *                     frequency:
  *                       type: string
  *                       description: Observación del horario.
  *                       example: "Todos los días"
@@ -219,7 +224,7 @@ router.post('/', schedulesController.createSchedule);
  *           schema:
  *             type: object
  *             properties:
- *               observations:
+ *               frequency:
  *                 type: string
  *               departure_time:
  *                 type: string

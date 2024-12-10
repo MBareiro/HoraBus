@@ -48,6 +48,13 @@ const swaggerOptions = {
           },
         },
       },
+      securitySchemes: {
+        bearerAuth: {
+          type: 'http',
+          scheme: 'bearer',
+          bearerFormat: 'JWT',
+        },
+      },
     },
     tags: [
       { name: 'Buses', description: 'Operaciones relacionadas con buses' },

@@ -35,10 +35,10 @@ const getStopByName = async (name) => {
 
 // Crear un horario
 exports.createSchedule = async (req, res) => {
-  const { observations, departure_time, arrival_time, origin, destination, company_id } = req.body;
+  const { frequency, departure_time, arrival_time, origin, destination, company_id } = req.body;
   try {
     // Validación de campos obligatorios
-    if (!observations || !departure_time || !arrival_time || !origin || !destination || !company_id) {
+    if (!frequency || !departure_time || !arrival_time || !origin || !destination || !company_id) {
       return res.status(400).json({ message: "Faltan datos obligatorios." });
     }
 
@@ -73,7 +73,7 @@ exports.createSchedule = async (req, res) => {
 
     // Crear el horario
     const newSchedule = await schedules.create({
-      observations,
+      frequency,
       departure_time,
       arrival_time,
       route_id: route.id,
@@ -88,10 +88,10 @@ exports.createSchedule = async (req, res) => {
 
 // Actualizar un horario
 exports.updateSchedule = async (req, res) => {
-  const { observations, departure_time, arrival_time } = req.body;
+  const { frequency, departure_time, arrival_time } = req.body;
   try {
     const [updated] = await schedules.update(
-      { observations, departure_time, arrival_time },
+      { frequency, departure_time, arrival_time },
       { where: { id: req.params.id } }
     );
 
@@ -126,14 +126,15 @@ exports.deleteSchedule = async (req, res) => {
 
 // Obtener horarios filtrados por origen, destino y compañía
 exports.getSchedules = async (req, res) => {
-  const { from, to, company } = req.query;
-  
+  const { from, to, frequency, company } = req.query;
+
   try {
     if (from === to) {
       return res
         .status(400)
         .json({ message: "El origen y el destino no pueden ser iguales." });
     }
+
     // Buscar paradas de origen y destino
     const [fromStop, toStop] = await Promise.all([
       getStopByName(from),
@@ -144,18 +145,31 @@ exports.getSchedules = async (req, res) => {
       return res.status(404).json({ message: "Las paradas no se encontraron." });
     }
 
+    // Construir las condiciones dinámicas para las rutas
+    const routeConditions = {
+      origin: fromStop.id,
+      destination: toStop.id,
+    };
+
+    if (company) {
+      routeConditions.company_id = company;
+    }
+
+    // Construir condiciones dinámicas para los horarios
+    const scheduleConditions = {};
+    if (frequency) {
+      scheduleConditions.frequency = frequency;
+    }
+
     // Obtener horarios con rutas y compañías
     const schedulesData = await schedules.findAll({
-      attributes: ["id", "departure_time", "arrival_time", "observations"],
+      attributes: ["id", "departure_time", "arrival_time", "frequency"],
+      where: scheduleConditions, // Filtro dinámico de frecuencia
       include: [{
         model: routes,
         as: "route",
         attributes: ["id", "company_id"],
-        where: {
-          origin: fromStop.id,
-          destination: toStop.id,
-          company_id: company || { [Op.ne]: null },
-        },
+        where: routeConditions, // Filtro dinámico de rutas
         include: [{
           model: companies,
           as: "company",
@@ -169,7 +183,7 @@ exports.getSchedules = async (req, res) => {
       id: schedule.id,
       departure_time: schedule.departure_time,
       arrival_time: schedule.arrival_time,
-      observations: schedule.observations,
+      frequency: schedule.frequency,
       company: schedule.route?.company,
     }));
 

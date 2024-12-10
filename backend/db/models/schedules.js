@@ -30,7 +30,7 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.TIME,
       allowNull: false
     },
-    observations: {
+    frequency: {
       type: DataTypes.STRING(255),  
       allowNull: true
     }
