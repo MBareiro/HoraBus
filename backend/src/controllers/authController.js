@@ -36,7 +36,7 @@ exports.loginUser = async (req, res) => {
 
     // Crear un token JWT
     const token = jwt.sign(
-      { id: user.id, name: user.name, email: user.email, role: user.role }, // Incluye el rol en el token
+      { id: user.id, name: user.name, email: user.email, role: user.role, company_id: user.company_id }, // Incluye el rol en el token
       JWT_SECRET, // El secreto utilizado para firmar el token
       { expiresIn: "1h" } // El tiempo de expiración del token (1 hora)
     );
