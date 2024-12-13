@@ -40,3 +40,20 @@
   .selector:hover {
     background-color: #b3b3b3; /* Color de hover */
   }
+
+  @media (max-width: 550px) {
+    .select-container {
+        width: 90%; /* Ajusta el ancho a un porcentaje mayor en pantallas pequeñas */
+    }
+
+    .select-container-buttons {
+        flex-direction: column; /* Cambia los botones a disposición vertical */
+        height: auto; /* Ajusta la altura */
+    }
+
+    .selector {
+        width: 90%; /* Los botones ocupan todo el ancho disponible */
+        margin-top: 0.5em; /* Espacio arriba */
+        margin-bottom: 0.5em; /* Espacio abajo */
+    }
+}
