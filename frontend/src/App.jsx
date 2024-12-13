@@ -1,5 +1,5 @@
 import './App.css';
-import logo from './pictures/horabus.png';
+import logo from './pictures/horabus2.png';
 import Select from './components/select/Select';
 import { useEffect } from 'react';
 import { getParadas } from './redux/actions/userActions/userActions';
