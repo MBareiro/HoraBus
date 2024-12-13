@@ -6,31 +6,20 @@ const swaggerUi = require('swagger-ui-express');
 const swaggerDocs = require('../config/swaggerConfig');
 const { authenticateDB, syncDB } = require('../config/db');
 const routes = require('./routes');
-const http = require('http'); // Necesario para usar WebSockets
+const http = require('http'); 
 const WebSocket = require('ws');
-const { setupWebSocket } = require('./controllers/gpsController'); // Importar configuración WebSocket
-
-// Crear una instancia de Express
+const { setupWebSocket } = require('./controllers/gpsController'); 
 const app = express();
-
-// Crear servidor HTTP a partir de Express (para WebSocket)
 const server = http.createServer(app);
+setupWebSocket(server);
 
-// Configurar WebSocket
-setupWebSocket(server); // Asegúrate de configurar WebSocket con el servidor
-
-// Middleware para configurar CORS y el parseo de JSON
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// Configurar la documentación de la API (Swagger)
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs, { explorer: true }));
-
-// Usar las rutas de la API
 app.use('/api', routes);
 
-// Definir el puerto
 const PORT = process.env.PORT || 3000;
 
 // Conexión a la base de datos y sincronización

@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const stopsController = require('../controllers/stopsController');
+const stopValidator = require('../validators/stopValidator');
+const validationErrorHandler = require('../middleware/validationErrorHandler');
 
 /**
  * @swagger
@@ -76,7 +78,7 @@ router.get('/', stopsController.getAllStops);
  *       500:
  *         description: Error en el servidor
  */
-router.get('/:id', stopsController.getStopById);
+router.get('/:id', stopValidator.getStopByIdValidator, validationErrorHandler, stopsController.updateStop);
 
 /**
  * @swagger
@@ -114,7 +116,7 @@ router.get('/:id', stopsController.getStopById);
  *       500:
  *         description: Error en el servidor
  */
-router.post('/', stopsController.createStop);
+router.post('/', stopValidator.createStopValidator, validationErrorHandler, stopsController.createStop );
 
 /**
  * @swagger
@@ -157,7 +159,7 @@ router.post('/', stopsController.createStop);
  *       500:
  *         description: Error en el servidor
  */
-router.put('/:id', stopsController.updateStop);
+router.put('/:id', stopValidator.updateStopValidator, validationErrorHandler, stopsController.updateStop );
 
 /**
  * @swagger
@@ -180,6 +182,6 @@ router.put('/:id', stopsController.updateStop);
  *       500:
  *         description: Error en el servidor
  */
-router.delete('/:id', stopsController.deleteStop);
+router.delete('/:id', stopValidator.deleteStopValidator, validationErrorHandler, stopsController.updateStop);
 
 module.exports = router;

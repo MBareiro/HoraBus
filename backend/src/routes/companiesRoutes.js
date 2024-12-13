@@ -1,7 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const companiesController = require('../controllers/companiesController');
-
+const validationErrorHandler = require('../middleware/validationErrorHandler');
+const companyValidator = require('../validators/companyValidator');
 /**
  * @swagger
  * tags:
@@ -64,7 +65,7 @@ router.get('/', companiesController.getAllCompanies);
  *       500:
  *         description: Error en el servidor
  */
-router.get('/:id', companiesController.getCompanyById);
+router.get('/:id', companyValidator.getCompanyByIdValidator, validationErrorHandler, companiesController.getCompanyById); 
 
 /**
  * @swagger
@@ -92,7 +93,7 @@ router.get('/:id', companiesController.getCompanyById);
  *       500:
  *         description: Error en el servidor
  */
-router.post('/', companiesController.createCompany);
+router.post('/', companyValidator.createCompanyValidator, validationErrorHandler, companiesController.createCompany);
 
 /**
  * @swagger
@@ -129,7 +130,7 @@ router.post('/', companiesController.createCompany);
  *       500:
  *         description: Error en el servidor
  */
-router.put('/:id', companiesController.updateCompany);
+router.put('/:id', companyValidator.updateCompanyValidator, validationErrorHandler, companiesController.updateCompany);
 
 /**
  * @swagger
@@ -152,6 +153,6 @@ router.put('/:id', companiesController.updateCompany);
  *       500:
  *         description: Error en el servidor
  */
-router.delete('/:id', companiesController.deleteCompany);
+router.delete('/:id', companyValidator.deleteCompanyValidator, validationErrorHandler, companiesController.deleteCompany);
 
 module.exports = router;

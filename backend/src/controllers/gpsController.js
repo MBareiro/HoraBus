@@ -30,7 +30,6 @@ const receiveCoordinates = (req, res) => {
       }
     });
   }
-
   // Responder que las coordenadas fueron recibidas
   res.status(200).send({ message: 'Coordenadas enviadas a los clientes' });
 };

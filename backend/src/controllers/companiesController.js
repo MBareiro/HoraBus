@@ -35,7 +35,7 @@ exports.createCompany = async (req, res) => {
     // Verificar si la compañía ya existe
     const existingCompany = await Company.findOne({ where: { name } });
     if (existingCompany) {
-      return res.status(409).json({ message: 'La compañía ya existe.' });
+      return res.status(409).json({ message: 'La compañía ya existe.' }); 
     }
 
     // Crear la nueva compañía
@@ -47,10 +47,11 @@ exports.createCompany = async (req, res) => {
   }
 };
 
+
 // Actualizar una compañía existente
 exports.updateCompany = async (req, res) => {
   const { name } = req.body;
-
+  
   try {
     const [updated] = await Company.update({ name }, { where: { id: req.params.id } });
     if (updated) {
