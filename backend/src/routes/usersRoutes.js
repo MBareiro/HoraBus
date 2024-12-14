@@ -1,7 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const usersController = require('../controllers/usersController');
-
+const userValidator = require('../validators/userValidators');
+const validationErrorHandler = require('../middleware/validationErrorHandler');
 /**
  * @swagger
  * tags:
@@ -86,7 +87,7 @@ router.get('/', usersController.getAllUsers);
  *       500:
  *         description: Error en el servidor
  */
-router.get('/:id', usersController.getUserById);
+router.get('/:id', userValidator.getUserByIdValidator, validationErrorHandler, usersController.getUserById);
 
 /**
  * @swagger
@@ -128,7 +129,7 @@ router.get('/:id', usersController.getUserById);
  *       500:
  *         description: Error en el servidor
  */
-router.post('/', usersController.createUser);
+router.post('/', userValidator.createUserValidator, validationErrorHandler, usersController.createUser);
 
 /**
  * @swagger
@@ -175,7 +176,7 @@ router.post('/', usersController.createUser);
  *       500:
  *         description: Error en el servidor
  */
-router.put('/:id', usersController.updateUser);
+router.put('/:id', userValidator.updateUserValidator, validationErrorHandler, usersController.updateUser);
 
 /**
  * @swagger
@@ -198,6 +199,11 @@ router.put('/:id', usersController.updateUser);
  *       500:
  *         description: Error en el servidor
  */
-router.delete('/:id', usersController.deleteUser);
+router.delete('/:id', userValidator.deleteUserValidator, validationErrorHandler, usersController.deleteUser);
 
 module.exports = router;
+
+
+
+
+

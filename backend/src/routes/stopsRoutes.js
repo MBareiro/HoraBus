@@ -78,7 +78,7 @@ router.get('/', stopsController.getAllStops);
  *       500:
  *         description: Error en el servidor
  */
-router.get('/:id', stopValidator.getStopByIdValidator, validationErrorHandler, stopsController.updateStop);
+router.get('/:id', stopValidator.getStopByIdValidator, validationErrorHandler, stopsController.getStopById);
 
 /**
  * @swagger
@@ -182,6 +182,6 @@ router.put('/:id', stopValidator.updateStopValidator, validationErrorHandler, st
  *       500:
  *         description: Error en el servidor
  */
-router.delete('/:id', stopValidator.deleteStopValidator, validationErrorHandler, stopsController.updateStop);
+router.delete('/:id', stopValidator.deleteStopValidator, validationErrorHandler, stopsController.deleteStop);
 
 module.exports = router;

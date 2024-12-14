@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const schedulesController = require('../controllers/schedulesController');
 
+const scheduleValidator = require('../validators/scheduleValidators');
+const validationErrorHandler = require('../middleware/validationErrorHandler');
 /**
  * @swagger
  * tags:
@@ -91,7 +93,7 @@ router.get('/', schedulesController.getSchedules);
  *       404:
  *         description: Horario no encontrado
  */
-router.get('/:id', schedulesController.getScheduleById);
+router.get('/:id', scheduleValidator.getScheduleByIdValidator, validationErrorHandler, schedulesController.getScheduleById);
 
 /**
  * @swagger
@@ -202,7 +204,7 @@ router.get('/:id', schedulesController.getScheduleById);
  *                   type: string
  *                   example: Error al crear el horario o la ruta.
  */
-router.post('/', schedulesController.createSchedule);
+router.post('/', scheduleValidator.createScheduleValidator, validationErrorHandler, schedulesController.createSchedule);
 
 /**
  * @swagger
@@ -238,7 +240,7 @@ router.post('/', schedulesController.createSchedule);
  *       404:
  *         description: Horario no encontrado
  */
-router.put('/:id', schedulesController.updateSchedule);
+router.put('/:id', scheduleValidator.updateScheduleValidator, validationErrorHandler, schedulesController.updateSchedule);
 
 /**
  * @swagger
@@ -259,6 +261,6 @@ router.put('/:id', schedulesController.updateSchedule);
  *       404:
  *         description: Horario no encontrado
  */
-router.delete('/:id', schedulesController.deleteSchedule);
+router.delete('/:id', scheduleValidator.deleteScheduleValidator, validationErrorHandler, schedulesController.deleteSchedule);
 
 module.exports = router;
