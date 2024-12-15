@@ -8,6 +8,7 @@ module.exports = {
     host: process.env.DB_HOST || "127.0.0.1",
     dialect: "mysql",
     dialectModule: require('mysql2'), 
+    port: process.env.DB_PORT || 3306,
     //seederStorage: "json",
     //seederStoragePath: "db/seeders"
   },
@@ -18,6 +19,7 @@ module.exports = {
     host: process.env.DB_HOST || "127.0.0.1",
     dialect: "mysql",
     dialectModule: require('mysql2'), 
+    port: process.env.DB_PORT || 3306,
   },
   production: {
     username: process.env.DB_USER || "root",
@@ -26,5 +28,6 @@ module.exports = {
     host: process.env.DB_HOST || "127.0.0.1",
     dialect: "mysql",
     dialectModule: require('mysql2'), 
+    port: process.env.DB_PORT || 3306,
   }
 };

@@ -8,6 +8,8 @@ const sequelize = new Sequelize(config.database, config.username, config.passwor
   logging: config.logging || false, // Habilitar/deshabilitar logs de consultas SQL
   dialectOptions: config.dialectOptions, // Opciones adicionales de dialecto si es necesario
   dialectModule: require('mysql2'), 
+  port: process.env.DB_PORT || 3306,
+
 });
 
 // Función para autenticar la conexión a la base de datos
