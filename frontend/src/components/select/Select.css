@@ -41,6 +41,11 @@
     background-color: #b3b3b3; /* Color de hover */
   }
 
+  .error {
+    color:  1px solid #1b1b1b;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  }
+
   @media (max-width: 550px) {
     .select-container {
         width: 90%; /* Ajusta el ancho a un porcentaje mayor en pantallas pequeñas */
@@ -55,5 +60,11 @@
         width: 90%; /* Los botones ocupan todo el ancho disponible */
         margin-top: 0.5em; /* Espacio arriba */
         margin-bottom: 0.5em; /* Espacio abajo */
+    }
+    .error {
+      color:  1px solid #1b1b1b;
+      font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+      font-size: 1em;
+      text-align: center;
     }
 }

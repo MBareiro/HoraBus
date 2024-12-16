@@ -14,25 +14,31 @@ function Select () {
 
     const [origen, setOrigen] = useState(''); 
     const [destino, setDestino] = useState('');
-    
-
-const [showHorarios, setShowHorarios] = useState(false)
-
-const destinoRef = useRef(null);
+    const [showHorarios, setShowHorarios] = useState(false)
+    const [showError, setShowError] = useState(false)
 
 const handleDestinoChange = (event) =>{
     setDestino(event.target.value)
+    setShowError(false)
+    
 }
 
 
 const handleOrigenChange = (event) =>{
     setOrigen(event.target.value)
+    setShowError(false)
 }
 
 
 const handleBuscarHorarios = () => {
-dispatch(getHorarios(origen, destino))
-setShowHorarios(true)
+if(destino && origen){
+  setShowError(false)
+  dispatch(getHorarios(origen, destino))
+  setShowHorarios(true)
+} else
+{
+  setShowError(true)
+}
 }
 
 useEffect(() => {
@@ -54,7 +60,7 @@ return (
         ))}
       </select>
 
-      <select className="selector" id="destino" value={destino} onChange={handleDestinoChange} ref={destinoRef}>
+      <select className="selector" id="destino" value={destino} onChange={handleDestinoChange}>
   <option value="" disabled>DESTINO</option>
   {paradas.map((parada) => (
     origen !== parada.value && (
@@ -71,10 +77,11 @@ return (
     <button className="selector" onClick={handleBuscarHorarios}>BUSCAR</button>
 
       </div>
-       
-
+      
 {showHorarios && <Horarios origen={origen} destino={destino}/> }
-    
+{showError && <p className="error">
+  POR FAVOR, SELECCIONE EL ORIGEN Y EL DESTINO CORRECTAMENTE
+  </p>}
 </div>
 
 )
