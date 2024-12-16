@@ -10,11 +10,7 @@
       {
         "src": "/(.*)",
         "dest": "src/app.js"
-      },
-      {
-        "src": "/api-docs",
-        "dest": "src/app.js"
-      },
+      }
     ]
   }
   
