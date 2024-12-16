@@ -3,10 +3,12 @@ import { setHorarios, setParadas, clearHorarios } from '../../slices/userSlice';
 import datos from '../../../datos/datos.json';
 import axios from 'axios';
 
+const api = 'https://hora-bus-backend.vercel.app/api'
+
 export const getHorarios = (origen, destino) => async (dispatch) => {
   try {
     dispatch(clearHorarios());
-    const response = await axios.get('https://horabus.onrender.com/api/schedules', {
+    const response = await axios.get(`${api}/schedules`, {
       params: { from: origen, to: destino }
     });
 
@@ -27,7 +29,7 @@ export const getHorarios = (origen, destino) => async (dispatch) => {
 
 export const getParadas = () => async (dispatch) => {
   try {
-    const response = await axios.get('https://horabus.onrender.com/api/stops');
+    const response = await axios.get(`${api}/stops`);
     
     const paradas = response.data.map(parada => ({
       name: parada.name
