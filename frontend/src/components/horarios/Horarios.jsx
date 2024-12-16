@@ -2,6 +2,7 @@ import { useSelector } from "react-redux"
 import './Horarios.css';
 import { useEffect, useState } from "react";
 import loadingGif from '../../pictures/loading.gif'
+import Filtros from '../filtros/Filtros'
 
 const Horarios = ({origen, destino}) => {
   console.log(origen, destino)
@@ -19,7 +20,7 @@ useEffect(() => {
     return (
         <div className="horariosConteiner">
             <h3 className="center-text">HORARIOS</h3>
-
+            <Filtros />
             {loading ? 
             <div className="loading-container">
             <img src={loadingGif} alt="Cargando..." className="loading-gif" />
@@ -51,7 +52,6 @@ useEffect(() => {
         </tbody>
       </table>
 }
-
         </div>
     )
 }

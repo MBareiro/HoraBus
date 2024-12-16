@@ -1,0 +1,25 @@
+.filtros-conteiner{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    width: 97%;
+}
+.filtro-button{
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    font-size: 1em;
+    font-weight: bold;
+    color:  1px solid #1b1b1b;
+    cursor: pointer;
+    border-radius: 10px;
+    transition: background-color 0.3s;
+    text-align: center;
+}
+.filtro-button:hover {
+    background-color: #b3b3b3; /* Color de hover */
+  }
+
+  @media (max-width: 1000px) {
+    .filtros-conteiner {
+        width: 91%; /* Ajusta el ancho a un porcentaje mayor en pantallas pequeñas */
+    }
+}
