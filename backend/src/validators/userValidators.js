@@ -6,10 +6,12 @@ module.exports = {
     body('name')
       .isString().withMessage('El nombre debe ser una cadena de texto.')
       .notEmpty().withMessage('El nombre es obligatorio.')
-      .isLength({ min: 3 }).withMessage('El nombre debe tener al menos 3 caracteres.'),
+      .isLength({ min: 3 }).withMessage('El nombre debe tener al menos 3 caracteres.')
+      .trim().escape(), // Sanitiza y elimina espacios
     body('email')
       .isEmail().withMessage('El email debe tener un formato válido.')
-      .notEmpty().withMessage('El email es obligatorio.'),
+      .notEmpty().withMessage('El email es obligatorio.')
+      .normalizeEmail(), // Normaliza el correo (en caso de que tenga mayúsculas o espacios)
     body('password')
       .isString().withMessage('La contraseña debe ser una cadena de texto.')
       .isLength({ min: 8 }).withMessage('La contraseña debe tener al menos 8 caracteres.')
@@ -25,14 +27,17 @@ module.exports = {
   // Validaciones para actualizar un usuario
   updateUserValidator: [
     param('id')
-      .isInt({ gt: 0 }).withMessage('El ID del usuario debe ser un número entero mayor que 0.'),
+      .isInt({ gt: 0 }).withMessage('El ID del usuario debe ser un número entero mayor que 0.')
+      .toInt(), // Convierte el valor a entero
     body('name')
       .optional()
       .isString().withMessage('El nombre debe ser una cadena de texto.')
-      .isLength({ min: 3 }).withMessage('El nombre debe tener al menos 3 caracteres.'),
+      .isLength({ min: 3 }).withMessage('El nombre debe tener al menos 3 caracteres.')
+      .trim().escape(), // Sanitiza y elimina espacios
     body('email')
       .optional()
-      .isEmail().withMessage('El email debe tener un formato válido.'),
+      .isEmail().withMessage('El email debe tener un formato válido.')
+      .normalizeEmail(), // Normaliza el correo
     body('password')
       .optional()
       .isString().withMessage('La contraseña debe ser una cadena de texto.')
@@ -49,11 +54,13 @@ module.exports = {
   getUserByIdValidator: [
     param('id')
       .isInt({ gt: 0 }).withMessage('El ID del usuario debe ser un número entero mayor que 0.')
+      .toInt() // Convierte el valor a entero
   ],
 
   // Validaciones para eliminar un usuario
   deleteUserValidator: [
     param('id')
       .isInt({ gt: 0 }).withMessage('El ID del usuario debe ser un número entero mayor que 0.')
+      .toInt() // Convierte el valor a entero
   ]
 };
