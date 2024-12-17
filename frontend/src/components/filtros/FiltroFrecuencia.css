@@ -1,0 +1,24 @@
+.filtro-frecuencia-conteiner{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: brown;
+}
+.opciones-conteiner{
+    width: 35%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+ 
+}
+.opcion{
+    margin-bottom: 1vh;
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    color:  1px solid #1b1b1b;
+}
+.h2{
+    margin-bottom: 1vh;
+    margin-top: 1vh;
+}

@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useState } from "react"
 import { useSelector } from "react-redux"
+import './FiltroFrecuencia.css'
 
 const FiltroFrecuencia = () => {
     const frecuencias = useSelector((state) => state.user.frecuencias)
@@ -22,25 +23,23 @@ const FiltroFrecuencia = () => {
     }, [frequencyFilter])
 
     return(
-        <div>
-            <h2>FRECUENCIAS</h2>
+        <div className="filtro-frecuencia-conteiner">
+            <h2 className="h2">FRECUENCIAS</h2>
+            <div className="opciones-conteiner">
             {frecuencias.map((opcion) => (
-                <label key={opcion}>
+                <label key={opcion} className="opcion">
+                    
                     <input
                     type="checkbox"
                     name={opcion}
                     onChange={handleFrequencyFilter}
                     />
                     {opcion}
+                    
                     </label>
 ))}
-                    <label>
-                    <input
-                    type="checkbox"
-                    name="Todas"
-                    />
-                    Todas
-                    </label>
+            </div>
+           
         </div>
     )
 }

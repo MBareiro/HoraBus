@@ -37,7 +37,10 @@ const FiltrosModal = ({isOpen,closeModal}) =>{
                 <div className='filtros-conteiner'>
                     <FiltroHorarios setHorasMin={setHorasMin} setHorasMax={setHorasMax}/>
                     <FiltroFrecuencia/>
-                    <button onClick={handleAplicar}>APLICAR</button>
+                    <div className='button-aplicar-conteiner'>
+                    <button onClick={handleAplicar} className='button-aplicar'>APLICAR</button>
+                    </div>
+                    
                 </div>
                 </div>
         </Modal>
