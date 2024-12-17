@@ -155,7 +155,7 @@ exports.getSchedules = async (req, res) => {
 
     // Construir condiciones dinámicas para los horarios
     const scheduleConditions = {};
-    
+
     if (frequency) {
       // Verificar si frequency es un arreglo y aplicarlo como filtro
       if (Array.isArray(frequency)) {
@@ -185,7 +185,7 @@ exports.getSchedules = async (req, res) => {
     // Obtener horarios con rutas y compañías
     const schedulesData = await schedules.findAll({
       attributes: ["id", "departure_time", "arrival_time", "frequency"],
-      where: scheduleConditions, 
+      where: scheduleConditions,
       include: [{
         model: routes,
         as: "route",
@@ -227,7 +227,7 @@ exports.getFrequencies = async (req, res) => {
       attributes: [
         [Sequelize.fn('DISTINCT', Sequelize.col('frequency')), 'frequency']
       ],
-      order: [['frequency', 'ASC']] 
+      order: [['frequency', 'ASC']]
     });
 
     // Extraer solo los valores de frecuencia
