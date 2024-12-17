@@ -2,7 +2,11 @@ import Modal from 'react-modal'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark} from "@fortawesome/free-solid-svg-icons";
 import FiltroHorarios from './FiltroHorarios';
+import FiltroFrecuencia from './FiltroFrecuencia';
+import './FiltrosModal.css'
+import { useState } from 'react';
 
+Modal.setAppElement('#root')
 
 const FiltrosModal = ({isOpen,closeModal}) =>{
 
@@ -10,19 +14,32 @@ const FiltrosModal = ({isOpen,closeModal}) =>{
     closeModal(false)
  }
 
+ const [horasMin, setHorasMin] = useState('')
+ const [horasMax, setHorasMax] = useState('')
+
+ const handleAplicar = () => {
+    console.log(horasMin)
+    console.log(horasMax)
+ }
+
     return(
         <Modal
         isOpen={isOpen}
+        className="modal-content"
+        overlayClassName="modal-overlay"
         >
-              <div>
-                <button onClick={handleCloseModal}>
+              <div className='conteiner'>
+                <div className='button-conteiner'>
+                <button onClick={handleCloseModal} className='button-close'>
                 <FontAwesomeIcon icon={faXmark}/>
                 </button>
-                <div>
-                    <FiltroHorarios/>
-                    <p>FRECUENCIA</p>
                 </div>
-        </div>
+                <div className='filtros-conteiner'>
+                    <FiltroHorarios setHorasMin={setHorasMin} setHorasMax={setHorasMax}/>
+                    <FiltroFrecuencia/>
+                    <button onClick={handleAplicar}>APLICAR</button>
+                </div>
+                </div>
         </Modal>
       
     )

@@ -2,7 +2,7 @@ import './App.css';
 import logo from './pictures/horabus2.png';
 import Select from './components/select/Select';
 import { useEffect } from 'react';
-import { getParadas } from './redux/actions/userActions/userActions';
+import { getFrequencies, getParadas } from './redux/actions/userActions/userActions';
 import { useDispatch } from 'react-redux';
 
 
@@ -12,6 +12,7 @@ const dispatch = useDispatch()
 
   useEffect(() => {
     dispatch(getParadas());
+    dispatch(getFrequencies())
   }, [dispatch]);
 
   return (

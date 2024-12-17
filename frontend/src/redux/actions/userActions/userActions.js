@@ -1,5 +1,5 @@
 // src/redux/actions/userActions/userActions.js
-import { setHorarios, setParadas, clearHorarios } from '../../slices/userSlice';
+import { setHorarios, setParadas, clearHorarios, setFrecuencias } from '../../slices/userSlice';
 import datos from '../../../datos/datos.json';
 import axios from 'axios';
 
@@ -39,3 +39,33 @@ export const getParadas = () => async (dispatch) => {
     console.error("Error fetching paradas:", error);
   }
 };
+
+export const getFilteredHorarios = () => async (dispatch) =>{
+  try{
+    const response = await axios.get(`${api}/stops`)
+
+    const filteredHorarios = response.data.map(item => ({
+      id: item.id,
+      departure_time: item.departure_time.split(':').slice(0, 2).join(':'),
+      arrival_time: item.arrival_time.split(':').slice(0, 2).join(':'),
+      frequency: item.frequency,
+      company: item.company.name
+    }))
+  }
+  catch (error) {
+    console.error("Error fetching paradas:", error);
+  }
+}
+
+export const getFrequencies = () => async (dispatch) => {
+  try{
+    const response = await axios.get(`${api}/schedules/frequencies`)
+
+    dispatch(setFrecuencias(response.data))
+  }
+  catch (error) {
+    console.error("Error fetching frequencies:", error)
+  }
+}
+
+

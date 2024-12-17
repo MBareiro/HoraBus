@@ -2,7 +2,8 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
   paradas: [],
-  horarios: []
+  horarios: [],
+  frecuencias: []
 };
 
 const userSlice = createSlice({
@@ -18,9 +19,15 @@ const userSlice = createSlice({
     clearHorarios: (state) => {
       state.horarios = []; 
     },
+    filterHorarios: (state, action) =>{
+      state.horarios = action.payload
+    },
+    setFrecuencias: (state, action) =>{
+      state.frecuencias = action.payload
+    }
   },
 });
 
-export const { setParadas, setHorarios, clearHorarios } = userSlice.actions;
+export const {setParadas, setHorarios, clearHorarios, filterHorarios, setFrecuencias} = userSlice.actions;
 
 export default userSlice.reducer;

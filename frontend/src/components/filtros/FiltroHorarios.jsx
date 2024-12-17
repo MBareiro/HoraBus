@@ -2,13 +2,10 @@ import { useState } from "react";
 import Slider from "react-slider";
 import './FiltroHorarios.css'
 
-const FiltroHorarios = () =>{
+const FiltroHorarios = ({setHorasMin, setHorasMax}) =>{
 
     const MIN = 0;
     const MAX = 1439;
-
-    const [horasMin, setHorasMin] = useState('')
-    const [horasMax, setHorasMax] = useState('')
 
     const [values, setValues] = useState([MIN, MAX])
 
@@ -20,15 +17,9 @@ const FiltroHorarios = () =>{
 
       const handleSliderChange = (newValues) => {
         setValues(newValues);
+        setHorasMin(convertToTime(newValues[0]));
+        setHorasMax(convertToTime(newValues[1]))
       };
-
-    const handleAplicar = () =>{
-        setHorasMin(convertToTime(values[0]));
-        setHorasMax(convertToTime(values[1])); 
-    }
-
-    console.log(horasMin)
-    console.log(horasMax)
 
     return ( 
     <div className="horarios-conteiner"> 
@@ -46,7 +37,6 @@ const FiltroHorarios = () =>{
             return <span {...props} />;
           }}
          />
-         <button onClick={handleAplicar}>APLICAR</button>
         </div> );
 }
 
