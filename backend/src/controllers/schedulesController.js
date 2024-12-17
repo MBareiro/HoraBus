@@ -1,6 +1,7 @@
 const db = require("../../db/models");
 const { Op } = require("sequelize");
 const { schedules, routes, stops, companies } = db;
+const { Sequelize } = require("sequelize");
 
 // Obtener todos los horarios
 exports.getAllSchedules = async (req, res) => {

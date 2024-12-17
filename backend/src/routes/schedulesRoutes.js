@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const schedulesController = require('../controllers/schedulesController');
-
 const scheduleValidator = require('../validators/scheduleValidators');
 const validationErrorHandler = require('../middleware/validationErrorHandler');
+
 /**
  * @swagger
  * tags:
@@ -89,6 +89,7 @@ const validationErrorHandler = require('../middleware/validationErrorHandler');
  *         description: Error al obtener los horarios
  */
 router.get('/', schedulesController.getSchedules);
+router.get('/frequencies', schedulesController.getFrequencies);
 
 /**
  * @swagger
@@ -292,6 +293,6 @@ router.put('/:id', scheduleValidator.updateScheduleValidator, validationErrorHan
  */
 router.delete('/:id', scheduleValidator.deleteScheduleValidator, validationErrorHandler, schedulesController.deleteSchedule);
 
-router.get('/frequencies', schedulesController.getFrequencies);
+
 
 module.exports = router;
