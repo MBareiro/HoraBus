@@ -126,7 +126,7 @@ exports.deleteSchedule = async (req, res) => {
 
 // Obtener horarios filtrados por origen, destino y compañía
 exports.getSchedules = async (req, res) => {
-  const { from, to, frequency, company } = req.query;
+  const { from, to, horaMin, horaMax, frequency, company } = req.query;
 
   try {
     if (from === to) {
@@ -161,15 +161,30 @@ exports.getSchedules = async (req, res) => {
       scheduleConditions.frequency = frequency;
     }
 
+    // Filtrar por hora de salida (departure_time) dentro del rango
+    if (horaMin && horaMax) {
+      scheduleConditions.departure_time = {
+        [Op.between]: [horaMin, horaMax],
+      };
+    } else if (horaMin) {
+      scheduleConditions.departure_time = {
+        [Op.gte]: horaMin,
+      };
+    } else if (horaMax) {
+      scheduleConditions.departure_time = {
+        [Op.lte]: horaMax,
+      };
+    }
+
     // Obtener horarios con rutas y compañías
     const schedulesData = await schedules.findAll({
       attributes: ["id", "departure_time", "arrival_time", "frequency"],
-      where: scheduleConditions, // Filtro dinámico de frecuencia
+      where: scheduleConditions, 
       include: [{
         model: routes,
         as: "route",
         attributes: ["id", "company_id"],
-        where: routeConditions, // Filtro dinámico de rutas
+        where: routeConditions,
         include: [{
           model: companies,
           as: "company",
@@ -195,5 +210,25 @@ exports.getSchedules = async (req, res) => {
   } catch (error) {
     console.error("Error al obtener los horarios:", error);
     res.status(500).json({ message: "Error al obtener los horarios." });
+  }
+};
+
+// Obtener todas las frecuencias sin repetir
+exports.getFrequencies = async (req, res) => {
+  try {
+    const frequencies = await schedules.findAll({
+      attributes: [
+        [Sequelize.fn('DISTINCT', Sequelize.col('frequency')), 'frequency']
+      ],
+      order: [['frequency', 'ASC']] 
+    });
+
+    // Extraer solo los valores de frecuencia
+    const distinctFrequencies = frequencies.map(f => f.frequency);
+
+    res.status(200).json(distinctFrequencies);
+  } catch (error) {
+    console.error("Error al obtener las frecuencias:", error);
+    res.status(500).json({ error: "Error al obtener las frecuencias." });
   }
 };

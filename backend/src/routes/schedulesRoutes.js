@@ -15,7 +15,7 @@ const validationErrorHandler = require('../middleware/validationErrorHandler');
  * @swagger
  * /schedules:
  *   get:
- *     summary: Obtiene todos los horarios
+ *     summary: Obtiene horarios filtrados por origen, destino, rango de horas, frecuencia y compañía
  *     tags: [Schedules]
  *     parameters:
  *       - in: query
@@ -27,12 +27,24 @@ const validationErrorHandler = require('../middleware/validationErrorHandler');
  *         name: to
  *         schema:
  *           type: string
- *         description: Destino del horario * 
+ *         description: Destino del horario
+ *       - in: query
+ *         name: horaMin
+ *         schema:
+ *           type: string
+ *           format: time
+ *         description: Hora mínima de salida (formato HH:MM)
+ *       - in: query
+ *         name: horaMax
+ *         schema:
+ *           type: string
+ *           format: time
+ *         description: Hora máxima de salida (formato HH:MM)
  *       - in: query
  *         name: frequency
  *         schema:
  *           type: string
- *         description: Dias de actividad    
+ *         description: Días de actividad (frecuencia)
  *       - in: query
  *         name: company
  *         schema:
@@ -50,14 +62,31 @@ const validationErrorHandler = require('../middleware/validationErrorHandler');
  *                 properties:
  *                   id:
  *                     type: integer
- *                   frequency:
- *                     type: string
+ *                     description: ID del horario
  *                   departure_time:
  *                     type: string
+ *                     format: time
+ *                     description: Hora de salida
  *                   arrival_time:
  *                     type: string
+ *                     format: time
+ *                     description: Hora de llegada
+ *                   frequency:
+ *                     type: string
+ *                     description: Frecuencia de los horarios
+ *                   company:
+ *                     type: object
+ *                     description: Información de la empresa
+ *                     properties:
+ *                       name:
+ *                         type: string
+ *                         description: Nombre de la empresa
+ *       400:
+ *         description: El origen y el destino no pueden ser iguales
  *       404:
- *         description: No se encontraron horarios
+ *         description: No se encontraron horarios para los filtros proporcionados
+ *       500:
+ *         description: Error al obtener los horarios
  */
 router.get('/', schedulesController.getSchedules);
 
@@ -262,5 +291,7 @@ router.put('/:id', scheduleValidator.updateScheduleValidator, validationErrorHan
  *         description: Horario no encontrado
  */
 router.delete('/:id', scheduleValidator.deleteScheduleValidator, validationErrorHandler, schedulesController.deleteSchedule);
+
+router.get('/frequencies', schedulesController.getFrequencies);
 
 module.exports = router;
