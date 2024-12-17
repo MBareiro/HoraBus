@@ -1,13 +1,15 @@
 const express = require('express');
-const morgan = require('morgan');
 const http = require('http');
+const morgan = require('morgan');
 const swaggerUi = require('swagger-ui-express');
-const swaggerDocs = require('../config/swaggerConfig');
 const { authenticateDB, syncDB } = require('../config/db');
+const swaggerDocs = require('../config/swaggerConfig');
 const routes = require('./routes');
 const setupMiddlewares = require('./middleware/security');
 const limiter = require('../config/rateLimit');
 const { setupWebSocket } = require('./controllers/gpsController');
+const { setGlobalTimeouts } = require('./services/timeoutService');
+const { limitPayloadSize } = require('./services/payloadSizeService');
 
 const app = express();
 const server = http.createServer(app);
@@ -20,34 +22,14 @@ server.headersTimeout = 35 * 1000;    // 35 segundos para recibir los encabezado
 setupMiddlewares(app);
 app.use(limiter);
 app.use(morgan('dev'));
+app.use(limitPayloadSize); // Limitar tamaño de payload
 
+// Configuración de rutas y documentación Swagger
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 app.use('/api', routes);
 
-// Middleware para configurar el timeout general para todas las solicitudes entrantes
-app.use((req, res, next) => {
-  // Establecer un timeout global para las solicitudes entrantes (por ejemplo, 5 segundos)
-  req.setTimeout(5000, () => {
-    console.log('La solicitud ha superado el tiempo de espera');
-    res.status(408).send('Timeout de la solicitud');  // 408: Request Timeout
-  });
-  // Establecer un timeout global para las respuestas del servidor (por ejemplo, 5 segundos)
-  res.setTimeout(5000, () => {
-    console.log('La respuesta ha superado el tiempo de espera');
-    res.status(504).send('Timeout de la respuesta');  // 504: Gateway Timeout
-  });
-  next();  
-});
-
-const limitPayloadSize = (req, res, next) => {
-  const MAX_PAYLOAD_SIZE = 1024 * 1024; // 1MB
-  if (req.headers['content-length'] && parseInt(req.headers['content-length']) > MAX_PAYLOAD_SIZE) {
-    return res.status(413).json({ error: 'Payload size exceeds the limit' });
-  }
-  next();
-}
-
-app.use(limitPayloadSize);
+// Configuración de timeouts globales para todas las solicitudes
+setGlobalTimeouts(app);
 
 // WebSocket
 setupWebSocket(server);
