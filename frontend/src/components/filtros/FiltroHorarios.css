@@ -1,21 +1,38 @@
 .horarios-conteiner{
     width: 100%;
+    height: 30%;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-    background-color: blueviolet;
+    background-color: rgb(206, 149, 15);
+
+}
+.slider-conteiner{
+    width: 100%;
+    height: 35%;
+    display: flex;
+    flex-direction: column;
+    justify-content:space-between;
+    align-items:center;
+    background-color: crimson;
 }
 .slider {
     /* Aquí van tus estilos */
-    width: 100%;
-    height: 8px;
-    background-color: #da9d9d;
+    width: 90%;
+    height: 15px;
+    background-color: #ffc107;
 }
 
 .slider .thumb{
-    width: 20px;
-    height: 20px;
+    width: 15px;
+    height: 25px;
     cursor: pointer;
     background-color:black;
+    border-radius: 20px;
+    position: relative;
+    top: -5px
+}
+.h2{
+    margin-bottom: 0vh;
 }

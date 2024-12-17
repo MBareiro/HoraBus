@@ -24,9 +24,10 @@ const FiltroHorarios = ({setHorasMin, setHorasMax}) =>{
     return ( 
     <div className="horarios-conteiner"> 
         <h2 className="h2">HORARIOS</h2>
-        <p className="opcion">
-            Values: {convertToTime(values[0])} - {convertToTime(values[1])}
-        </p>
+        <div className="slider-conteiner">
+        <span>
+            Horario de Salida: {convertToTime(values[0])} - {convertToTime(values[1])}
+        </span>
         <Slider
         onChange={handleSliderChange}
         value={values}
@@ -37,6 +38,9 @@ const FiltroHorarios = ({setHorasMin, setHorasMax}) =>{
             return <span {...props} />;
           }}
          />
+
+        </div>
+       
         </div> );
 }
 

@@ -20,7 +20,7 @@ useEffect(() => {
     return (
         <div className="horariosConteiner">
             <h3 className="center-text">HORARIOS</h3>
-            <Filtros />
+            <Filtros origen={origen} destino={destino} />
             {loading ? 
             <div className="loading-container">
             <img src={loadingGif} alt="Cargando..." className="loading-gif" />

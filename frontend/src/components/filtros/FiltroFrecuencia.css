@@ -1,10 +1,11 @@
 .filtro-frecuencia-conteiner{
     width: 100%;
+    height: 46%;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
-    background-color: brown;
+    background-color: blueviolet;
 }
 .opciones-conteiner{
     width: 35%;
@@ -20,5 +21,5 @@
 }
 .h2{
     margin-bottom: 1vh;
-    margin-top: 1vh;
+    margin-top: 0vh;
 }
