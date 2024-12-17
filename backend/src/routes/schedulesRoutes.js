@@ -10,7 +10,6 @@ const validationErrorHandler = require('../middleware/validationErrorHandler');
  *   - name: Schedules
  *     description: Endpoints para gestionar horarios de colectivos
  */
-
 /**
  * @swagger
  * /schedules:
@@ -43,8 +42,10 @@ const validationErrorHandler = require('../middleware/validationErrorHandler');
  *       - in: query
  *         name: frequency
  *         schema:
- *           type: string
- *         description: Días de actividad (frecuencia)
+ *           type: array
+ *           items:
+ *             type: string
+ *           description: Días de actividad (frecuencia) como un arreglo de cadenas
  *       - in: query
  *         name: company
  *         schema:
@@ -72,8 +73,10 @@ const validationErrorHandler = require('../middleware/validationErrorHandler');
  *                     format: time
  *                     description: Hora de llegada
  *                   frequency:
- *                     type: string
- *                     description: Frecuencia de los horarios
+ *                     type: array
+ *                     items:
+ *                       type: string
+ *                     description: Frecuencia de los horarios, como un arreglo de cadenas
  *                   company:
  *                     type: object
  *                     description: Información de la empresa
@@ -89,6 +92,7 @@ const validationErrorHandler = require('../middleware/validationErrorHandler');
  *         description: Error al obtener los horarios
  */
 router.get('/', schedulesController.getSchedules);
+
 router.get('/frequencies', schedulesController.getFrequencies);
 
 /**

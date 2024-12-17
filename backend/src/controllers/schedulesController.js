@@ -137,10 +137,7 @@ exports.getSchedules = async (req, res) => {
     }
 
     // Buscar paradas de origen y destino
-    const [fromStop, toStop] = await Promise.all([
-      getStopByName(from),
-      getStopByName(to),
-    ]);
+    const [fromStop, toStop] = await Promise.all([getStopByName(from), getStopByName(to)]);
 
     if (!fromStop || !toStop) {
       return res.status(404).json({ message: "Las paradas no se encontraron." });
@@ -158,8 +155,16 @@ exports.getSchedules = async (req, res) => {
 
     // Construir condiciones dinámicas para los horarios
     const scheduleConditions = {};
+    
     if (frequency) {
-      scheduleConditions.frequency = frequency;
+      // Verificar si frequency es un arreglo y aplicarlo como filtro
+      if (Array.isArray(frequency)) {
+        scheduleConditions.frequency = {
+          [Op.in]: frequency,  // Filtrar por cualquiera de las frecuencias proporcionadas
+        };
+      } else {
+        scheduleConditions.frequency = frequency; // Si no es un arreglo, usar el valor como string
+      }
     }
 
     // Filtrar por hora de salida (departure_time) dentro del rango
@@ -213,6 +218,7 @@ exports.getSchedules = async (req, res) => {
     res.status(500).json({ message: "Error al obtener los horarios." });
   }
 };
+
 
 // Obtener todas las frecuencias sin repetir
 exports.getFrequencies = async (req, res) => {
