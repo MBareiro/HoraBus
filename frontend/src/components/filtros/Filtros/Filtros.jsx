@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import './Filtros.css'
-import FiltrosModal from './FiltrosModal'
+import FiltrosModal from '../FiltrosModal/FiltrosModal'
 
 const Filtros = ({origen, destino}) => {
 

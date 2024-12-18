@@ -40,7 +40,13 @@
     border: 1px solid #000;
     border-radius: 3px;
   }
-
+.buttons-filters-conteiner{
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items:flex-end;
+  width: 100%;
+}
 
 
   

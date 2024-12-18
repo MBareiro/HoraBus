@@ -1,12 +1,12 @@
 import Modal from 'react-modal'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark} from "@fortawesome/free-solid-svg-icons";
-import FiltroHorarios from './FiltroHorarios';
-import FiltroFrecuencia from './FiltroFrecuencia';
+import FiltroHorarios from '../FiltroHorarios/FiltroHorarios';
+import FiltroFrecuencia from '../FiltroFrecuencia/FiltroFrecuencia';
 import './FiltrosModal.css'
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { getFilteredFrequencies} from '../../redux/actions/userActions/userActions';
+import { getFilteredFrequencies} from '../../../redux/actions/userActions/userActions';
 
 Modal.setAppElement('#root')
 
