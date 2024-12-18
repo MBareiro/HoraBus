@@ -6,7 +6,7 @@
     align-items: center;
     justify-content: flex-start;
     margin-top: 2vh;
-    margin-bottom: 2vh;
+    margin-bottom: 3vh;
 
 }
 .slider-conteiner{
@@ -19,6 +19,8 @@
 }
 .span{
     margin-bottom: 2vh;
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-size: 20px;
 }
 .slider {
     /* Aquí van tus estilos */

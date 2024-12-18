@@ -45,9 +45,11 @@
   font-size: 20px;
   border-radius: 5px;
 }
+.button-close:hover {
+  color: #b77979; /* Color de hover */
+}
 
 .filtros-conteiner{
-  font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
   width: 90%;
   height: auto;
   display: flex;
@@ -70,12 +72,15 @@
 .button-aplicar{
   width:6em;
   font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-  color: #1b1b1b;
+  color:#fefefe;
   font-size: 20px;
-  background-color: #6a6c6da3 ;
+  background-color: #6a6c6d ;
   border-radius: 5px;
   cursor: pointer;
   border: none;
+}
+.button-aplicar:hover {
+  background-color: #949393; /* Color de hover */
 }
 @media (max-width: 1000px) {
   .modal-content {

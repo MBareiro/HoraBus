@@ -30,6 +30,7 @@ console.log(frequencyFilter)
                     type="checkbox"
                     name={opcion}
                     onChange={handleFrequencyFilter}
+                    className="input"
                     />
                     {opcion}
                     </label>
