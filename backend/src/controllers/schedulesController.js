@@ -176,7 +176,7 @@ exports.getSchedules = async (req, res) => {
       routeConditions.company_id = company;
     }
     const scheduleConditions = {};
-    
+
     if (frequency) {
       if (Array.isArray(frequency)) {
         scheduleConditions.frequency_id = {
