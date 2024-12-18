@@ -6,14 +6,6 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false,
       primaryKey: true
     },
-    /* bus_id: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: 'buses',
-        key: 'id'
-      }
-    }, */
     route_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
@@ -30,16 +22,20 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.TIME,
       allowNull: false
     },
-    frequency: {
-      type: DataTypes.STRING(255),  
-      allowNull: true
+    frequency_id: { // Cambié "frequency" por "frequency_id"
+      type: DataTypes.INTEGER,  // Será un número que representa la clave foránea
+      allowNull: true,
+      references: {
+        model: 'frequencies',  // Referencia al modelo Frequency
+        key: 'id'  // El campo "id" de la tabla frequencies
+      }
     }
   });
 
-  // Relación con el bus y la ruta
+  // Relación con la ruta y frecuencia
   Schedule.associate = function(models) {
-    /* Schedule.belongsTo(models.buses, { foreignKey: 'bus_id', as: 'bus' }); */
     Schedule.belongsTo(models.routes, { foreignKey: 'route_id', as: 'route' });
+    Schedule.belongsTo(models.frequency, { foreignKey: 'frequency_id', as: 'frequency' }); // Relación con Frequency
   };
 
   return Schedule;

@@ -93,8 +93,6 @@ const validationErrorHandler = require('../middleware/validationErrorHandler');
  */
 router.get('/', schedulesController.getSchedules);
 
-router.get('/frequencies', schedulesController.getFrequencies);
-
 /**
  * @swagger
  * /schedules/{id}:

@@ -27,13 +27,16 @@ const authenticateDB = async () => {
 const syncDB = async () => {
   try {
     // Sincroniza los modelos (elimina las tablas y las recrea si usas `force: true`)
-    await sequelize.sync({ force: true }); // Cambia a `force: true` para eliminar y recrear las tablas
+    await sequelize.sync({ force: false }); // Cambia a `force: true` para eliminar y recrear las tablas
     console.log('Base de datos sincronizada correctamente.');
   } catch (error) {
     console.error('Error al sincronizar la base de datos:', error);
     throw new Error('No se pudo sincronizar la base de datos.');
   }
 };
+
+
+
 
 // Exportar la instancia de Sequelize y las funciones de conexión y sincronización
 module.exports = {

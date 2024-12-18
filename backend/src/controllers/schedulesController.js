@@ -2,6 +2,7 @@ const db = require("../../db/models");
 const { Op } = require("sequelize");
 const { schedules, routes, stops, companies } = db;
 const { Sequelize } = require("sequelize");
+const { frequency: Frequency } = db; 
 
 // Obtener todos los horarios
 exports.getAllSchedules = async (req, res) => {
@@ -125,10 +126,10 @@ exports.deleteSchedule = async (req, res) => {
   }
 };
 
-// Obtener horarios filtrados por origen, destino y compañía
+
+// Obtener horarios filtrados por origen, destino, frecuencias, compañía y hora
 exports.getSchedules = async (req, res) => {
   const { from, to, horaMin, horaMax, frequency, company } = req.query;
-
   try {
     if (from === to) {
       return res
@@ -136,14 +137,36 @@ exports.getSchedules = async (req, res) => {
         .json({ message: "El origen y el destino no pueden ser iguales." });
     }
 
-    // Buscar paradas de origen y destino
     const [fromStop, toStop] = await Promise.all([getStopByName(from), getStopByName(to)]);
 
     if (!fromStop || !toStop) {
       return res.status(404).json({ message: "Las paradas no se encontraron." });
     }
+    // Validar que las frecuencias existan (si se proporciona un arreglo de frecuencias)
+    if (frequency && Array.isArray(frequency)) {
+      const frequenciesExists = await Frequency.findAll({
+        where: {
+          name: { [Op.in]: frequency } // Buscar todas las frecuencias que estén en el arreglo
+        }
+      });
+      
+      // Verificar que todas las frecuencias proporcionadas estén presentes
+      const existingFrequencies = frequenciesExists.map(f => f.name);
+      const missingFrequencies = frequency.filter(f => !existingFrequencies.includes(f));
 
-    // Construir las condiciones dinámicas para las rutas
+      if (missingFrequencies.length > 0) {
+        return res.status(404).json({ message: `Las frecuencias no existen: ${missingFrequencies.join(", ")}` });
+      }
+    } else if (frequency) {
+      // Si `frequency` no es un arreglo, validamos una sola frecuencia
+      const frequencyExists = await Frequency.findOne({
+        where: { name: frequency }
+      });
+      if (!frequencyExists) {
+        return res.status(404).json({ message: `La frecuencia "${frequency}" no existe.` });
+      }
+    }
+
     const routeConditions = {
       origin: fromStop.id,
       destination: toStop.id,
@@ -152,22 +175,18 @@ exports.getSchedules = async (req, res) => {
     if (company) {
       routeConditions.company_id = company;
     }
-
-    // Construir condiciones dinámicas para los horarios
     const scheduleConditions = {};
     
     if (frequency) {
-      // Verificar si frequency es un arreglo y aplicarlo como filtro
       if (Array.isArray(frequency)) {
-        scheduleConditions.frequency = {
-          [Op.in]: frequency,  // Filtrar por cualquiera de las frecuencias proporcionadas
+        scheduleConditions.frequency_id = {
+          [Op.in]: frequency,  
         };
       } else {
-        scheduleConditions.frequency = frequency; // Si no es un arreglo, usar el valor como string
+        scheduleConditions.frequency_id = frequency; 
       }
     }
 
-    // Filtrar por hora de salida (departure_time) dentro del rango
     if (horaMin && horaMax) {
       scheduleConditions.departure_time = {
         [Op.between]: [horaMin, horaMax],
@@ -182,9 +201,8 @@ exports.getSchedules = async (req, res) => {
       };
     }
 
-    // Obtener horarios con rutas y compañías
     const schedulesData = await schedules.findAll({
-      attributes: ["id", "departure_time", "arrival_time", "frequency"],
+      attributes: ["id", "departure_time", "arrival_time", "frequency_id"],
       where: scheduleConditions, 
       include: [{
         model: routes,
@@ -199,7 +217,6 @@ exports.getSchedules = async (req, res) => {
       }],
     });
 
-    // Reestructurar los horarios para mover la compañía al nivel superior
     const formattedSchedules = schedulesData.map(schedule => ({
       id: schedule.id,
       departure_time: schedule.departure_time,
@@ -216,26 +233,5 @@ exports.getSchedules = async (req, res) => {
   } catch (error) {
     console.error("Error al obtener los horarios:", error);
     res.status(500).json({ message: "Error al obtener los horarios." });
-  }
-};
-
-
-// Obtener todas las frecuencias sin repetir
-exports.getFrequencies = async (req, res) => {
-  try {
-    const frequencies = await schedules.findAll({
-      attributes: [
-        [Sequelize.fn('DISTINCT', Sequelize.col('frequency')), 'frequency']
-      ],
-      order: [['frequency', 'ASC']] 
-    });
-
-    // Extraer solo los valores de frecuencia
-    const distinctFrequencies = frequencies.map(f => f.frequency);
-
-    res.status(200).json(distinctFrequencies);
-  } catch (error) {
-    console.error("Error al obtener las frecuencias:", error);
-    res.status(500).json({ error: "Error al obtener las frecuencias." });
   }
 };
