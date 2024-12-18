@@ -24,10 +24,13 @@ const userSlice = createSlice({
     },
     setFrecuencias: (state, action) =>{
       state.frecuencias = action.payload
+    },
+    filterFrequencies: (state, action) => {
+      state.horarios = action.payload
     }
   },
 });
 
-export const {setParadas, setHorarios, clearHorarios, filterHorarios, setFrecuencias} = userSlice.actions;
+export const {setParadas, setHorarios, clearHorarios, filterHorarios, setFrecuencias, filterFrequencies} = userSlice.actions;
 
 export default userSlice.reducer;

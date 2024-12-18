@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Slider from "react-slider";
 import './FiltroHorarios.css'
 
@@ -25,7 +25,7 @@ const FiltroHorarios = ({setHorasMin, setHorasMax}) =>{
     <div className="horarios-conteiner"> 
         <h2 className="h2">HORARIOS</h2>
         <div className="slider-conteiner">
-        <span>
+        <span className="span">
             Horario de Salida: {convertToTime(values[0])} - {convertToTime(values[1])}
         </span>
         <Slider
