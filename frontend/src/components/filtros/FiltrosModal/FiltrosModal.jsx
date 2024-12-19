@@ -7,11 +7,11 @@ import './FiltrosModal.css'
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { getFilteredFrequencies} from '../../../redux/actions/userActions/userActions';
-import { setHorarios } from '../../../redux/slices/userSlice';
+import { setFilters, setHorarios } from '../../../redux/slices/userSlice';
 
 Modal.setAppElement('#root')
 
-const FiltrosModal = ({isOpen,closeModal, origen, destino, setLoading, filtrosOn, setFiltrosOn}) =>{
+const FiltrosModal = ({isOpen,closeModal, origen, destino, setLoading, setFiltrosOn, filtrosOn}) =>{
 const dispatch = useDispatch()
  const handleCloseModal = () =>{
     closeModal(false)
@@ -35,6 +35,7 @@ const dispatch = useDispatch()
         frequency: frequencyFilter
     }
     dispatch(getFilteredFrequencies(paramFilterHorarios))
+    dispatch(setFilters(paramFilterHorarios))
  }
 
     return(
@@ -50,8 +51,10 @@ const dispatch = useDispatch()
                 </button>
                 </div>
                 <div className='filtros-conteiner'>
-                    <FiltroHorarios setHorasMin={setHorasMin} setHorasMax={setHorasMax}/>
-                    <FiltroFrecuencia frequencyFilter={frequencyFilter} setFrequencyFilter={setFrequencyFilter}/>
+                    <FiltroHorarios setHorasMin={setHorasMin} setHorasMax={setHorasMax} filtrosOn={filtrosOn}
+                    setFiltrosOn={setFiltrosOn}/>
+                    <FiltroFrecuencia frequencyFilter={frequencyFilter} setFrequencyFilter={setFrequencyFilter}
+                    filtrosOn={filtrosOn}/>
                     <div className='button-aplicar-conteiner'>
                     <button onClick={handleAplicar} className='button-aplicar'>APLICAR</button>
                     </div>

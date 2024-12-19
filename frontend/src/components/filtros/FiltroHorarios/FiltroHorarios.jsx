@@ -1,25 +1,42 @@
 import { useEffect, useState } from "react";
 import Slider from "react-slider";
 import './FiltroHorarios.css'
+import { useSelector } from "react-redux";
 
-const FiltroHorarios = ({setHorasMin, setHorasMax}) =>{
+const FiltroHorarios = ({setHorasMin, setHorasMax, filtrosOn, setFiltrosOn}) =>{
+const {horaMin,horaMax} = useSelector((state) => state.user.filtros)
 
-    const MIN = 0;
-    const MAX = 1439;
+let MIN, MAX;
 
-    const [values, setValues] = useState([MIN, MAX])
+MIN = 0;
+MAX = 1439;
 
-    const convertToTime = (minutes) => {
-        const hours = Math.floor(minutes / 60); // Obtener horas
-        const mins = minutes % 60; // Obtener minutos
-        return `${String(hours).padStart(2, '0')}:${String(mins).padStart(2, '0')}`; // Formato HH:MM
-      };
+const [values, setValues] = useState([MIN, MAX])
 
-      const handleSliderChange = (newValues) => {
-        setValues(newValues);
-        setHorasMin(convertToTime(newValues[0]));
-        setHorasMax(convertToTime(newValues[1]))
-      };
+const convertToMinutes = (time) => {
+  const [hours, minutes] = time.split(':').map(Number);
+  return hours * 60 + minutes;
+};
+
+  
+useEffect(() => {
+  if (filtrosOn && horaMin && horaMax) {
+    setValues([convertToMinutes(horaMin), convertToMinutes(horaMax)]);
+  }
+}, [filtrosOn, horaMin, horaMax]);
+
+
+const convertToTime = (minutes) => {
+  const hours = Math.floor(minutes / 60); // Obtener horas
+  const mins = minutes % 60; // Obtener minutos
+  return `${String(hours).padStart(2, '0')}:${String(mins).padStart(2, '0')}`; // Formato HH:MM
+};
+
+const handleSliderChange = (newValues) => {
+  setValues(newValues);
+  setHorasMin(convertToTime(newValues[0]));
+  setHorasMax(convertToTime(newValues[1]))
+};
 
     return ( 
     <div className="horarios-conteiner"> 
