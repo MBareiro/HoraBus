@@ -1,6 +1,5 @@
 // src/redux/actions/userActions/userActions.js
-import { setHorarios, setParadas, clearHorarios, setFrecuencias, filterHorarios, filterFrequencies } from '../../slices/userSlice';
-import datos from '../../../datos/datos.json';
+import { setHorarios, setParadas, clearHorarios, setFrecuencias, filterFrequencies } from '../../slices/userSlice';
 import axios from 'axios';
 
 const api = 'https://hora-bus-backend.vercel.app/api'
@@ -56,8 +55,8 @@ export const getFrequencies = () => async (dispatch) => {
 
 export const getFilteredFrequencies = (paramFilterHorarios) => async (dispatch) => {
   const { from, to, horaMin, horaMax, frequency} = paramFilterHorarios;
-  console.log(frequency)
-  
+
+  const frequencyParam = frequency[0] === "Todas" ? [] : frequency
   try{
     const response = await axios.get(`${api}/schedules`,{
       params: {
@@ -65,7 +64,7 @@ export const getFilteredFrequencies = (paramFilterHorarios) => async (dispatch) 
         to,
         horaMin,
         horaMax,
-        frequency
+        frequency: frequencyParam,
       }
     })
    
