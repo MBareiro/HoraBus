@@ -4,7 +4,9 @@ const initialState = {
   paradas: [],
   horarios: [],
   frecuencias: [],
-  filtros: {}
+  filtros: {
+    frequency: []
+  }
 };
 
 const userSlice = createSlice({

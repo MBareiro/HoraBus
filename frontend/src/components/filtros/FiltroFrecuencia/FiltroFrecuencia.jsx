@@ -8,6 +8,7 @@ const FiltroFrecuencia = ({frequencyFilter, setFrequencyFilter}) => {
     const dispatch = useDispatch()
     const frecuencias = useSelector((state) => state.user.frecuencias)
     const filtros = useSelector((state) => state.user.filtros)
+    const { frequency } = filtros
 
    const [isTodasSelected,setIsTodasSelected] = useState(false)
    const [isChecked, setIsChecked] = useState(false)
@@ -17,7 +18,7 @@ const FiltroFrecuencia = ({frequencyFilter, setFrequencyFilter}) => {
         if(event.target.checked){
             setFrequencyFilter(prevState => [...prevState, event.target.name])
             setIsTodasSelected(true)
-            dispatch(setFilters({...filtros,
+            dispatch(setFilters({
                 frequency: [...frequency, event.target.name]
             }))
         } else{
@@ -27,11 +28,12 @@ const FiltroFrecuencia = ({frequencyFilter, setFrequencyFilter}) => {
             dispatch(setFilters({...filtros,
                 frequency: nuevoArray
             }))
+            setIsChecked(false)
         }
     }else{
         if(event.target.checked){
             setFrequencyFilter(prevState => [...prevState, event.target.name])
-            dispatch(setFilters({...filtros,
+            dispatch(setFilters({
                 frequency: [...frequency, event.target.name]
             }))
             setIsChecked(true)
@@ -44,7 +46,7 @@ const FiltroFrecuencia = ({frequencyFilter, setFrequencyFilter}) => {
         }
         }
     }
-    
+
     return(
         <div className="filtro-frecuencia-conteiner">
             <h2 className="h2">FRECUENCIAS</h2>
@@ -58,7 +60,7 @@ const FiltroFrecuencia = ({frequencyFilter, setFrequencyFilter}) => {
                     onChange={handleFrequencyFilter}
                     className="input"
                     disabled={isTodasSelected}
-                    checked={isChecked}
+                    checked={frequency.includes(opcion)}
                     />
                     {opcion}
                     </label>
@@ -69,6 +71,7 @@ const FiltroFrecuencia = ({frequencyFilter, setFrequencyFilter}) => {
                     name="Todas"
                     onChange={handleFrequencyFilter}
                     className="input"
+                    checked={frequency.includes("Todas")}
                     />
                     Todas
                     </label>
