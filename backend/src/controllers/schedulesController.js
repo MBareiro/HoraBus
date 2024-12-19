@@ -18,12 +18,42 @@ exports.getAllSchedules = async (req, res) => {
 // Obtener un horario por ID
 exports.getScheduleById = async (req, res) => {
   try {
-    const schedule = await schedules.findByPk(req.params.id);
-    if (schedule) {
-      res.status(200).json(schedule);
-    } else {
-      res.status(404).json({ error: "Horario no encontrado." });
+    const schedule = await schedules.findByPk(req.params.id, {
+      attributes: ['departure_time', 'arrival_time'],
+      include: [
+        {
+          model: Frequency,
+          as: 'frequency',
+          attributes: ['name'],
+        },
+        {
+          model: routes,
+          as: 'route',
+          include: [
+            { model: stops, as: 'originStop', attributes: ['name'] },
+            { model: stops, as: 'destinationStop', attributes: ['name'] },
+            { model: companies, as: 'company', attributes: ['name'] },
+          ],
+        },
+      ],
+    });
+
+    if (!schedule) {
+      return res.status(404).json({ error: "Horario no encontrado." });
     }
+
+    console.log('Datos de schedule.route:', schedule.route);
+
+    const formattedSchedule = {
+      departure_time: schedule.departure_time,
+      arrival_time: schedule.arrival_time,
+      frequency: schedule.frequency ? [schedule.frequency.name] : [],
+      origin: schedule.route?.originStop?.name || null,
+      destination: schedule.route?.destinationStop?.name || null,
+      company: schedule.route?.company?.name || null,
+    };
+
+    res.status(200).json(formattedSchedule);
   } catch (error) {
     console.error("Error al obtener el horario:", error);
     res.status(500).json({ error: "Error al obtener el horario." });
@@ -38,6 +68,7 @@ const getStopByName = async (name) => {
 // Crear un horario
 exports.createSchedule = async (req, res) => {
   const { frequency, departure_time, arrival_time, origin, destination, company_id } = req.body;
+
   try {
     // Validación de campos obligatorios
     if (!frequency || !departure_time || !arrival_time || !origin || !destination || !company_id) {
@@ -45,9 +76,7 @@ exports.createSchedule = async (req, res) => {
     }
 
     if (origin === destination) {
-      return res
-        .status(400)
-        .json({ message: "El origen y el destino no pueden ser iguales." });
+      return res.status(400).json({ message: "El origen y el destino no pueden ser iguales." });
     }
 
     // Verificar si las paradas de origen y destino existen
@@ -73,9 +102,33 @@ exports.createSchedule = async (req, res) => {
       });
     }
 
-    // Crear el horario
+    // Buscar el ID de la frecuencia en la tabla de frecuencias
+    const frequencyRecord = await Frequency.findOne({
+      where: { name: frequency }
+    });
+
+    // Si la frecuencia no existe, devolver un error
+    if (!frequencyRecord) {
+      return res.status(400).json({ message: `La frecuencia '${frequency}' no es válida.` });
+    }
+
+    // Verificar si el horario ya existe (misma frecuencia, hora de salida, hora de llegada y ruta)
+    const existingSchedule = await schedules.findOne({
+      where: {
+        frequency_id: frequencyRecord.id, // Usar el ID de la frecuencia
+        departure_time,
+        arrival_time,
+        route_id: route.id,
+      }
+    });
+
+    if (existingSchedule) {
+      return res.status(400).json({ message: "Ya existe un horario con la misma frecuencia, hora de salida y hora de llegada." });
+    }
+
+    // Crear el horario con el frequency_id en lugar de frequency
     const newSchedule = await schedules.create({
-      frequency,
+      frequency_id: frequencyRecord.id, // Guardar el ID de la frecuencia
       departure_time,
       arrival_time,
       route_id: route.id,
@@ -90,16 +143,75 @@ exports.createSchedule = async (req, res) => {
 
 // Actualizar un horario
 exports.updateSchedule = async (req, res) => {
-  const { frequency, departure_time, arrival_time } = req.body;
+  const { frequency, departure_time, arrival_time, origin, destination } = req.body;
+
   try {
+    // Validar que se proporcionen origen y destino
+    if (!origin || !destination) {
+      return res.status(400).json({ error: "Origen y destino son obligatorios." });
+    }
+    
+    // Buscar los stops para el origen y destino
+    const originStop = await stops.findOne({ where: { name: origin } });
+    const destinationStop = await stops.findOne({ where: { name: destination } });
+
+    if (!originStop || !destinationStop) {
+      return res.status(400).json({ error: "Origen o destino no válidos." });
+    }
+
+    // Buscar una ruta existente con el origen y destino proporcionados
+    let route = await routes.findOne({
+      where: {
+        origin: originStop.id,
+        destination: destinationStop.id,
+      },
+    });
+
+    // Si la ruta no existe, crearla
+    if (!route) {
+      route = await routes.create({
+        origin: originStop.id,
+        destination: destinationStop.id,
+      });
+    }
+
+    // Actualizar el horario con la información proporcionada
     const [updated] = await schedules.update(
-      { frequency, departure_time, arrival_time },
+      {
+        frequency,
+        departure_time,
+        arrival_time,
+        route_id: route.id,
+      },
       { where: { id: req.params.id } }
     );
 
     if (updated) {
-      const updatedSchedule = await schedules.findByPk(req.params.id);
-      res.status(200).json(updatedSchedule);
+      // Obtener el horario actualizado con relaciones
+      const updatedSchedule = await schedules.findOne({
+        where: { id: req.params.id },
+        include: [
+          {
+            model: routes,
+            as: "route",
+            include: [
+              { model: stops, as: "originStop", attributes: ["name"] },
+              { model: stops, as: "destinationStop", attributes: ["name"] },
+            ],
+          },
+        ],
+      });
+
+      // Formatear la respuesta
+      const response = {
+        departure_time: updatedSchedule.departure_time,
+        arrival_time: updatedSchedule.arrival_time,
+        frequency,
+        origin: updatedSchedule.route?.originStop?.name || null,
+        destination: updatedSchedule.route?.destinationStop?.name || null,
+      };
+
+      res.status(200).json(response);
     } else {
       res.status(404).json({ error: "Horario no encontrado." });
     }
@@ -108,6 +220,7 @@ exports.updateSchedule = async (req, res) => {
     res.status(500).json({ error: "Error al actualizar el horario." });
   }
 };
+
 
 // Eliminar un horario
 exports.deleteSchedule = async (req, res) => {
@@ -126,9 +239,10 @@ exports.deleteSchedule = async (req, res) => {
   }
 };
 
-
 // Obtener horarios filtrados por origen, destino, frecuencias, compañía y hora
 exports.getSchedules = async (req, res) => {
+  console.log(req.query);
+  
   const { from, to, horaMin, horaMax, frequency, company } = req.query;
   try {
     if (from === to) {
@@ -147,11 +261,9 @@ exports.getSchedules = async (req, res) => {
       return res.status(404).json({ message: "Las paradas no se encontraron." });
     }
 
-    // Validar que las frecuencias existan (si se proporciona)
     let frequencyIds = [];
     if (frequency) {
       if (Array.isArray(frequency)) {
-        // Buscar los IDs de las frecuencias por nombre
         const frequencyRecords = await Frequency.findAll({
           where: { name: { [Op.in]: frequency } },
         });
@@ -166,10 +278,8 @@ exports.getSchedules = async (req, res) => {
           });
         }
 
-        // Extraer los IDs de las frecuencias
         frequencyIds = frequencyRecords.map(f => f.id);
       } else {
-        // Validar una única frecuencia
         const frequencyRecord = await Frequency.findOne({
           where: { name: frequency },
         });
@@ -182,7 +292,6 @@ exports.getSchedules = async (req, res) => {
       }
     }
 
-    // Condiciones para la tabla routes
     const routeConditions = {
       origin: fromStop.id,
       destination: toStop.id,
@@ -192,7 +301,6 @@ exports.getSchedules = async (req, res) => {
       routeConditions.company_id = company;
     }
 
-    // Condiciones para la tabla schedules
     const scheduleConditions = {};
 
     if (frequencyIds.length > 0) {
@@ -209,7 +317,6 @@ exports.getSchedules = async (req, res) => {
       scheduleConditions.departure_time = { [Op.lte]: horaMax };
     }
 
-    // Consulta a la base de datos
     const schedulesData = await schedules.findAll({
       attributes: ["id", "departure_time", "arrival_time", "frequency_id"],
       where: scheduleConditions,
@@ -230,7 +337,7 @@ exports.getSchedules = async (req, res) => {
         {
           model: Frequency,
           as: "frequency",
-          attributes: ["name"], // Obtener el nombre de la frecuencia
+          attributes: ["name"],
         },
       ],
     });
@@ -240,7 +347,7 @@ exports.getSchedules = async (req, res) => {
       id: schedule.id,
       departure_time: schedule.departure_time,
       arrival_time: schedule.arrival_time,
-      frequency: schedule.frequency?.name, // Nombre de la frecuencia
+      frequency: schedule.frequency?.name,
       company: schedule.route?.company?.name,
     }));
 

@@ -148,9 +148,11 @@ router.get('/:id', scheduleValidator.getScheduleByIdValidator, validationErrorHa
  *               - company_id
  *             properties:
  *               frequency:
- *                 type: string
- *                 description: Observación sobre el horario (e.g., "Todos los días", "Fines de semana").
- *                 example: "Todos los días"
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *                 description: Lista de observaciones sobre el horario (e.g., ["Todos los días", "Fines de semana"]).
+ *                 example: ["Todos los días", "Fines de semana"]
  *               departure_time:
  *                 type: string
  *                 description: Hora de salida en formato HH:MM (24 horas).
@@ -190,9 +192,11 @@ router.get('/:id', scheduleValidator.getScheduleByIdValidator, validationErrorHa
  *                       description: ID del horario recién creado.
  *                       example: 101
  *                     frequency:
- *                       type: string
- *                       description: Observación del horario.
- *                       example: "Todos los días"
+ *                       type: array
+ *                       items:
+ *                         type: string
+ *                       description: Lista de observaciones del horario.
+ *                       example: ["Todos los días", "Fines de semana"]
  *                     departure_time:
  *                       type: string
  *                       description: Hora de salida del horario.
@@ -200,11 +204,7 @@ router.get('/:id', scheduleValidator.getScheduleByIdValidator, validationErrorHa
  *                     arrival_time:
  *                       type: string
  *                       description: Hora de llegada del horario.
- *                       example: "08:30"
- *                     route_id:
- *                       type: integer
- *                       description: ID de la ruta asociada al horario.
- *                       example: 50
+ *                       example: "10:30"
  *       400:
  *         description: Faltan datos obligatorios o datos inválidos.
  *         content:
@@ -260,12 +260,24 @@ router.post('/', scheduleValidator.createScheduleValidator, validationErrorHandl
  *             properties:
  *               frequency:
  *                 type: string
+ *                 description: Lista de observaciones del horario.
+ *                 example: "Todos los días"
  *               departure_time:
  *                 type: string
+ *                 description: Hora de salida del horario.
+ *                 example: "08:30:00"
  *               arrival_time:
  *                 type: string
- *               route_id:
- *                 type: integer
+ *                 description: Hora de llegada del horario.
+ *                 example: "10:30:00"
+ *               origin:
+ *                 type: string
+ *                 description: Nombre de la parada de origen.
+ *                 example: "Puerto Rico"
+ *               destination:
+ *                 type: string
+ *                 description: Nombre de la parada de destino.
+ *                 example: "Capiovi"
  *     responses:
  *       200:
  *         description: Horario actualizado exitosamente
