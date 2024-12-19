@@ -5,13 +5,15 @@ import FiltroHorarios from '../FiltroHorarios/FiltroHorarios';
 import FiltroFrecuencia from '../FiltroFrecuencia/FiltroFrecuencia';
 import './FiltrosModal.css'
 import { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { getFilteredFrequencies} from '../../../redux/actions/userActions/userActions';
 import { setFilters, setHorarios } from '../../../redux/slices/userSlice';
 
 Modal.setAppElement('#root')
 
 const FiltrosModal = ({isOpen,closeModal, origen, destino, setLoading, setFiltrosOn, filtrosOn}) =>{
+const {horaMin,horaMax} = useSelector((state) => state.user.filtros)
+
 const dispatch = useDispatch()
  const handleCloseModal = () =>{
     closeModal(false)

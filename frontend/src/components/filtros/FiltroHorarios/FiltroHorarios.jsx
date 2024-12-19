@@ -23,6 +23,8 @@ useEffect(() => {
   if (filtrosOn && horaMin && horaMax) {
     setValues([convertToMinutes(horaMin), convertToMinutes(horaMax)]);
   }
+  setHorasMin(horaMin);
+  setHorasMax(horaMax)
 }, [filtrosOn, horaMin, horaMax]);
 
 
