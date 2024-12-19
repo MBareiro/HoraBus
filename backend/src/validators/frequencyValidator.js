@@ -14,7 +14,7 @@ module.exports = {
   updateFrequencyValidator: [
     param('id')
       .isInt({ gt: 0 }).withMessage('El ID debe ser un número entero mayor que 0.')
-      .toInt(), // Convierte el valor a entero
+      .toInt(), 
     body('name')
       .isString().withMessage('El nombre de la frecuencia debe ser una cadena de texto.')
       .notEmpty().withMessage('El nombre de la frecuencia es obligatorio.')
@@ -26,13 +26,13 @@ module.exports = {
   getFrequencyByIdValidator: [
     param('id')
       .isInt({ gt: 0 }).withMessage('El ID debe ser un número entero mayor que 0.')
-      .toInt() // Convierte el valor a entero
+      .toInt() 
   ],
 
   // Validaciones para eliminar una frecuencia
   deleteFrequencyValidator: [
     param('id')
       .isInt({ gt: 0 }).withMessage('El ID debe ser un número entero mayor que 0.')
-      .toInt() // Convierte el valor a entero
+      .toInt() 
   ]
 };
