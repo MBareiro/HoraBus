@@ -5,11 +5,11 @@ import loadingGif from '../../pictures/loading.gif'
 import Filtros from '../filtros/Filtros/Filtros'
 import LimpiarFiltros from "../filtros/LimpiarFiltros/LimpiarFiltros";
 
-const Horarios = ({origen, destino}) => {
-  console.log(origen, destino)
+const Horarios = ({origen, destino, handleBuscarHorarios}) => {
 
 const horarios = useSelector((state) => state.user.horarios)
 const [loading, setLoading] = useState(true)
+const [filtrosOn, setFiltrosOn] = useState(false)
 
 useEffect(() => {
   if (horarios.length !== 0){
@@ -22,8 +22,9 @@ useEffect(() => {
         <div className="horariosConteiner">
             <h3 className="center-text">HORARIOS</h3>
             <div className="buttons-filters-conteiner">
-            <Filtros origen={origen} destino={destino} />
-            <LimpiarFiltros />
+            <Filtros origen={origen} destino={destino} setLoading={setLoading} filtrosOn={filtrosOn} setFiltrosOn={setFiltrosOn} />
+            <LimpiarFiltros origen={origen} destino={destino} handleBuscarHorarios={handleBuscarHorarios} setLoading={setLoading} 
+            filtrosOn={filtrosOn} setFiltrosOn={setFiltrosOn}/>
             </div>
          
             {loading ? 

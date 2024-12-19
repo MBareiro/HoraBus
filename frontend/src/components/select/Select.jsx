@@ -78,7 +78,7 @@ return (
 
       </div>
       
-{showHorarios && <Horarios origen={origen} destino={destino}/> }
+{showHorarios && <Horarios origen={origen} destino={destino} handleBuscarHorarios={handleBuscarHorarios}/> }
 {showError && <p className="error">
   POR FAVOR, SELECCIONE EL ORIGEN Y EL DESTINO CORRECTAMENTE
   </p>}

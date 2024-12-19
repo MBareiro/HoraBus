@@ -15,10 +15,6 @@ const FiltroFrecuencia = ({frequencyFilter, setFrequencyFilter}) => {
     }
     }
 
-    useEffect(()=>{
-console.log(frequencyFilter)
-    },[frequencyFilter])
-
     return(
         <div className="filtro-frecuencia-conteiner">
             <h2 className="h2">FRECUENCIAS</h2>

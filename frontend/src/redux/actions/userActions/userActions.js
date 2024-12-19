@@ -12,12 +12,13 @@ export const getHorarios = (origen, destino) => async (dispatch) => {
       params: { from: origen, to: destino }
     });
 
+    console.log(response.data)
     const horarios = response.data.map(item => ({
       id: item.id,
       departure_time: item.departure_time.split(':').slice(0, 2).join(':'),
       arrival_time: item.arrival_time.split(':').slice(0, 2).join(':'),
       frequency: item.frequency,
-      company: item.company.name
+      company: item.company
     }));
 
     // Usar la acción predefinida
@@ -42,9 +43,11 @@ export const getParadas = () => async (dispatch) => {
 
 export const getFrequencies = () => async (dispatch) => {
   try{
-    const response = await axios.get(`${api}/schedules/frequencies`)
+    const response = await axios.get(`${api}/frequencies`)
 
-    dispatch(setFrecuencias(response.data))
+    const frequencies = response.data.map(frequency => frequency.name);
+
+    dispatch(setFrecuencias(frequencies))
   }
   catch (error) {
     console.error("Error fetching frequencies:", error)
@@ -53,7 +56,7 @@ export const getFrequencies = () => async (dispatch) => {
 
 export const getFilteredFrequencies = (paramFilterHorarios) => async (dispatch) => {
   const { from, to, horaMin, horaMax, frequency} = paramFilterHorarios;
-  console.log(paramFilterHorarios)
+  console.log(frequency)
   
   try{
     const response = await axios.get(`${api}/schedules`,{
@@ -65,12 +68,13 @@ export const getFilteredFrequencies = (paramFilterHorarios) => async (dispatch) 
         frequency
       }
     })
+   
     const filterByFrequencies = response.data.map(item => ({
       id: item.id,
       departure_time: item.departure_time.split(':').slice(0, 2).join(':'),
       arrival_time: item.arrival_time.split(':').slice(0, 2).join(':'),
       frequency: item.frequency,
-      company: item.company.name
+      company: item.company
     }))
     dispatch(filterFrequencies(filterByFrequencies))
   }
