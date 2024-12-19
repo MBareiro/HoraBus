@@ -137,36 +137,52 @@ exports.getSchedules = async (req, res) => {
         .json({ message: "El origen y el destino no pueden ser iguales." });
     }
 
-    const [fromStop, toStop] = await Promise.all([getStopByName(from), getStopByName(to)]);
+    // Obtener las paradas por nombre
+    const [fromStop, toStop] = await Promise.all([
+      stops.findOne({ where: { name: from } }),
+      stops.findOne({ where: { name: to } }),
+    ]);
 
     if (!fromStop || !toStop) {
       return res.status(404).json({ message: "Las paradas no se encontraron." });
     }
-    // Validar que las frecuencias existan (si se proporciona un arreglo de frecuencias)
-    if (frequency && Array.isArray(frequency)) {
-      const frequenciesExists = await Frequency.findAll({
-        where: {
-          name: { [Op.in]: frequency } // Buscar todas las frecuencias que estén en el arreglo
-        }
-      });
-      
-      // Verificar que todas las frecuencias proporcionadas estén presentes
-      const existingFrequencies = frequenciesExists.map(f => f.name);
-      const missingFrequencies = frequency.filter(f => !existingFrequencies.includes(f));
 
-      if (missingFrequencies.length > 0) {
-        return res.status(404).json({ message: `Las frecuencias no existen: ${missingFrequencies.join(", ")}` });
-      }
-    } else if (frequency) {
-      // Si `frequency` no es un arreglo, validamos una sola frecuencia
-      const frequencyExists = await Frequency.findOne({
-        where: { name: frequency }
-      });
-      if (!frequencyExists) {
-        return res.status(404).json({ message: `La frecuencia "${frequency}" no existe.` });
+    // Validar que las frecuencias existan (si se proporciona)
+    let frequencyIds = [];
+    if (frequency) {
+      if (Array.isArray(frequency)) {
+        // Buscar los IDs de las frecuencias por nombre
+        const frequencyRecords = await Frequency.findAll({
+          where: { name: { [Op.in]: frequency } },
+        });
+
+        if (frequencyRecords.length !== frequency.length) {
+          const foundFrequencies = frequencyRecords.map(f => f.name);
+          const missingFrequencies = frequency.filter(
+            f => !foundFrequencies.includes(f)
+          );
+          return res.status(404).json({
+            message: `Las frecuencias no existen: ${missingFrequencies.join(", ")}`,
+          });
+        }
+
+        // Extraer los IDs de las frecuencias
+        frequencyIds = frequencyRecords.map(f => f.id);
+      } else {
+        // Validar una única frecuencia
+        const frequencyRecord = await Frequency.findOne({
+          where: { name: frequency },
+        });
+        if (!frequencyRecord) {
+          return res.status(404).json({
+            message: `La frecuencia "${frequency}" no existe.`,
+          });
+        }
+        frequencyIds = [frequencyRecord.id];
       }
     }
 
+    // Condiciones para la tabla routes
     const routeConditions = {
       origin: fromStop.id,
       destination: toStop.id,
@@ -175,16 +191,12 @@ exports.getSchedules = async (req, res) => {
     if (company) {
       routeConditions.company_id = company;
     }
+
+    // Condiciones para la tabla schedules
     const scheduleConditions = {};
 
-    if (frequency) {
-      if (Array.isArray(frequency)) {
-        scheduleConditions.frequency_id = {
-          [Op.in]: frequency,  
-        };
-      } else {
-        scheduleConditions.frequency_id = frequency; 
-      }
+    if (frequencyIds.length > 0) {
+      scheduleConditions.frequency_id = { [Op.in]: frequencyIds };
     }
 
     if (horaMin && horaMax) {
@@ -192,41 +204,50 @@ exports.getSchedules = async (req, res) => {
         [Op.between]: [horaMin, horaMax],
       };
     } else if (horaMin) {
-      scheduleConditions.departure_time = {
-        [Op.gte]: horaMin,
-      };
+      scheduleConditions.departure_time = { [Op.gte]: horaMin };
     } else if (horaMax) {
-      scheduleConditions.departure_time = {
-        [Op.lte]: horaMax,
-      };
+      scheduleConditions.departure_time = { [Op.lte]: horaMax };
     }
 
+    // Consulta a la base de datos
     const schedulesData = await schedules.findAll({
       attributes: ["id", "departure_time", "arrival_time", "frequency_id"],
-      where: scheduleConditions, 
-      include: [{
-        model: routes,
-        as: "route",
-        attributes: ["id", "company_id"],
-        where: routeConditions,
-        include: [{
-          model: companies,
-          as: "company",
-          attributes: ["name"],
-        }],
-      }],
+      where: scheduleConditions,
+      include: [
+        {
+          model: routes,
+          as: "route",
+          attributes: ["id", "company_id"],
+          where: routeConditions,
+          include: [
+            {
+              model: companies,
+              as: "company",
+              attributes: ["name"],
+            },
+          ],
+        },
+        {
+          model: Frequency,
+          as: "frequency",
+          attributes: ["name"], // Obtener el nombre de la frecuencia
+        },
+      ],
     });
 
+    // Formatear la respuesta
     const formattedSchedules = schedulesData.map(schedule => ({
       id: schedule.id,
       departure_time: schedule.departure_time,
       arrival_time: schedule.arrival_time,
-      frequency: schedule.frequency,
-      company: schedule.route?.company,
+      frequency: schedule.frequency?.name, // Nombre de la frecuencia
+      company: schedule.route?.company?.name,
     }));
 
     if (formattedSchedules.length === 0) {
-      return res.status(404).json({ message: "No se encontraron horarios para los filtros proporcionados." });
+      return res.status(404).json({
+        message: "No se encontraron horarios para los filtros proporcionados.",
+      });
     }
 
     res.status(200).json(formattedSchedules);
@@ -235,3 +256,4 @@ exports.getSchedules = async (req, res) => {
     res.status(500).json({ message: "Error al obtener los horarios." });
   }
 };
+
