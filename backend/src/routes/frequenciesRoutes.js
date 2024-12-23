@@ -35,7 +35,7 @@ const verifyToken = require('../middleware/verifyToken');
  *       500:
  *         description: Error en el servidor
  */
-router.get('/', verifyToken(['Administrator']), frequenciesController.getAllFrequency);
+router.get('/', frequenciesController.getAllFrequency);
 
 /**
  * @swagger
@@ -67,7 +67,7 @@ router.get('/', verifyToken(['Administrator']), frequenciesController.getAllFreq
  *       500:
  *         description: Error en el servidor
  */
-router.get('/:id', verifyToken(['Administrator']), frequencyValidator.getFrequencyByIdValidator, validationErrorHandler, frequenciesController.getFrequencyById);
+router.get('/:id', frequencyValidator.getFrequencyByIdValidator, validationErrorHandler, frequenciesController.getFrequencyById);
 
 /**
  * @swagger
