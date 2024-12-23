@@ -14,15 +14,13 @@ const FiltroFrecuencia = ({frequencyFilter, setFrequencyFilter}) => {
     if(event.target.name === "Todas"){
         if(event.target.checked){
             setFrequencyFilter("Todas")
-            setIsTodasSelected(true)
             dispatch(setFilters({
                 frequency: ["Todas"],
             }))
             dispatch(setErrorFilter(""))
         } else{
-            const nuevoArray = frequencyFilter.filter((item) => item !== event.target.name);
+            const nuevoArray = frequency.filter((item) => item !== event.target.name);
             setFrequencyFilter(nuevoArray)
-            setIsTodasSelected(false)
             dispatch(setFilters({...filtros,
                 frequency: nuevoArray
             }))
