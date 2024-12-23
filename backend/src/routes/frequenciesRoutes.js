@@ -3,6 +3,7 @@ const router = express.Router();
 const frequenciesController = require('../controllers/frequenciesController');
 const frequencyValidator = require('../validators/frequencyValidator');
 const validationErrorHandler = require('../middleware/validationErrorHandler');
+const verifyToken = require('../middleware/verifyToken');
 
 /**
  * @swagger
@@ -34,7 +35,7 @@ const validationErrorHandler = require('../middleware/validationErrorHandler');
  *       500:
  *         description: Error en el servidor
  */
-router.get('/', frequenciesController.getAllFrequency);
+router.get('/', verifyToken(['Administrator']), frequenciesController.getAllFrequency);
 
 /**
  * @swagger
@@ -66,7 +67,7 @@ router.get('/', frequenciesController.getAllFrequency);
  *       500:
  *         description: Error en el servidor
  */
-router.get('/:id', frequencyValidator.getFrequencyByIdValidator, validationErrorHandler, frequenciesController.getFrequencyById);
+router.get('/:id', verifyToken(['Administrator']), frequencyValidator.getFrequencyByIdValidator, validationErrorHandler, frequenciesController.getFrequencyById);
 
 /**
  * @swagger
@@ -94,7 +95,7 @@ router.get('/:id', frequencyValidator.getFrequencyByIdValidator, validationError
  *       500:
  *         description: Error en el servidor
  */
-router.post('/', frequencyValidator.createFrequencyValidator, validationErrorHandler, frequenciesController.createFrequency );
+router.post('/', verifyToken(['Administrator']), frequencyValidator.createFrequencyValidator, validationErrorHandler, frequenciesController.createFrequency );
 
 /**
  * @swagger
@@ -129,7 +130,7 @@ router.post('/', frequencyValidator.createFrequencyValidator, validationErrorHan
  *       500:
  *         description: Error en el servidor
  */
-router.put('/:id', frequencyValidator.updateFrequencyValidator, validationErrorHandler, frequenciesController.updateFrequency );
+router.put('/:id', verifyToken(['Administrator']), frequencyValidator.updateFrequencyValidator, validationErrorHandler, frequenciesController.updateFrequency );
 
 /**
  * @swagger
@@ -152,6 +153,6 @@ router.put('/:id', frequencyValidator.updateFrequencyValidator, validationErrorH
  *       500:
  *         description: Error en el servidor
  */
-router.delete('/:id', frequencyValidator.deleteFrequencyValidator, validationErrorHandler, frequenciesController.deleteFrequency);
+router.delete('/:id', verifyToken(['Administrator']), frequencyValidator.deleteFrequencyValidator, validationErrorHandler, frequenciesController.deleteFrequency);
 
 module.exports = router;

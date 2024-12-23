@@ -3,6 +3,7 @@ const router = express.Router();
 const schedulesController = require('../controllers/schedulesController');
 const scheduleValidator = require('../validators/scheduleValidators');
 const validationErrorHandler = require('../middleware/validationErrorHandler');
+const verifyToken = require('../middleware/verifyToken');
 
 /**
  * @swagger
@@ -133,6 +134,8 @@ router.get('/:id', scheduleValidator.getScheduleByIdValidator, validationErrorHa
  *   post:
  *     summary: Crea un nuevo horario y, si es necesario, una ruta asociada
  *     tags: [Schedules]
+ *     security:
+ *       - bearerAuth: []  
  *     requestBody:
  *       required: true
  *       content:
@@ -207,36 +210,12 @@ router.get('/:id', scheduleValidator.getScheduleByIdValidator, validationErrorHa
  *                       example: "10:30"
  *       400:
  *         description: Faltan datos obligatorios o datos inválidos.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: Faltan datos obligatorios.
  *       404:
  *         description: Paradas no encontradas (origen o destino).
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: Parada de origen 'Terminal A' no encontrada.
  *       500:
  *         description: Error interno del servidor.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: Error al crear el horario o la ruta.
  */
-router.post('/', scheduleValidator.createScheduleValidator, validationErrorHandler, schedulesController.createSchedule);
+router.post('/', verifyToken(['Administrator', 'Operator']),  scheduleValidator.createScheduleValidator, validationErrorHandler, schedulesController.createSchedule);
 
 /**
  * @swagger
@@ -284,7 +263,7 @@ router.post('/', scheduleValidator.createScheduleValidator, validationErrorHandl
  *       404:
  *         description: Horario no encontrado
  */
-router.put('/:id', scheduleValidator.updateScheduleValidator, validationErrorHandler, schedulesController.updateSchedule);
+router.put('/:id', verifyToken(['Administrator', 'Operator']), scheduleValidator.updateScheduleValidator, validationErrorHandler, schedulesController.updateSchedule);
 
 /**
  * @swagger
@@ -305,7 +284,7 @@ router.put('/:id', scheduleValidator.updateScheduleValidator, validationErrorHan
  *       404:
  *         description: Horario no encontrado
  */
-router.delete('/:id', scheduleValidator.deleteScheduleValidator, validationErrorHandler, schedulesController.deleteSchedule);
+router.delete('/:id', verifyToken(['Administrator', 'Operator']), scheduleValidator.deleteScheduleValidator, validationErrorHandler, schedulesController.deleteSchedule);
 
 
 

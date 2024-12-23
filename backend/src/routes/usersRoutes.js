@@ -3,6 +3,8 @@ const router = express.Router();
 const usersController = require('../controllers/usersController');
 const userValidator = require('../validators/userValidators');
 const validationErrorHandler = require('../middleware/validationErrorHandler');
+const verifyToken = require('../middleware/verifyToken');
+
 /**
  * @swagger
  * tags:
@@ -44,7 +46,7 @@ const validationErrorHandler = require('../middleware/validationErrorHandler');
  *       500:
  *         description: Error en el servidor
  */
-router.get('/', usersController.getAllUsers);
+router.get('/', verifyToken(['Administrator']), usersController.getAllUsers);
 
 /**
  * @swagger
@@ -87,7 +89,7 @@ router.get('/', usersController.getAllUsers);
  *       500:
  *         description: Error en el servidor
  */
-router.get('/:id', userValidator.getUserByIdValidator, validationErrorHandler, usersController.getUserById);
+router.get('/:id', verifyToken(['Administrator']), userValidator.getUserByIdValidator, validationErrorHandler, usersController.getUserById);
 
 /**
  * @swagger
@@ -129,7 +131,7 @@ router.get('/:id', userValidator.getUserByIdValidator, validationErrorHandler, u
  *       500:
  *         description: Error en el servidor
  */
-router.post('/', userValidator.createUserValidator, validationErrorHandler, usersController.createUser);
+router.post('/', verifyToken(['Administrator']), userValidator.createUserValidator, validationErrorHandler, usersController.createUser);
 
 /**
  * @swagger
@@ -176,7 +178,7 @@ router.post('/', userValidator.createUserValidator, validationErrorHandler, user
  *       500:
  *         description: Error en el servidor
  */
-router.put('/:id', userValidator.updateUserValidator, validationErrorHandler, usersController.updateUser);
+router.put('/:id', verifyToken(['Administrator']), userValidator.updateUserValidator, validationErrorHandler, usersController.updateUser);
 
 /**
  * @swagger
@@ -199,7 +201,7 @@ router.put('/:id', userValidator.updateUserValidator, validationErrorHandler, us
  *       500:
  *         description: Error en el servidor
  */
-router.delete('/:id', userValidator.deleteUserValidator, validationErrorHandler, usersController.deleteUser);
+router.delete('/:id', verifyToken(['Administrator']), userValidator.deleteUserValidator, validationErrorHandler, usersController.deleteUser);
 
 module.exports = router;
 

@@ -3,6 +3,8 @@ const router = express.Router();
 const companiesController = require('../controllers/companiesController');
 const validationErrorHandler = require('../middleware/validationErrorHandler');
 const companyValidator = require('../validators/companyValidator');
+const verifyToken = require('../middleware/verifyToken');
+
 /**
  * @swagger
  * tags:
@@ -33,7 +35,7 @@ const companyValidator = require('../validators/companyValidator');
  *       500:
  *         description: Error en el servidor
  */
-router.get('/', companiesController.getAllCompanies);
+router.get('/', verifyToken(['Administrator']), companiesController.getAllCompanies);
 
 /**
  * @swagger
@@ -65,7 +67,7 @@ router.get('/', companiesController.getAllCompanies);
  *       500:
  *         description: Error en el servidor
  */
-router.get('/:id', companyValidator.getCompanyByIdValidator, validationErrorHandler, companiesController.getCompanyById); 
+router.get('/:id', verifyToken(['Administrator']), companyValidator.getCompanyByIdValidator, validationErrorHandler, companiesController.getCompanyById); 
 
 /**
  * @swagger
@@ -93,7 +95,7 @@ router.get('/:id', companyValidator.getCompanyByIdValidator, validationErrorHand
  *       500:
  *         description: Error en el servidor
  */
-router.post('/', companyValidator.createCompanyValidator, validationErrorHandler, companiesController.createCompany);
+router.post('/', verifyToken(['Administrator']), companyValidator.createCompanyValidator, validationErrorHandler, companiesController.createCompany);
 
 /**
  * @swagger
@@ -130,7 +132,7 @@ router.post('/', companyValidator.createCompanyValidator, validationErrorHandler
  *       500:
  *         description: Error en el servidor
  */
-router.put('/:id', companyValidator.updateCompanyValidator, validationErrorHandler, companiesController.updateCompany);
+router.put('/:id', verifyToken(['Administrator']), companyValidator.updateCompanyValidator, validationErrorHandler, companiesController.updateCompany);
 
 /**
  * @swagger
@@ -153,6 +155,6 @@ router.put('/:id', companyValidator.updateCompanyValidator, validationErrorHandl
  *       500:
  *         description: Error en el servidor
  */
-router.delete('/:id', companyValidator.deleteCompanyValidator, validationErrorHandler, companiesController.deleteCompany);
+router.delete('/:id', verifyToken(['Administrator']), companyValidator.deleteCompanyValidator, validationErrorHandler, companiesController.deleteCompany);
 
 module.exports = router;

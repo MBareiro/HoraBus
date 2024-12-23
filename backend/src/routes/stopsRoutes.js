@@ -3,6 +3,7 @@ const router = express.Router();
 const stopsController = require('../controllers/stopsController');
 const stopValidator = require('../validators/stopValidator');
 const validationErrorHandler = require('../middleware/validationErrorHandler');
+const verifyToken = require('../middleware/verifyToken');
 
 /**
  * @swagger
@@ -116,7 +117,7 @@ router.get('/:id', stopValidator.getStopByIdValidator, validationErrorHandler, s
  *       500:
  *         description: Error en el servidor
  */
-router.post('/', stopValidator.createStopValidator, validationErrorHandler, stopsController.createStop );
+router.post('/', verifyToken(['Administrator', 'Operator']), stopValidator.createStopValidator, validationErrorHandler, stopsController.createStop );
 
 /**
  * @swagger
@@ -159,7 +160,7 @@ router.post('/', stopValidator.createStopValidator, validationErrorHandler, stop
  *       500:
  *         description: Error en el servidor
  */
-router.put('/:id', stopValidator.updateStopValidator, validationErrorHandler, stopsController.updateStop );
+router.put('/:id', verifyToken(['Administrator', 'Operator']), stopValidator.updateStopValidator, validationErrorHandler, stopsController.updateStop );
 
 /**
  * @swagger
@@ -182,6 +183,6 @@ router.put('/:id', stopValidator.updateStopValidator, validationErrorHandler, st
  *       500:
  *         description: Error en el servidor
  */
-router.delete('/:id', stopValidator.deleteStopValidator, validationErrorHandler, stopsController.deleteStop);
+router.delete('/:id', verifyToken(['Administrator', 'Operator']), stopValidator.deleteStopValidator, validationErrorHandler, stopsController.deleteStop);
 
 module.exports = router;

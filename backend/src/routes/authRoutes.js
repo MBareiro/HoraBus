@@ -106,6 +106,7 @@ router.post('/login', authController.loginUser);
  *         description: Error interno
  */
 router.post('/forgot-password', authController.forgotPassword);
+
 /**
  * @swagger
  * /auth/reset-password:
