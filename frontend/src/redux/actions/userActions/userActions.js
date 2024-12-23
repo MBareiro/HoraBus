@@ -1,5 +1,6 @@
 // src/redux/actions/userActions/userActions.js
-import { setHorarios, setParadas, clearHorarios, setFrecuencias, filterFrequencies } from '../../slices/userSlice';
+import { useSelector } from 'react-redux';
+import { setHorarios, setParadas, clearHorarios, setFrecuencias, filterFrequencies, setFilters, setErrorFilter } from '../../slices/userSlice';
 import axios from 'axios';
 
 const api = 'https://hora-bus-backend.vercel.app/api'
@@ -78,7 +79,9 @@ export const getFilteredFrequencies = (paramFilterHorarios) => async (dispatch) 
     dispatch(filterFrequencies(filterByFrequencies))
   }
   catch (error) {
-    console.error("Error filtering frequencies:", error)
+    console.error("Error filtering frequencies:", error.message)
+    console.log(error.status)
+    dispatch(setErrorFilter("No hay horarios disponibles en ese rango. Puedes explorar otras opciones"))
   }
 }
 

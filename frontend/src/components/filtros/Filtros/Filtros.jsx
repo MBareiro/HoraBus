@@ -2,9 +2,7 @@ import { useState } from 'react'
 import './Filtros.css'
 import FiltrosModal from '../FiltrosModal/FiltrosModal'
 
-const Filtros = ({origen, destino, setLoading, filtrosOn, setFiltrosOn}) => {
-
-const [openFiltrosModal, setOpenFiltrosModal]=useState(false)
+const Filtros = ({origen, destino, setLoading, filtrosOn, setFiltrosOn, openFiltrosModal, setOpenFiltrosModal}) => {
 
 const handleOpenFiltrosModal = () =>{
     setOpenFiltrosModal(true)

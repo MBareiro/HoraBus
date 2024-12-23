@@ -1,7 +1,7 @@
 import { useDispatch } from 'react-redux';
 import './LimpiarFiltros.css'
 import { getFrequencies} from '../../../redux/actions/userActions/userActions';
-import { setHorarios } from '../../../redux/slices/userSlice';
+import { setFilters, setHorarios } from '../../../redux/slices/userSlice';
 
 const LimpiarFiltros = ({setLoading, handleBuscarHorarios, filtrosOn, setFiltrosOn}) =>{
 const dispatch = useDispatch()
@@ -13,6 +13,10 @@ const handleLimpiarFiltros = () =>{
         handleBuscarHorarios()
         dispatch(getFrequencies())
         setFiltrosOn(false)
+        dispatch(setFilters({
+            frequency: [],
+            error: ""
+        }))
     }
 }
 

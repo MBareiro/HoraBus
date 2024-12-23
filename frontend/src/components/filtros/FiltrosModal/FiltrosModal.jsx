@@ -4,19 +4,36 @@ import { faXmark} from "@fortawesome/free-solid-svg-icons";
 import FiltroHorarios from '../FiltroHorarios/FiltroHorarios';
 import FiltroFrecuencia from '../FiltroFrecuencia/FiltroFrecuencia';
 import './FiltrosModal.css'
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getFilteredFrequencies} from '../../../redux/actions/userActions/userActions';
-import { setFilters, setHorarios } from '../../../redux/slices/userSlice';
+import { getFilteredFrequencies, getHorarios} from '../../../redux/actions/userActions/userActions';
+import { setErrorFilter, setFilters, setHorarios } from '../../../redux/slices/userSlice';
 
 Modal.setAppElement('#root')
 
 const FiltrosModal = ({isOpen,closeModal, origen, destino, setLoading, setFiltrosOn, filtrosOn}) =>{
 const {frequency} = useSelector((state) => state.user.filtros)
+const error = useSelector((state) => state.user.errorFilter)
+
+const [showError, setShowError] = useState(false)
 
 const dispatch = useDispatch()
+
  const handleCloseModal = () =>{
     closeModal(false)
+    if(filtrosOn === false){
+        dispatch(setFilters({
+            frequency: []
+        }))
+    }
+    if(error){
+        dispatch(getHorarios(origen,destino))
+        setFiltrosOn(false)
+        dispatch(setErrorFilter(""))
+        dispatch(setFilters({
+            frequency: []
+        }))
+    }
  }
 
  const [horasMin, setHorasMin] = useState('')
@@ -28,17 +45,23 @@ const dispatch = useDispatch()
     setFiltrosOn(true)
     dispatch(setHorarios([]))
     setLoading(true)
-    closeModal(false)
     const paramFilterHorarios = {
         from: origen,
         to: destino,
         horaMin: horasMin,
         horaMax: horasMax,
-        frequency: frequency
+        frequency: frequency,
     }
     dispatch(getFilteredFrequencies(paramFilterHorarios))
     dispatch(setFilters(paramFilterHorarios))
  }
+
+ useEffect(()=>{
+    if(error){
+        setShowError(true)
+    }
+    setLoading(false)
+ }, [error])
 
     return(
         <Modal
@@ -60,7 +83,12 @@ const dispatch = useDispatch()
                     <div className='button-aplicar-conteiner'>
                     <button onClick={handleAplicar} className='button-aplicar'>APLICAR</button>
                     </div>
+                    {showError &&
+                <div className='span-conteiner-error'>
+                     <span  className="span-error"> {error}</span>
+                </div>}
                 </div>
+               
                 </div>
         </Modal>
       

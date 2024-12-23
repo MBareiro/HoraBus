@@ -82,6 +82,17 @@
 .button-aplicar:hover {
   background-color: #949393; /* Color de hover */
 }
+.span-conteiner-error{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.span-error{
+  margin-bottom: 2vh;
+  font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  font-size: 20px;
+ text-align: center;
+}
 @media (max-width: 1000px) {
   .modal-content {
       width: 90%; /* Ajusta el ancho a un porcentaje mayor en pantallas pequeñas */

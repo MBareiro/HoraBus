@@ -6,7 +6,8 @@ const initialState = {
   frecuencias: [],
   filtros: {
     frequency: []
-  }
+  },
+  errorFilter: ""
 };
 
 const userSlice = createSlice({
@@ -33,10 +34,15 @@ const userSlice = createSlice({
     },
     setFilters: (state,action) =>{
       state.filtros = action.payload
+    },
+    setErrorFilter: (state, action) =>{
+      state.errorFilter = action.payload
     }
   },
 });
 
-export const {setParadas, setHorarios, clearHorarios, filterHorarios, setFrecuencias, filterFrequencies, setFilters} = userSlice.actions;
+export const {setParadas, setHorarios, clearHorarios, filterHorarios, setFrecuencias, filterFrequencies, setFilters,
+  setErrorFilter
+} = userSlice.actions;
 
 export default userSlice.reducer;

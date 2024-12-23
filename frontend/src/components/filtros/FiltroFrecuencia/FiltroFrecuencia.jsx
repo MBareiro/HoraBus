@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import './FiltroFrecuencia.css'
-import { setFilters } from "../../../redux/slices/userSlice";
+import { setErrorFilter, setFilters } from "../../../redux/slices/userSlice";
 
 const FiltroFrecuencia = ({frequencyFilter, setFrequencyFilter}) => {
     const dispatch = useDispatch()
@@ -19,8 +19,9 @@ const FiltroFrecuencia = ({frequencyFilter, setFrequencyFilter}) => {
             setFrequencyFilter(prevState => [...prevState, event.target.name])
             setIsTodasSelected(true)
             dispatch(setFilters({
-                frequency: [...frequency, event.target.name]
+                frequency: [...frequency, event.target.name],
             }))
+            dispatch(setErrorFilter(""))
         } else{
             const nuevoArray = frequencyFilter.filter((item) => item !== event.target.name);
             setFrequencyFilter(nuevoArray)
@@ -28,19 +29,22 @@ const FiltroFrecuencia = ({frequencyFilter, setFrequencyFilter}) => {
             dispatch(setFilters({...filtros,
                 frequency: nuevoArray
             }))
+            dispatch(setErrorFilter(""))
         }
     }else{
         if(event.target.checked){
             setFrequencyFilter(prevState => [...prevState, event.target.name])
             dispatch(setFilters({
-                frequency: [...frequency, event.target.name]
+                frequency: [...frequency, event.target.name],
             }))
+            dispatch(setErrorFilter(""))
         } else{
             const nuevoArray = frequency.filter((item) => item !== event.target.name);
             setFrequencyFilter(nuevoArray)
             dispatch(setFilters({...filtros,
                 frequency: nuevoArray
             }))
+            dispatch(setErrorFilter(""))
         }
         }
     }
@@ -57,7 +61,7 @@ const FiltroFrecuencia = ({frequencyFilter, setFrequencyFilter}) => {
                     name={opcion}
                     onChange={handleFrequencyFilter}
                     className="input"
-                    disabled={isTodasSelected}
+                    disabled={frequency.includes("Todas")}
                     checked={frequency.includes(opcion)}
                     />
                     {opcion}
