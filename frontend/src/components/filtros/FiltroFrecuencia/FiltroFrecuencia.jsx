@@ -10,16 +10,13 @@ const FiltroFrecuencia = ({frequencyFilter, setFrequencyFilter}) => {
     const filtros = useSelector((state) => state.user.filtros)
     const { frequency } = filtros
 
-   const [isTodasSelected,setIsTodasSelected] = useState(false)
-
-
     const handleFrequencyFilter = (event) =>{
     if(event.target.name === "Todas"){
         if(event.target.checked){
-            setFrequencyFilter(prevState => [...prevState, event.target.name])
+            setFrequencyFilter("Todas")
             setIsTodasSelected(true)
             dispatch(setFilters({
-                frequency: [...frequency, event.target.name],
+                frequency: ["Todas"],
             }))
             dispatch(setErrorFilter(""))
         } else{
