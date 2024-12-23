@@ -11,7 +11,7 @@ const FiltroFrecuencia = ({frequencyFilter, setFrequencyFilter}) => {
     const { frequency } = filtros
 
    const [isTodasSelected,setIsTodasSelected] = useState(false)
-   const [isChecked, setIsChecked] = useState(false)
+
 
     const handleFrequencyFilter = (event) =>{
     if(event.target.name === "Todas"){
@@ -28,7 +28,6 @@ const FiltroFrecuencia = ({frequencyFilter, setFrequencyFilter}) => {
             dispatch(setFilters({...filtros,
                 frequency: nuevoArray
             }))
-            setIsChecked(false)
         }
     }else{
         if(event.target.checked){
@@ -36,9 +35,8 @@ const FiltroFrecuencia = ({frequencyFilter, setFrequencyFilter}) => {
             dispatch(setFilters({
                 frequency: [...frequency, event.target.name]
             }))
-            setIsChecked(true)
         } else{
-            const nuevoArray = frequencyFilter.filter((item) => item !== event.target.name);
+            const nuevoArray = frequency.filter((item) => item !== event.target.name);
             setFrequencyFilter(nuevoArray)
             dispatch(setFilters({...filtros,
                 frequency: nuevoArray

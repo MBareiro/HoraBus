@@ -12,7 +12,7 @@ import { setFilters, setHorarios } from '../../../redux/slices/userSlice';
 Modal.setAppElement('#root')
 
 const FiltrosModal = ({isOpen,closeModal, origen, destino, setLoading, setFiltrosOn, filtrosOn}) =>{
-const {horaMin,horaMax} = useSelector((state) => state.user.filtros)
+const {frequency} = useSelector((state) => state.user.filtros)
 
 const dispatch = useDispatch()
  const handleCloseModal = () =>{
@@ -34,7 +34,7 @@ const dispatch = useDispatch()
         to: destino,
         horaMin: horasMin,
         horaMax: horasMax,
-        frequency: frequencyFilter
+        frequency: frequency
     }
     dispatch(getFilteredFrequencies(paramFilterHorarios))
     dispatch(setFilters(paramFilterHorarios))
