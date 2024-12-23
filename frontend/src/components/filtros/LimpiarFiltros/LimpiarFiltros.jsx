@@ -15,7 +15,6 @@ const handleLimpiarFiltros = () =>{
         setFiltrosOn(false)
         dispatch(setFilters({
             frequency: [],
-            error: ""
         }))
     }
 }

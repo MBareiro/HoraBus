@@ -3,6 +3,7 @@ import {getHorarios} from '../../redux/actions/userActions/userActions';
 import { useDispatch } from 'react-redux';
 import Horarios from '../horarios/Horarios'
 import './Select.css';
+import { setFilters } from '../../redux/slices/userSlice';
 
 function Select () {
   const dispatch = useDispatch();
@@ -27,6 +28,9 @@ const handleDestinoChange = (event) =>{
 const handleOrigenChange = (event) =>{
     setOrigen(event.target.value)
     setShowError(false)
+    dispatch(setFilters({
+      frequency: []
+    }))
 }
 
 
