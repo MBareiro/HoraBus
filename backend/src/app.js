@@ -17,10 +17,11 @@ const server = http.createServer(app);
 // Tiempo de espera para mantener la conexión abierta
 server.keepAliveTimeout = 30 * 1000;  // 30 segundos (keep-alive)
 server.headersTimeout = 35 * 1000;    // 35 segundos para recibir los encabezados completos
+app.set('trust proxy', true);
 
 // Configuración de middlewares
 setupMiddlewares(app);
-app.use(limiter);
+/* app.use(limiter); */
 app.use(morgan('dev'));
 app.use(limitPayloadSize); // Limitar tamaño de payload
 
