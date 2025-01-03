@@ -1,5 +1,5 @@
 const db = require('../../db/models');
-const Stop = db.stops; // Accede al modelo 'stops'
+const Stop = db.stops; 
 
 // Obtener todas las paradas
 exports.getAllStops = async (req, res) => {
@@ -30,15 +30,11 @@ exports.getStopById = async (req, res) => {
 // Crear una nueva parada
 exports.createStop = async (req, res) => {
   const { name } = req.body;
-
   try {
-    // Verificar si la parada ya existe
     const existingStop = await Stop.findOne({ where: { name } });
     if (existingStop) {
       return res.status(409).json({ message: 'La parada ya existe.' });
     }
-
-    // Crear la nueva parada
     const newStop = await Stop.create({ name });
     res.status(201).json(newStop);
   } catch (error) {

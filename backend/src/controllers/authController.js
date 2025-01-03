@@ -5,14 +5,15 @@ const nodemailer = require('nodemailer');
 const crypto = require('crypto');
 const { Op } = require('sequelize');
 const User = db.users;
-const JWT_SECRET = process.env.JWT_SECRET; 
+const PasswordReset = db.password_resets;
+const JWT_SECRET = process.env.JWT_SECRET;
 
 // Configuración de nodemailer (para enviar correos)
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
-    user: process.env.EMAIL_USER, 
-    pass: process.env.EMAIL_PASS,  
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS,
   },
 });
 
@@ -21,27 +22,23 @@ exports.loginUser = async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    // Buscar al usuario por correo electrónico
     const user = await User.findOne({ where: { email } });
 
     if (!user) {
       return res.status(404).json({ error: "Usuario no encontrado." });
     }
 
-    // Verificar si la contraseña es correcta
     const passwordMatch = await bcrypt.compare(password, user.password);
     if (!passwordMatch) {
       return res.status(401).json({ error: "Contraseña incorrecta." });
     }
 
-    // Crear un token JWT
     const token = jwt.sign(
-      { id: user.id, name: user.name, email: user.email, role: user.role, company_id: user.company_id }, // Incluye el rol en el token
-      JWT_SECRET, // El secreto utilizado para firmar el token
-      { expiresIn: "1h" } // El tiempo de expiración del token (1 hora)
+      { id: user.id, name: user.name, email: user.email, role: user.role, company_id: user.company_id },
+      JWT_SECRET,
+      { expiresIn: "1h" }
     );
 
-    // Enviar el token al cliente
     res.status(200).json({ message: "Inicio de sesión exitoso.", token });
   } catch (error) {
     console.error("Error al iniciar sesión:", error);
@@ -60,18 +57,16 @@ exports.forgotPassword = async (req, res) => {
       return res.status(404).json({ error: 'Usuario no encontrado.' });
     }
 
-    // Generar un token de restablecimiento
     const resetToken = crypto.randomBytes(20).toString('hex');
-    const resetExpiration = Date.now() + 3600000; // 1 hora
+    const resetExpiration = new Date(Date.now() + 3600000); // 1 hora
 
-    // Guardar el token y su fecha de expiración en la base de datos
-    user.reset_password_token = resetToken;
-    user.reset_password_expiration = resetExpiration;
-    await user.save();
+    await PasswordReset.create({
+      user_id: user.id,
+      reset_password_token: resetToken,
+      reset_password_expiration: resetExpiration,
+    });
 
-    // Enviar el correo electrónico con el enlace de restablecimiento
     const resetUrl = `${process.env.FRONTEND_URL}/reset-password/${resetToken}`;
-
     const mailOptions = {
       to: user.email,
       from: process.env.EMAIL_USER,
@@ -94,25 +89,29 @@ exports.resetPassword = async (req, res) => {
   const { token, newPassword } = req.body;
 
   try {
-    const user = await User.findOne({
+    const passwordReset = await PasswordReset.findOne({
       where: {
         reset_password_token: token,
-        reset_password_expiration: { [Op.gt]: Date.now() }, // Usar Op.gt para "mayor que"
+        reset_password_expiration: { [Op.gt]: new Date() },
       },
     });
 
-    if (!user) {
+    if (!passwordReset) {
       return res.status(400).json({ error: 'Token inválido o expirado.' });
     }
 
-    // Hashear la nueva contraseña
+    const user = await User.findByPk(passwordReset.user_id);
+    if (!user) {
+      return res.status(404).json({ error: 'Usuario no encontrado.' });
+    }
+
     const hashedPassword = await bcrypt.hash(newPassword, 10);
-    // Actualizar la contraseña y limpiar el token
+
     user.password = hashedPassword;
-    user.reset_password_token = null;
-    user.reset_password_expiration = null;
     await user.save();
-    console.log(user.password);
+
+    await PasswordReset.destroy({ where: { id: passwordReset.id } });
+
     res.status(200).json({ message: 'Contraseña actualizada exitosamente.' });
 
   } catch (error) {

@@ -7,11 +7,11 @@ module.exports = {
       .isString().withMessage('El nombre debe ser una cadena de texto.')
       .notEmpty().withMessage('El nombre es obligatorio.')
       .isLength({ min: 3 }).withMessage('El nombre debe tener al menos 3 caracteres.')
-      .trim().escape(), 
+      .trim().escape(),
     body('email')
       .isEmail().withMessage('El email debe tener un formato válido.')
       .notEmpty().withMessage('El email es obligatorio.')
-      .normalizeEmail(), 
+      .normalizeEmail(),
     body('password')
       .isString().withMessage('La contraseña debe ser una cadena de texto.')
       .isLength({ min: 8 }).withMessage('La contraseña debe tener al menos 8 caracteres.')
@@ -28,16 +28,16 @@ module.exports = {
   updateUserValidator: [
     param('id')
       .isInt({ gt: 0 }).withMessage('El ID del usuario debe ser un número entero mayor que 0.')
-      .toInt(), 
+      .toInt(),
     body('name')
       .optional()
       .isString().withMessage('El nombre debe ser una cadena de texto.')
       .isLength({ min: 3 }).withMessage('El nombre debe tener al menos 3 caracteres.')
-      .trim().escape(), 
+      .trim().escape(),
     body('email')
       .optional()
       .isEmail().withMessage('El email debe tener un formato válido.')
-      .normalizeEmail(), 
+      .normalizeEmail(),
     body('password')
       .optional()
       .isString().withMessage('La contraseña debe ser una cadena de texto.')
@@ -54,13 +54,13 @@ module.exports = {
   getUserByIdValidator: [
     param('id')
       .isInt({ gt: 0 }).withMessage('El ID del usuario debe ser un número entero mayor que 0.')
-      .toInt() 
+      .toInt()
   ],
 
   // Validaciones para eliminar un usuario
   deleteUserValidator: [
     param('id')
       .isInt({ gt: 0 }).withMessage('El ID del usuario debe ser un número entero mayor que 0.')
-      .toInt() 
+      .toInt()
   ]
 };
