@@ -23,19 +23,14 @@ app.set('trust proxy', true);
 setupMiddlewares(app);
 /* app.use(limiter); */
 app.use(morgan('dev'));
-app.use(limitPayloadSize); // Limitar tamaño de payload
+app.use(limitPayloadSize); 
 
-// Configuración de rutas y documentación Swagger
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 app.use('/api', routes);
 
-// Configuración de timeouts globales para todas las solicitudes
 setGlobalTimeouts(app);
-
-// WebSocket
 setupWebSocket(server);
 
-// Conexión a la base de datos
 const PORT = process.env.PORT || 3000;
 
 authenticateDB()

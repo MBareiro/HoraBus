@@ -4,13 +4,11 @@ module.exports = {
   // Validaciones para crear un horario
   createScheduleValidator: [
     body('origin')
-      /* .isInt({ gt: 0 }).withMessage('El origen debe ser un ID válido y mayor que 0.') */
       .notEmpty().withMessage('El campo origen es obligatorio.')
-      /* .toInt() */,
+      /* .isInt({ gt: 0 }).withMessage('El origen debe ser un ID válido y mayor que 0.') */,
     body('destination')
-      /* .isInt({ gt: 0 }).withMessage('El destino debe ser un ID válido y mayor que 0.') */
       .notEmpty().withMessage('El campo destino es obligatorio.')
-      /* .toInt()  */
+      /* .isInt({ gt: 0 }).withMessage('El destino debe ser un ID válido y mayor que 0.') */
       .custom((value, { req }) => {
         if (value === req.body.origin) {
           throw new Error('El origen y el destino no pueden ser iguales.');
@@ -20,23 +18,25 @@ module.exports = {
     body('departure_time')
       .matches(/^([01]\d|2[0-3]):([0-5]\d):([0-5]\d)$/).withMessage('La hora de salida debe tener el formato HH:MM:SS.')
       .notEmpty().withMessage('La hora de salida es obligatoria.')
-      .trim(), 
+      .trim(),
     body('arrival_time')
       .matches(/^([01]\d|2[0-3]):([0-5]\d):([0-5]\d)$/).withMessage('La hora de llegada debe tener el formato HH:MM:SS.')
       .notEmpty().withMessage('La hora de llegada es obligatoria.')
-      .trim(), 
-
+      .trim(),
+    body('departure_time').custom((value, { req }) => {
+      if (value >= req.body.arrival_time) {
+        throw new Error('La hora de salida no puede ser igual o posterior a la hora de llegada.');
+      }
+      return true;
+    }),
     body('frequency')
       .optional()
       .custom((value) => {
-        // Si 'value' es una cadena, se valida
         if (typeof value === 'string') {
           if (value.length > 255) {
             throw new Error('La frecuencia no debe superar los 255 caracteres.');
           }
-        }
-        // Si 'value' es un array, validamos cada uno de sus elementos
-        else if (Array.isArray(value)) {
+        } else if (Array.isArray(value)) {
           value.forEach((item) => {
             if (typeof item !== 'string') {
               throw new Error('Cada elemento en el array de frecuencias debe ser una cadena de texto.');
@@ -58,32 +58,30 @@ module.exports = {
   updateScheduleValidator: [
     param('id')
       .isInt({ gt: 0 }).withMessage('El ID del horario debe ser un número entero mayor que 0.')
-      .toInt(), 
-   /*  body('route_id')
-      .optional()
-      .isInt({ gt: 0 }).withMessage('El ID de la ruta debe ser un número entero mayor que 0.')
-      .toInt(), */
+      .toInt(),
     body('departure_time')
       .optional()
       .matches(/^([01]\d|2[0-3]):([0-5]\d):([0-5]\d)$/).withMessage('La hora de salida debe tener el formato HH:MM:SS.')
-      .trim(), 
+      .trim(),
     body('arrival_time')
       .optional()
       .matches(/^([01]\d|2[0-3]):([0-5]\d):([0-5]\d)$/).withMessage('La hora de llegada debe tener el formato HH:MM:SS.')
-      .trim(), 
+      .trim(),
+    body('departure_time').custom((value, { req }) => {
+      if (value && value >= req.body.arrival_time) {
+        throw new Error('La hora de salida no puede ser igual o posterior a la hora de llegada.');
+      }
+      return true;
+    }),
     body('frequency')
       .optional()
       .isString().withMessage('La frecuencia debe ser una cadena de texto.')
       .isLength({ max: 255 }).withMessage('La frecuencia no debe superar los 255 caracteres.')
-      .trim().escape(), 
+      .trim().escape(),
     body('origin')
-      /* .isInt({ gt: 0 }).withMessage('El origen debe ser un ID válido y mayor que 0.') */
-      .notEmpty().withMessage('El campo origen es obligatorio.')
-      /* .toInt() */,
+      .notEmpty().withMessage('El campo origen es obligatorio.'),
     body('destination')
-      /* .isInt({ gt: 0 }).withMessage('El destino debe ser un ID válido y mayor que 0.') */
       .notEmpty().withMessage('El campo destino es obligatorio.')
-      /* .toInt()  */
       .custom((value, { req }) => {
         if (value === req.body.origin) {
           throw new Error('El origen y el destino no pueden ser iguales.');
@@ -96,13 +94,13 @@ module.exports = {
   getScheduleByIdValidator: [
     param('id')
       .isInt({ gt: 0 }).withMessage('El ID del horario debe ser un número entero mayor que 0.')
-      .toInt() 
+      .toInt()
   ],
 
   // Validaciones para eliminar un horario
   deleteScheduleValidator: [
     param('id')
       .isInt({ gt: 0 }).withMessage('El ID del horario debe ser un número entero mayor que 0.')
-      .toInt() 
+      .toInt()
   ]
 };

@@ -22,12 +22,12 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.TIME,
       allowNull: false
     },
-    frequency_id: { // Cambié "frequency" por "frequency_id"
-      type: DataTypes.INTEGER,  // Será un número que representa la clave foránea
+    frequency_id: { 
+      type: DataTypes.INTEGER, 
       allowNull: true,
       references: {
-        model: 'frequencies',  // Referencia al modelo Frequency
-        key: 'id'  // El campo "id" de la tabla frequencies
+        model: 'frequencies',  
+        key: 'id'  
       }
     }
   });
