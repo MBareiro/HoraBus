@@ -10,13 +10,8 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING(255),
       allowNull: false
     },
-    latitude: {
-      type: DataTypes.FLOAT,
-      allowNull: true
-    },
-    longitude: {
-      type: DataTypes.FLOAT,
-      allowNull: true
+    location: {
+      type: DataTypes.GEOGRAPHY('POINT'),
     }
   });
 

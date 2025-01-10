@@ -117,7 +117,7 @@ router.get('/:id', stopValidator.getStopByIdValidator, validationErrorHandler, s
  *       500:
  *         description: Error en el servidor
  */
-router.post('/', verifyToken(['Administrator', 'Operator']), stopValidator.createStopValidator, validationErrorHandler, stopsController.createStop );
+router.post('/', stopValidator.createStopValidator, validationErrorHandler, stopsController.createStop );
 
 /**
  * @swagger
@@ -160,7 +160,7 @@ router.post('/', verifyToken(['Administrator', 'Operator']), stopValidator.creat
  *       500:
  *         description: Error en el servidor
  */
-router.put('/:id', verifyToken(['Administrator', 'Operator']), stopValidator.updateStopValidator, validationErrorHandler, stopsController.updateStop );
+router.put('/:id', stopValidator.updateStopValidator, validationErrorHandler, stopsController.updateStop );
 
 /**
  * @swagger

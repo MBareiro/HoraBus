@@ -29,13 +29,24 @@ exports.getStopById = async (req, res) => {
 
 // Crear una nueva parada
 exports.createStop = async (req, res) => {
-  const { name } = req.body;
+  const { name, latitude, longitude } = req.body; 
+  
+  if (!latitude || !longitude) {
+    return res.status(400).json({ error: 'Latitud y longitud son requeridos.' });
+  }
+
   try {
     const existingStop = await Stop.findOne({ where: { name } });
     if (existingStop) {
       return res.status(409).json({ message: 'La parada ya existe.' });
     }
-    const newStop = await Stop.create({ name });
+
+    // Crear el nuevo objeto GEOGRAPHY
+    const newStop = await Stop.create({
+      name,
+      location: db.sequelize.fn('ST_GeomFromText', `POINT(${longitude} ${latitude})`)
+    });
+
     res.status(201).json(newStop);
   } catch (error) {
     console.error('Error al crear la parada:', error);
@@ -45,20 +56,47 @@ exports.createStop = async (req, res) => {
 
 // Actualizar una parada existente
 exports.updateStop = async (req, res) => {
-  const { name } = req.body;
+  const { name, latitude, longitude } = req.body; // Obtener latitud y longitud
 
-  try {
-    const [updated] = await Stop.update({ name }, { where: { id: req.params.id } });
+  if (latitude && longitude) {
+    try {
+      // Actualizar las coordenadas si están presentes
+      const [updated] = await Stop.update(
+        { 
+          name, 
+          location: db.sequelize.fn('ST_GeomFromText', `POINT(${longitude} ${latitude})`)
+        },
+        { where: { id: req.params.id } }
+      );
 
-    if (updated) {
-      const updatedStop = await Stop.findByPk(req.params.id);
-      res.status(200).json(updatedStop);
-    } else {
-      res.status(404).json({ error: 'Parada no encontrada.' });
+      if (updated) {
+        const updatedStop = await Stop.findByPk(req.params.id);
+        res.status(200).json(updatedStop);
+      } else {
+        res.status(404).json({ error: 'Parada no encontrada.' });
+      }
+    } catch (error) {
+      console.error('Error al actualizar la parada:', error);
+      res.status(500).json({ error: 'Error al actualizar la parada.' });
     }
-  } catch (error) {
-    console.error('Error al actualizar la parada:', error);
-    res.status(500).json({ error: 'Error al actualizar la parada.' });
+  } else {
+    try {
+      // Solo actualizar el nombre si no hay nuevas coordenadas
+      const [updated] = await Stop.update(
+        { name },
+        { where: { id: req.params.id } }
+      );
+
+      if (updated) {
+        const updatedStop = await Stop.findByPk(req.params.id);
+        res.status(200).json(updatedStop);
+      } else {
+        res.status(404).json({ error: 'Parada no encontrada.' });
+      }
+    } catch (error) {
+      console.error('Error al actualizar la parada:', error);
+      res.status(500).json({ error: 'Error al actualizar la parada.' });
+    }
   }
 };
 
