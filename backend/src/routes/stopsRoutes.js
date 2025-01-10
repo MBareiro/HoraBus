@@ -183,6 +183,6 @@ router.put('/:id', stopValidator.updateStopValidator, validationErrorHandler, st
  *       500:
  *         description: Error en el servidor
  */
-router.delete('/:id', verifyToken(['Administrator', 'Operator']), stopValidator.deleteStopValidator, validationErrorHandler, stopsController.deleteStop);
+router.delete('/:id', stopValidator.deleteStopValidator, validationErrorHandler, stopsController.deleteStop);
 
 module.exports = router;

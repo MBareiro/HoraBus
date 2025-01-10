@@ -1,5 +1,6 @@
 const db = require('../../db/models');
 const Route = db.routes;
+const Stop = db.stops;
 
 // Obtener todas las rutas
 exports.getAllRoutes = async (req, res) => {
@@ -76,5 +77,40 @@ exports.deleteRoute = async (req, res) => {
   } catch (error) {
     console.error('Error al eliminar la ruta:', error);
     res.status(500).json({ error: 'Error al eliminar la ruta.' });
+  }
+};
+
+// Obtener las rutas donde el ID de la parada es el origen
+exports.getRoutesFromStop = async (req, res) => {
+  try {
+    const stopId = req.params.id; 
+    const stop = await Stop.findByPk(stopId);
+
+    if (!stop) {
+      return res.status(404).json({ message: `Parada con ID ${stopId} no encontrada` });
+    }
+    const routes = await Route.findAll({
+      where: { origin: stopId },
+      include: [
+        {
+          model: Stop,
+          as: 'originStop'
+        },
+        {
+          model: Stop,
+          as: 'destinationStop'
+        }
+      ]
+    });
+
+    if (routes.length === 0) {
+      return res.status(404).json({ message: `No se encontraron rutas desde la parada con ID ${stopId}` });
+    }
+
+    return res.status(200).json(routes);
+
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: 'Error en el servidor' });
   }
 };
