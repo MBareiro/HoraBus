@@ -1,5 +1,5 @@
 const { Sequelize } = require('sequelize');
-const config = require('./config')[process.env.NODE_ENV || 'development'];
+const config = require('./config')[process.env.NODE_ENV || 'development']; // Selecciona configuración según el entorno
 
 // Crear una nueva instancia de Sequelize con la configuración
 const sequelize = new Sequelize(config.database, config.username, config.password, {
@@ -34,6 +34,9 @@ const syncDB = async () => {
     throw new Error('No se pudo sincronizar la base de datos.');
   }
 };
+
+
+
 
 // Exportar la instancia de Sequelize y las funciones de conexión y sincronización
 module.exports = {
