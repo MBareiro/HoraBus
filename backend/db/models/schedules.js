@@ -29,13 +29,18 @@ module.exports = function(sequelize, DataTypes) {
         model: 'frequencies',  
         key: 'id'  
       }
+    },
+    is_active: { 
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: true 
     }
   });
 
   // Relación con la ruta y frecuencia
   Schedule.associate = function(models) {
     Schedule.belongsTo(models.routes, { foreignKey: 'route_id', as: 'route' });
-    Schedule.belongsTo(models.frequency, { foreignKey: 'frequency_id', as: 'frequency' }); // Relación con Frequency
+    Schedule.belongsTo(models.frequency, { foreignKey: 'frequency_id', as: 'frequency' }); 
   };
 
   return Schedule;
