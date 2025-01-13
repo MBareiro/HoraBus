@@ -6,15 +6,7 @@ const crypto = require('crypto');
 const { Op } = require('sequelize');
 const User = db.users;
 const PasswordReset = db.password_resets;
-
-// Configuración de nodemailer (para enviar correos)
-const transporter = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-  },
-});
+const transporter = require('../../config/mailer');
 
 // Login de usuario
 exports.loginUser = async (req, res) => {

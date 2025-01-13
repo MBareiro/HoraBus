@@ -15,7 +15,7 @@ const verifyToken = require('../middleware/verifyToken');
  * @swagger
  * /schedules:
  *   get:
- *     summary: Obtiene horarios filtrados por origen, destino, rango de horas, frecuencia y compañía
+ *     summary: Obtiene horarios filtrados por origen, destino, rango de horas, frecuencia, compañía y estado de activación
  *     tags: [Schedules]
  *     parameters:
  *       - in: query
@@ -52,6 +52,11 @@ const verifyToken = require('../middleware/verifyToken');
  *         schema:
  *           type: integer
  *         description: ID de la empresa
+ *       - in: query
+ *         name: is_active
+ *         schema:
+ *           type: boolean
+ *         description: Filtra los horarios según su estado de activación (por defecto muestra solo los horarios activos)
  *     responses:
  *       200:
  *         description: Lista de horarios obtenida exitosamente
@@ -286,6 +291,27 @@ router.put('/:id', verifyToken(['Administrator', 'Operator']), scheduleValidator
  */
 router.delete('/:id', verifyToken(['Administrator', 'Operator']), scheduleValidator.deleteScheduleValidator, validationErrorHandler, schedulesController.deleteSchedule);
 
-
+/**
+ * @swagger
+ * /schedules/{id}/toggle:
+ *   put:
+ *     summary: Alterna el estado de activación de un horario específico
+ *     tags: [Schedules]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID del horario a modificar
+ *     responses:
+ *       200:
+ *         description: Estado de activación del horario cambiado exitosamente
+ *       404:
+ *         description: Horario no encontrado
+ *       500:
+ *         description: Error interno al cambiar el estado de activación
+ */
+router.put('/:id/toggle', schedulesController.toggleScheduleStatus);
 
 module.exports = router;
