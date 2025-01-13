@@ -4,32 +4,32 @@ module.exports = function(sequelize, DataTypes) {
       autoIncrement: true,
       type: DataTypes.INTEGER,
       allowNull: false,
-      primaryKey: true
+      primaryKey: true,
     },
     origin: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
         model: 'stops',
-        key: 'id'
-      }
+        key: 'id',
+      },
     },
     destination: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
         model: 'stops',
-        key: 'id'
-      }
+        key: 'id',
+      },
     },
     company_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
         model: 'companies',
-        key: 'id'
-      }
-    }
+        key: 'id',
+      },
+    },
   });
 
   // Relación con 'Stop' para 'origin' y 'destination'
@@ -37,6 +37,9 @@ module.exports = function(sequelize, DataTypes) {
     Route.belongsTo(models.stops, { foreignKey: 'origin', as: 'originStop' });
     Route.belongsTo(models.stops, { foreignKey: 'destination', as: 'destinationStop' });
     Route.belongsTo(models.companies, { foreignKey: 'company_id', as: 'company' });
+
+    // Relación con Schedule (uno a muchos)
+    Route.hasMany(models.schedules, { foreignKey: 'route_id', as: 'schedule' });
   };
   
   return Route;

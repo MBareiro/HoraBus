@@ -60,5 +60,11 @@ module.exports = {
     param('id')
       .isInt({ gt: 0 }).withMessage('El ID de la ruta debe ser un número entero válido y mayor que 0.')
       .toInt() 
-  ]
+  ],
+
+  getRoutesFromStopValidator: [
+    param('name')
+      .isString().withMessage('El nombre de la parada debe ser una cadena de texto válida.')
+      .notEmpty().withMessage('El nombre de la parada no puede estar vacío.')
+  ],
 };
