@@ -139,4 +139,70 @@ router.post('/forgot-password', authController.forgotPassword);
  */
 router.post('/reset-password', authController.resetPassword);
 
+/**
+ * @swagger
+ * /auth/refresh_token:
+ *   post:
+ *     summary: Refrescar el token de acceso usando un refresh token válido
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               refreshToken:
+ *                 type: string
+ *                 description: El refresh token del usuario que se utilizará para obtener un nuevo access token.
+ *             example:
+ *               refreshToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIxMjM0NTY3ODkwIiwiaWF0IjoxNjEzMjg0NzM2LCJleHBpcmVkIjoxNjE4NTI3ODIwfQ._7nZqXQ0bDPHST1O0AqRUdd3Hs4yMNfFT5wYwks0X5M'
+ *     responses:
+ *       200:
+ *         description: Token refrescado exitosamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Token refrescado exitosamente.
+ *                 token:
+ *                   type: string
+ *                   description: El nuevo access token generado.
+ *       400:
+ *         description: Refresh token necesario.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Refresh token es necesario.
+ *       403:
+ *         description: Refresh token no válido.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Refresh token no válido.
+ *       500:
+ *         description: Error interno al procesar el refresh token.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Error al procesar el refresh token.
+ */
+router.post('/refresh_token', authController.refreshToken);
+
+
 module.exports = router;
