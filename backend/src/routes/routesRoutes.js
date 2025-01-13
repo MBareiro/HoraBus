@@ -43,42 +43,6 @@ router.get('/', routesController.getAllRoutes);
 
 /**
  * @swagger
- * /routes/{id}:
- *   get:
- *     summary: Obtiene una ruta específica
- *     tags: [Routes]
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: integer
- *         description: ID de la ruta
- *     responses:
- *       200:
- *         description: Ruta encontrada
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 id:
- *                   type: integer
- *                 origin:
- *                   type: integer
- *                 destination:
- *                   type: integer
- *                 company_id:
- *                   type: integer
- *       404:
- *         description: Ruta no encontrada
- *       500:
- *         description: Error en el servidor
- */
-router.get('/:id', routeValidator.getRouteByIdValidator , validationErrorHandler, routesController.getRouteById);
-
-/**
- * @swagger
  * /routes:
  *   post:
  *     summary: Crea una nueva ruta
@@ -179,17 +143,30 @@ router.delete('/:id', routeValidator.deleteRouteValidator , validationErrorHandl
 
 /**
  * @swagger
- * /routes/routes/{id}:
+ * /routes/with_transfers:
  *   get:
  *     summary: Obtiene todas las rutas donde el ID de la parada es el origen
  *     tags: [Routes]
  *     parameters:
- *       - in: path
- *         name: id
+ *       - in: query
+ *         name: origin
  *         required: true
  *         schema:
- *           type: integer
- *         description: ID de la parada de origen (Ej. 1)
+ *           type: string
+ *         description: ID de la parada de origen (Ej. "A123")
+ *       - in: query
+ *         name: destination
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID de la parada de destino (Ej. "B456")
+ *       - in: query
+ *         name: departure_time
+ *         required: false
+ *         schema:
+ *           type: string
+ *           format: time
+ *         description: Hora de salida para filtrar las rutas
  *     responses:
  *       200:
  *         description: Rutas encontradas desde la parada con el ID especificado
@@ -200,12 +177,12 @@ router.delete('/:id', routeValidator.deleteRouteValidator , validationErrorHandl
  *               items:
  *                 type: object
  *                 properties:
- *                   id:
- *                     type: integer
  *                   origin:
- *                     type: integer
+ *                     type: string
  *                   destination:
- *                     type: integer
+ *                     type: string
+ *                   departure_time:
+ *                     type: string
  *                   company_id:
  *                     type: integer
  *       404:
@@ -213,7 +190,7 @@ router.delete('/:id', routeValidator.deleteRouteValidator , validationErrorHandl
  *       500:
  *         description: Error en el servidor
  */
-router.get('/routes/:id', routesController.getRoutesFromStop);
+router.get('/with_transfers', routesController.with_transfers);
 
 
 module.exports = router;
