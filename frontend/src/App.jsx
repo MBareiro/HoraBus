@@ -20,6 +20,9 @@ const dispatch = useDispatch()
       <div className="logo-container">
         <img src={logo} alt="Horabus Logo" className="logo" />
       </div>
+      <div className='conteiner-acceso'>
+        <button>ACCESSO PARA EMPRESAS</button>
+      </div>
         <Select/>
     </div>
   );
