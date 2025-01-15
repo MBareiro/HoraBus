@@ -88,7 +88,6 @@ const dispatch = useDispatch()
                      <span  className="span-error"> {error}</span>
                 </div>}
                 </div>
-               
                 </div>
         </Modal>
       
