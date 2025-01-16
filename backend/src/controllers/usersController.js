@@ -27,7 +27,7 @@ exports.getUserById = async (req, res) => {
 };
 
 exports.createUser = async (req, res) => {
-  const { name, email, password, role, company_id } = req.body;
+  const { name, dni, email, password, role, company_id } = req.body;
 
   try {
     const existingUser = await User.findOne({ where: { email } });
@@ -35,13 +35,15 @@ exports.createUser = async (req, res) => {
       return res.status(409).json({ error: 'El correo electrónico ya está registrado.' });
     }
     const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = await User.create({ name, email, password: hashedPassword, role, company_id });
-
+    const newUser = await User.create({ name, dni, email, password: hashedPassword, role, company_id });
+    console.log(hashedPassword);
+    
     res.status(201).json({
       message: 'Usuario creado exitosamente.',
       user: {
         id: newUser.id,
         name: newUser.name,
+        dni: newUser.dni,
         email: newUser.email,
         role: newUser.role,
         company_id: newUser.company_id,
@@ -54,24 +56,39 @@ exports.createUser = async (req, res) => {
 };
 
 exports.updateUser = async (req, res) => {
-  const { name, email, password, role, company_id } = req.body;
+  const { name, dni, email, password, role, company_id } = req.body;
+  const userId = req.params.id;
 
   try {
-    if (password) {
-      req.body.password = await bcrypt.hash(password, 10);
+    if (dni) {
+      const existingUserWithDni = await User.findOne({ where: { dni } });
+      if (existingUserWithDni && existingUserWithDni.id !== userId) {
+        return res.status(400).json({ error: 'El DNI ya está registrado para otro usuario.' });
+      }
     }
 
-    const [updated] = await User.update(req.body, { where: { id: req.params.id } });
+    const updatedFields = {};
+    if (name) updatedFields.name = name;
+    if (dni) updatedFields.dni = dni;
+    if (email) updatedFields.email = email;
+    if (role) updatedFields.role = role;
+    if (company_id) updatedFields.company_id = company_id;
+
+    if (password) {
+      updatedFields.password = await bcrypt.hash(password, 10);
+    }
+
+    const [updated] = await User.update(updatedFields, { where: { id: userId } });
 
     if (updated) {
-      const updatedUser = await User.findByPk(req.params.id);
-      res.status(200).json(updatedUser);
+      const updatedUser = await User.findByPk(userId);
+      return res.status(200).json(updatedUser);
     } else {
-      res.status(404).json({ error: 'Usuario no encontrado.' });
+      return res.status(404).json({ error: 'Usuario no encontrado.' });
     }
   } catch (error) {
     console.error('Error al actualizar el usuario:', error);
-    res.status(500).json({ error: 'Error al actualizar el usuario.' });
+    return res.status(500).json({ error: 'Error al actualizar el usuario.' });
   }
 };
 

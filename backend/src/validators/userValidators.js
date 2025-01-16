@@ -21,7 +21,12 @@ module.exports = {
       .notEmpty().withMessage('El rol es obligatorio.'),
     body('company_id')
       .isInt({ gt: 0 }).withMessage('El ID de la compañía debe ser un número entero mayor que 0.')
-      .notEmpty().withMessage('El ID de la compañía es obligatorio.')
+      .notEmpty().withMessage('El ID de la compañía es obligatorio.'),
+    body('dni')
+      .isString().withMessage('El DNI debe ser una cadena de texto.') // Verifica que sea una cadena
+      .notEmpty().withMessage('El DNI es obligatorio.') // Verifica que no esté vacío
+      .isLength({ min: 8, max: 20 }).withMessage('El DNI debe tener entre 8 y 20 caracteres.') // Validación de longitud
+      .matches(/^[0-9]+$/).withMessage('El DNI debe contener solo números.') // Si el DNI es solo numérico (ajusta el patrón si es necesario)
   ],
 
   // Validaciones para actualizar un usuario
@@ -47,7 +52,13 @@ module.exports = {
       .isIn(['Administrator', 'Operator', 'Driver', 'User']).withMessage('El rol no es válido.'),
     body('company_id')
       .optional()
-      .isInt({ gt: 0 }).withMessage('El ID de la compañía debe ser un número entero mayor que 0.')
+      .isInt({ gt: 0 }).withMessage('El ID de la compañía debe ser un número entero mayor que 0.'),
+    body('dni')
+      .optional()
+      .isString().withMessage('El DNI debe ser una cadena de texto.') // Verifica que sea una cadena
+      .notEmpty().withMessage('El DNI es obligatorio.') // Verifica que no esté vacío
+      .isLength({ min: 8, max: 20 }).withMessage('El DNI debe tener entre 8 y 20 caracteres.') // Validación de longitud
+      .matches(/^[0-9]+$/).withMessage('El DNI debe contener solo números.') // Si el DNI es solo numérico (ajusta el patrón si es necesario)
   ],
 
   // Validaciones para obtener un usuario por ID

@@ -62,6 +62,7 @@ exports.getSchedules = async (req, res) => {
       routeConditions.company_id = company;
     }
     const scheduleConditions = {};
+
     if (frequencyIds.length > 0) {
       scheduleConditions.frequency_id = { [Op.in]: frequencyIds };
     }
