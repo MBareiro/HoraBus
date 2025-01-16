@@ -105,12 +105,16 @@ router.get('/:id', verifyToken(['Administrator']), userValidator.getUserByIdVali
  *             type: object
  *             required:
  *               - name
+ *               - dni
  *               - email
  *               - password
  *             properties:
  *               name:
  *                 type: string
  *                 description: Nombre del usuario
+ *               dni:
+ *                 type: string
+ *                 description: D.N.I del usuario
  *               email:
  *                 type: string
  *                 description: Correo electrónico del usuario
@@ -131,7 +135,7 @@ router.get('/:id', verifyToken(['Administrator']), userValidator.getUserByIdVali
  *       500:
  *         description: Error en el servidor
  */
-router.post('/', verifyToken(['Administrator']), userValidator.createUserValidator, validationErrorHandler, usersController.createUser);
+router.post('/',  userValidator.createUserValidator, validationErrorHandler, usersController.createUser);
 
 /**
  * @swagger
@@ -156,6 +160,9 @@ router.post('/', verifyToken(['Administrator']), userValidator.createUserValidat
  *               name:
  *                 type: string
  *                 description: Nombre del usuario
+ *               dni:
+ *                 type: string
+ *                 description: D.N.I del usuario
  *               email:
  *                 type: string
  *                 description: Correo electrónico del usuario

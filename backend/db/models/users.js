@@ -15,22 +15,31 @@ module.exports = function (sequelize, DataTypes) {
         type: DataTypes.STRING(255),
         allowNull: false,
         validate: {
-          notEmpty: true, // No permitir valores vacíos
+          notEmpty: true, 
+        },
+      },
+      dni: {
+        type: DataTypes.STRING(20),
+        allowNull: false,
+        unique: true, 
+        validate: {
+          notEmpty: true, 
+          len: [8, 20], 
         },
       },
       email: {
         type: DataTypes.STRING(255),
         allowNull: false,
-        unique: true, // Asegurar unicidad del email
+        unique: true, 
         validate: {
-          isEmail: true, // Validar formato de email
+          isEmail: true, 
         },
       },
       password: {
         type: DataTypes.STRING(255),
         allowNull: false,
         validate: {
-          len: [8, 255], // Asegurar un mínimo de 8 caracteres
+          len: [8, 255],
         },
       },
       role: {
@@ -46,15 +55,7 @@ module.exports = function (sequelize, DataTypes) {
         },
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE',
-      },
-      reset_password_token: {
-        type: DataTypes.STRING(255),
-        allowNull: true,
-      },
-      reset_password_expiration: {
-        type: DataTypes.DATE,
-        allowNull: true,
-      },
+      },      
     },
     {
       sequelize,
@@ -96,6 +97,6 @@ module.exports = function (sequelize, DataTypes) {
       }
     }
   });
-  
+
   return User;
 };
