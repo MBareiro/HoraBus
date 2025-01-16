@@ -47,7 +47,6 @@ exports.loginUser = async (req, res) => {
   }
 };
 
-
 // Recuperación de contraseña - Solicitar enlace
 exports.forgotPassword = async (req, res) => {
   const { email } = req.body;

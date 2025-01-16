@@ -73,11 +73,11 @@ module.exports = function (sequelize, DataTypes) {
   );
 
   // Hook para hashear la contraseña antes de crear el usuario
-  User.beforeCreate(async (user, options) => {
+/*   User.beforeCreate(async (user, options) => {
     if (user.password) {
       user.password = await bcrypt.hash(user.password, 10); // Hashea la contraseña
     }
-  });
+  }); */
 
   // Hook para hashear la contraseña antes de actualizar si cambió
   User.beforeUpdate(async (user, options) => {
