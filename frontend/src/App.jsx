@@ -4,6 +4,7 @@ import Select from './components/select/Select';
 import { useEffect } from 'react';
 import { getFrequencies, getParadas } from './redux/actions/userActions/userActions';
 import { useDispatch } from 'react-redux';
+import { UserAccess } from './components/userAccess/UserAccess';
 
 
 function App() {
@@ -17,11 +18,9 @@ const dispatch = useDispatch()
 
   return (
     <div className="app">
+      <UserAccess/>
       <div className="logo-container">
         <img src={logo} alt="Horabus Logo" className="logo" />
-      </div>
-      <div className='conteiner-acceso'>
-        <button>ACCESSO PARA EMPRESAS</button>
       </div>
         <Select/>
     </div>

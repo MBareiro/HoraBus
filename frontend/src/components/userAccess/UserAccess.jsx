@@ -1,7 +1,6 @@
 import { useState } from "react"
 import { Login } from "../login/Login"
 import './UserAccess.css'
-import logo from '../../pictures/horabus2.png';
 
 export const UserAccess = () => {
 
@@ -12,15 +11,10 @@ setIsOpen(true)
 }
     return(
         <div className="access-conteiner">
-            <div className="logo-container">
-                    <img src={logo} alt="Horabus Logo" className="logo" />
-                  </div>
-            <div className="conteiner-log-reg">
-            <button onClick={handleIsOpen} className="button-log-reg">INICIAR SESIÓN</button>
+               <div>
+                <button className="button-access" onClick={handleIsOpen}>ACCESSO PARA EMPRESAS</button>
+                </div>
             <Login isOpen={isOpen} closeModal={setIsOpen}/>
-            <button className='inicio-button'>VOLVER A INICIO</button>
-            </div>
-            
         </div>
     )
 }

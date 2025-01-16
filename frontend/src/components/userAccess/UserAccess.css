@@ -1,52 +1,20 @@
 .access-conteiner{
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content:flex-start;
-    background-color: #d3d3d3; /* Fondo gris claro para la página */
-    background-size: cover;
-    background-repeat:no-repeat;
-    background-position: center;
-    min-height: 100vh; /* Usa toda la altura de la pantalla */
-    width:100vw;
-    box-sizing: border-box;
-    gap: 2em;
+    flex-direction: row;
+    justify-content: flex-end;
+    width: 100%;
+    margin-top: 3vh;
+    margin-right: 3vh;
 }
-.conteiner-log-reg{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    background-color: #6a6c6d;
-    width: 360px;
-    height: 20vh;
-    border-radius: 10px;
-}
-.button-log-reg{
-    width:50%;
-    height: 5vh;
+.button-access{
     font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
     color:#1b1b1b;
-    font-size: 20px;
+    font-size: 12px;
     background-color:#fefefe ;
     border-radius: 5px;
-    cursor: pointer;
     border: none;
-    margin-bottom: 3vh;
-}
-.button-log-reg:hover {
-    background-color: #c0c0c0 ;
-  }
-.inicio-button{
-    width:auto;
-    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-    color:#1b1b1b;
-    font-size: 15px;
-    background-color:#fefefe ;
-    border-radius: 5px;
     cursor: pointer;
-    border: none;
 }
-.inicio-button:hover {
+.button-access:hover {
     background-color: #c0c0c0;
 }
