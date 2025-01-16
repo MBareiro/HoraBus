@@ -23,14 +23,14 @@ const verifyToken = require('../middleware/verifyToken');
  *           schema:
  *             type: object
  *             properties:
- *               email:
+ *               dni:
  *                 type: string
- *                 description: Correo electrónico del usuario
+ *                 description: DNI del usuario
  *               password:
  *                 type: string
  *                 description: Contraseña del usuario
  *             example:
- *               email: usuario@example.com
+ *               dni: 11222333
  *               password: contraseña123
  *     responses:
  *       200:
