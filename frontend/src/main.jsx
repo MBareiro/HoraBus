@@ -6,7 +6,7 @@ import store from './redux/store'; // Asegúrate de que esta ruta sea correcta
 import App from './App';
 import { Analytics } from "@vercel/analytics/react"
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { UserAccess } from './components/userAccess/UserAccess';
+import { OperadorHome } from './components/operador/home/OperadorHome';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -14,7 +14,7 @@ root.render(
     <Router>
       <Routes>
         <Route path="/" element={<App />} />
-        <Route path="/access" element={<UserAccess />} />
+        <Route path="/operador" element={<OperadorHome />} />
       </Routes>
       <Analytics />
     </Router>
