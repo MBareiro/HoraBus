@@ -34,10 +34,10 @@ console.log(loginForm)
                                 <FontAwesomeIcon icon={faXmark}/>
                 </button>
                 </div>
-                <h1 className="h2">INICIO DE SESIÓN</h1>
+                <h1 className="h2-login">INICIO DE SESIÓN</h1>
                 <div className='conteiner-form-login'>
                     <form className='conteiner-form-login'>
-                        <label className="span" >
+                        <label className="label-login" >
                             DNI
                         </label>
                         <input
@@ -48,7 +48,7 @@ console.log(loginForm)
                         value={loginForm.dni}
                         className='input-login'>
                         </input>
-                        <label className="span">
+                        <label className="label-login">
                             CONTRASEÑA
                         </label>
                         <input

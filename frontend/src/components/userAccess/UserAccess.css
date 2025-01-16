@@ -18,3 +18,10 @@
 .button-access:hover {
     background-color: #c0c0c0;
 }
+
+@media (max-width: 450px) {
+    .button-access{
+        font-size: 10px;
+        margin-right: 1vh;
+    }
+  }
