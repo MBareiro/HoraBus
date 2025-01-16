@@ -65,12 +65,12 @@ exports.getSchedules = async (req, res) => {
 
     // Filtrar por el estado de activación
     const scheduleConditions = {};
-    if (is_active !== undefined) {
+   /*  if (is_active !== undefined) {
       const isActiveBool = is_active === 'true'; // Asegurar que es un valor booleano
       scheduleConditions.is_active = isActiveBool;
     } else {
       scheduleConditions.is_active = true; // Si no se pasa 'is_active', por defecto se filtra solo por los horarios activos
-    }
+    } */
 
     if (frequencyIds.length > 0) {
       scheduleConditions.frequency_id = { [Op.in]: frequencyIds };
