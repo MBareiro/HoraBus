@@ -1,17 +1,25 @@
 import Modal from 'react-modal'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark} from "@fortawesome/free-solid-svg-icons";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import './Login.css'
+import { useDispatch, useSelector } from 'react-redux';
+import { getLogin } from '../../redux/actions/operadorActions/operadorActions';
+import { useNavigate } from "react-router-dom";
 
 export const Login = ({isOpen, closeModal}) => {
+
+const access = useSelector((state) => state.operador.access)
+const dispatch = useDispatch()
+const navigate = useNavigate();
+
     const handleCloseModal = () =>{
         closeModal(false)
     }
 
     const [loginForm, setLoginForm] = useState({
         dni: "",
-        contraseña: ""
+        password: ""
     })
 
     const handleChange = ({target}) => {
@@ -21,7 +29,17 @@ export const Login = ({isOpen, closeModal}) => {
         }));
     }
 
-console.log(loginForm)
+const handleLogin = () =>{
+dispatch(getLogin(loginForm))
+}
+
+useEffect(() =>{
+if(access){
+    navigate("/operador")
+}
+}, [access])
+
+
     return(
         <Modal
         isOpen={isOpen}
@@ -53,16 +71,16 @@ console.log(loginForm)
                         </label>
                         <input
                          type="password"
-                         name="contraseña"
-                         id="contraseña"
+                         name="password"
+                         id="password"
                          onChange={handleChange}
-                         value={loginForm.contraseña}
+                         value={loginForm.password}
                          className='input-login'>
                         </input>
                     </form>
                 </div>
                 <div>
-                    <button className='login-button'>INICIAR SESIÓN</button>
+                    <button className='login-button' onClick={handleLogin}>INICIAR SESIÓN</button>
                 </div>
                 </div>
         </Modal>
