@@ -5,8 +5,7 @@ const { Sequelize } = require("sequelize");
 const { frequency: Frequency } = db; 
 
 exports.getSchedules = async (req, res) => {  
-  const { from, to, horaMin, horaMax, frequency, company, is_active } = req.query;
-
+  const { from, to, horaMin, horaMax, frequency, company } = req.query;
   try {
     if (from === to) {
       return res
@@ -62,20 +61,11 @@ exports.getSchedules = async (req, res) => {
     if (company) {
       routeConditions.company_id = company;
     }
-
-    // Filtrar por el estado de activación
     const scheduleConditions = {};
-   /*  if (is_active !== undefined) {
-      const isActiveBool = is_active === 'true'; // Asegurar que es un valor booleano
-      scheduleConditions.is_active = isActiveBool;
-    } else {
-      scheduleConditions.is_active = true; // Si no se pasa 'is_active', por defecto se filtra solo por los horarios activos
-    } */
 
     if (frequencyIds.length > 0) {
       scheduleConditions.frequency_id = { [Op.in]: frequencyIds };
     }
-
     if (horaMin && horaMax) {
       scheduleConditions.departure_time = {
         [Op.between]: [horaMin, horaMax],
@@ -131,7 +121,6 @@ exports.getSchedules = async (req, res) => {
     res.status(500).json({ message: "Error al obtener los horarios." });
   }
 };
-
 
 exports.getScheduleById = async (req, res) => {
   try {
@@ -246,13 +235,13 @@ exports.createSchedule = async (req, res) => {
 };
 
 exports.updateSchedule = async (req, res) => {
-  const { frequency, departure_time, arrival_time, origin, destination, is_active } = req.body;
+  const { frequency, departure_time, arrival_time, origin, destination } = req.body;
 
   try {
     if (!origin || !destination) {
       return res.status(400).json({ error: "Origen y destino son obligatorios." });
     }
-
+    
     const originStop = await stops.findOne({ where: { name: origin } });
     const destinationStop = await stops.findOne({ where: { name: destination } });
 
@@ -280,7 +269,6 @@ exports.updateSchedule = async (req, res) => {
         departure_time,
         arrival_time,
         route_id: route.id,
-        is_active
       },
       { where: { id: req.params.id } }
     );
@@ -308,7 +296,6 @@ exports.updateSchedule = async (req, res) => {
         frequency,
         origin: updatedSchedule.route?.originStop?.name || null,
         destination: updatedSchedule.route?.destinationStop?.name || null,
-        is_active: updatedSchedule.is_active, // Incluir el estado de is_active
       };
 
       res.status(200).json(response);
@@ -320,7 +307,6 @@ exports.updateSchedule = async (req, res) => {
     res.status(500).json({ error: "Error al actualizar el horario." });
   }
 };
-
 
 exports.deleteSchedule = async (req, res) => {
   try {
@@ -337,28 +323,6 @@ exports.deleteSchedule = async (req, res) => {
     res.status(500).json({ error: "Error al eliminar el horario." });
   }
 };
-
-exports.toggleScheduleStatus = async (req, res) => {
-  try {
-    const schedule = await schedules.findByPk(req.params.id);
-
-    if (!schedule) {
-      return res.status(404).json({ error: "Horario no encontrado." });
-    }
-
-    schedule.is_active = !schedule.is_active;
-    await schedule.save();
-
-    res.status(200).json({
-      message: `El horario ha sido ${schedule.is_active ? 'habilitado' : 'deshabilitado'}.`,
-      is_active: schedule.is_active
-    });
-  } catch (error) {
-    console.error("Error al actualizar el estado del horario:", error);
-    res.status(500).json({ error: "Error al actualizar el estado del horario." });
-  }
-};
-
 
 // Validar la existencia de una parada
 const getStopByName = async (name) => {
