@@ -39,7 +39,6 @@ if(access){
 }
 }, [access])
 
-
     return(
         <Modal
         isOpen={isOpen}
