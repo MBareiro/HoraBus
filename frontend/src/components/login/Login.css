@@ -87,7 +87,28 @@
     color:#1b1b1b;
     font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
   }
-
+  .conteiner-buttons-login{
+    display: flex;
+    flex-direction: column;
+  }
+  .recover-button{
+    width:auto;
+    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    color:#1b1b1b;
+    font-size: 12px;
+    background-color:#fefefe ;
+    border-radius: 5px;
+    cursor: pointer;
+    border: none;
+    margin-right: 1vh;
+    margin-bottom: 3vh;
+  }
+  .recover-button:hover {
+    background-color: #b3b3b3;
+  }
+  .login-button:hover{
+    background-color: #b3b3b3;
+  }
   @media (max-width: 450px) {
     .modal-login {
       width: 80%;

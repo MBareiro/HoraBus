@@ -79,8 +79,9 @@ if(access){
                         </input>
                     </form>
                 </div>
-                <div>
+                <div className='conteiner-buttons-login'>
                     <button className='login-button' onClick={handleLogin}>INICIAR SESIÓN</button>
+                    <button className='recover-button'>Recuperar contraseña</button>
                 </div>
                 </div>
         </Modal>
