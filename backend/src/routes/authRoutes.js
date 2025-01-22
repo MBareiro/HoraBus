@@ -92,11 +92,11 @@ router.post('/login', authController.loginUser);
  *           schema:
  *             type: object
  *             properties:
- *               email:
+ *               dni:
  *                 type: string
- *                 description: Correo electrónico del usuario
+ *                 description: dni del usuario
  *             example:
- *               email: usuario@example.com
+ *               dni: 11222333
  *     responses:
  *       200:
  *         description: Enlace de recuperación enviado al correo

@@ -50,10 +50,10 @@ exports.loginUser = async (req, res) => {
 
 // Recuperación de contraseña - Solicitar enlace
 exports.forgotPassword = async (req, res) => {
-  const { email } = req.body;
+  const { dni } = req.body;
 
   try {
-    const user = await User.findOne({ where: { email } });
+    const user = await User.findOne({ where: { dni } });
 
     if (!user) {
       return res.status(404).json({ error: 'Usuario no encontrado.' });
@@ -80,11 +80,9 @@ exports.forgotPassword = async (req, res) => {
         </a>
       `,
     };
-    
-
     await transporter.sendMail(mailOptions);
-
-    res.status(200).json({ message: 'Enlace de recuperación enviado a su correo electrónico.' });
+    const userMail = user.email;
+    res.status(200).json({ message: 'Enlace de recuperación enviado a su correo electrónico.', userMail });
 
   } catch (error) {
     console.error('Error al enviar el enlace de recuperación:', error);
