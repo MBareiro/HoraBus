@@ -9,6 +9,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { OperadorHome } from './components/operador/home/OperadorHome';
 import { RecoverPassword } from './components/operador/recoverPassword/RecoverPassword';
 import { ResetPassword } from './components/operador/resetPassword/ResetPassword';
+import { Login } from './components/login/Login';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -18,7 +19,7 @@ root.render(
         <Route path="/" element={<App />} />
         <Route path="/operador" element={<OperadorHome />} />
         <Route path="/recoverPassword" element={<RecoverPassword/>} />
-        <Route path="/reset-password" element={<ResetPassword/>}/>
+        <Route path="/reset-password/:token" element={<ResetPassword/>}/>
       </Routes>
       <Analytics />
     </Router>

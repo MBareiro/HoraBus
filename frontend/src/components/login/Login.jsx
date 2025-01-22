@@ -5,18 +5,18 @@ import { useState, useEffect } from 'react';
 import './Login.css'
 import { useDispatch, useSelector } from 'react-redux';
 import { getLogin } from '../../redux/actions/operadorActions/operadorActions';
-import { useNavigate } from "react-router-dom";
-import { RecoverPassword } from '../operador/recoverPassword/RecoverPassword';
+import { useNavigate } from 'react-router-dom';
+import { setSignIn } from '../../redux/slices/operadorSlice';
 
 export const Login = ({isOpen, closeModal}) => {
-
+const navigate = useNavigate()
 const access = useSelector((state) => state.operador.access)
 const dispatch = useDispatch()
-const navigate = useNavigate();
 
-    const handleCloseModal = () =>{
-        closeModal(false)
-    }
+const handleCloseModal = () => {
+    closeModal(false);
+    dispatch(setSignIn(false))
+  };
 
     const [loginForm, setLoginForm] = useState({
         dni: "",

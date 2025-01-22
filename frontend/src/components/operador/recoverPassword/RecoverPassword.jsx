@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getRecoverPassword } from "../../../redux/actions/operadorActions/operadorActions";
+import './RecoverPassword.css'
 
 export const RecoverPassword = () =>{
 
@@ -32,7 +33,7 @@ const dispatch = useDispatch()
     }, [recoverPassword])
 
     return(
-        <div>
+        <div className="conteiner-recover-p">
             <div>
                 <form>
                     <label>INGRESE SU DNI</label>

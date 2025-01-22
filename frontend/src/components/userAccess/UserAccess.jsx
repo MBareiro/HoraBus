@@ -1,14 +1,21 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Login } from "../login/Login"
 import './UserAccess.css'
+import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 export const UserAccess = () => {
-
 const [isOpen, setIsOpen] = useState(false)
+
+const signIn = useSelector((state) => state.operador.signIn)
 
 const handleIsOpen = () => {
 setIsOpen(true)
 }
+
+useEffect(() =>{
+signIn && setIsOpen(true)
+}, [signIn])
     return(
         <div className="access-conteiner">
                <div>

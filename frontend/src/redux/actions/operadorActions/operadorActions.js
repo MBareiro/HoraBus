@@ -35,3 +35,14 @@ export const getRecoverPassword = (dni) => async (dispatch) => {
     console.error(error)
   }
 }
+
+export const getNewPassword = (newPassword) => async (dispatch) => {
+  console.log(newPassword)
+  try{
+    const response = await axios.post(`${api}/auth/reset-password`, newPassword);
+    dispatch(setRecoverPassword(response.data))
+  }
+  catch(error){
+    console.error(error)
+  }
+}
