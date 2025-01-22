@@ -6,6 +6,7 @@ import './Login.css'
 import { useDispatch, useSelector } from 'react-redux';
 import { getLogin } from '../../redux/actions/operadorActions/operadorActions';
 import { useNavigate } from "react-router-dom";
+import { RecoverPassword } from '../operador/recoverPassword/RecoverPassword';
 
 export const Login = ({isOpen, closeModal}) => {
 
@@ -39,6 +40,9 @@ if(access){
 }
 }, [access])
 
+const handleClick = () => {
+navigate("/recoverPassword")
+}
     return(
         <Modal
         isOpen={isOpen}
@@ -80,7 +84,7 @@ if(access){
                 </div>
                 <div className='conteiner-buttons-login'>
                     <button className='login-button' onClick={handleLogin}>INICIAR SESIÓN</button>
-                    <button className='recover-button'>Recuperar contraseña</button>
+                    <button className='recover-button' onClick={handleClick}>Recuperar contraseña</button>
                 </div>
                 </div>
         </Modal>

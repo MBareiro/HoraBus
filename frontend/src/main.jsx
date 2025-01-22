@@ -7,6 +7,8 @@ import App from './App';
 import { Analytics } from "@vercel/analytics/react"
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { OperadorHome } from './components/operador/home/OperadorHome';
+import { RecoverPassword } from './components/operador/recoverPassword/RecoverPassword';
+import { ResetPassword } from './components/operador/resetPassword/ResetPassword';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -15,6 +17,8 @@ root.render(
       <Routes>
         <Route path="/" element={<App />} />
         <Route path="/operador" element={<OperadorHome />} />
+        <Route path="/recoverPassword" element={<RecoverPassword/>} />
+        <Route path="/reset-password" element={<ResetPassword/>}/>
       </Routes>
       <Analytics />
     </Router>

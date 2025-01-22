@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { setAccess } from '../../slices/operadorSlice';
+import { setAccess, setRecoverPassword } from '../../slices/operadorSlice';
 
 const api = 'https://hora-bus-backend.vercel.app/api'
 
@@ -19,3 +19,19 @@ export const getLogin = (loginForm) => async (dispatch) => {
     console.error("Error fetching paradas:", error);
   }
 };
+
+export const getRecoverPassword = (dni) => async (dispatch) => {
+  console.log(dni)
+  try{
+    const response = await axios.post(`${api}/auth/forgot-password`, dni);
+    const recoverPassword = {
+      message: response.data.message,
+      email: response.data.userMail
+    }
+
+    dispatch(setRecoverPassword(recoverPassword))
+  }
+  catch(error){
+    console.error(error)
+  }
+}
