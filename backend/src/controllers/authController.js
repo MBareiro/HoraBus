@@ -35,19 +35,12 @@ exports.loginUser = async (req, res) => {
     const token = jwt.sign(
       { id: user.id, name: user.name, email: user.email, role: user.role, company_id: user.company_id },
       process.env.JWT_SECRET,
-      { expiresIn: "1h" }
-    );
-
-    const refreshToken = jwt.sign(
-      { userId: user.id },
-      process.env.REFRESH_TOKEN_SECRET, 
-      { expiresIn: '7d' }
-    );
+      { expiresIn: "24h" }
+    );   
 
     res.status(200).json({ 
       message: "Inicio de sesión exitoso.",
-      token, 
-      refreshToken 
+      token
     });
   } catch (error) {
     console.error("Error al iniciar sesión:", error);
@@ -80,8 +73,14 @@ exports.forgotPassword = async (req, res) => {
       to: user.email,
       from: process.env.EMAIL_USER,
       subject: 'Recuperación de contraseña',
-      text: `Haga clic en el siguiente enlace para restablecer su contraseña: ${resetUrl}`,
+      html: `
+        <p>Haga clic en el siguiente botón para restablecer su contraseña:</p>
+        <a href="${resetUrl}" style="background-color: #4CAF50; color: white; padding: 15px 20px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; border-radius: 5px;">
+          Restablecer contraseña
+        </a>
+      `,
     };
+    
 
     await transporter.sendMail(mailOptions);
 
