@@ -73,8 +73,14 @@ exports.forgotPassword = async (req, res) => {
       to: user.email,
       from: process.env.EMAIL_USER,
       subject: 'Recuperación de contraseña',
-      text: `Haga clic en el siguiente enlace para restablecer su contraseña: ${resetUrl}`,
+      html: `
+        <p>Haga clic en el siguiente botón para restablecer su contraseña:</p>
+        <a href="${resetUrl}" style="background-color: #4CAF50; color: white; padding: 15px 20px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; border-radius: 5px;">
+          Restablecer contraseña
+        </a>
+      `,
     };
+    
 
     await transporter.sendMail(mailOptions);
 
