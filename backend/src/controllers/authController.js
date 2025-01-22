@@ -82,7 +82,7 @@ exports.forgotPassword = async (req, res) => {
     };
     await transporter.sendMail(mailOptions);
     const userMail = user.email;
-    res.status(200).json({ message: 'Enlace de recuperación enviado a su correo electrónico.', userMail });
+    res.status(200).json({ message: 'Enlace de recuperación enviado a su correo electrónico', userMail });
 
   } catch (error) {
     console.error('Error al enviar el enlace de recuperación:', error);
