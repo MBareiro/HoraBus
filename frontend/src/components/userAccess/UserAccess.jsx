@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react"
 import { Login } from "../login/Login"
 import './UserAccess.css'
-import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 export const UserAccess = () => {

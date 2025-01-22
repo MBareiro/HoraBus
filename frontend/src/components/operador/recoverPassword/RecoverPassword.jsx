@@ -2,11 +2,14 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getRecoverPassword } from "../../../redux/actions/operadorActions/operadorActions";
 import './RecoverPassword.css'
+import loadingGif from '../../../pictures/loading.gif'
 
 export const RecoverPassword = () =>{
 
 const recoverPassword = useSelector((state) => state.operador.recoverPassword)
 const dispatch = useDispatch()
+
+const [showLoadinGif, setShowLoadinGif] = useState(false)
 
         const [recoverForm, setRecoverForm] = useState({
             dni: "",
@@ -21,6 +24,7 @@ const dispatch = useDispatch()
         }
 
         const handleSend = () => {
+        setShowLoadinGif(true)
         dispatch(getRecoverPassword(recoverForm))
         }
     
@@ -29,23 +33,27 @@ const dispatch = useDispatch()
             message: recoverPassword.message,
             email: recoverPassword.email
         })
+        setShowLoadinGif(false)
 
     }, [recoverPassword])
 
     return(
         <div className="conteiner-recover-p">
-            <div>
-                <form>
-                    <label>INGRESE SU DNI</label>
+            <div className="conteiner-form-recover">
+                <h1 className="h1-recover">RECUPERAR CONTRASEÑA</h1>
+                <form className="conteiner-form">
+                    <label className="label-recover">INGRESE SU DNI</label>
                     <input
                     type="text"
                     name="dni"
                     id="dni"
                     onChange={handleChange}
-                    value={recoverForm.dni}></input>
+                    value={recoverForm.dni}
+                    className="input-recover"></input>
                 </form>
-                <button onClick={handleSend}>ENVIAR</button>
-              {recoverPass.message && <span>{recoverPass.message}: {recoverPass.email}</span>}  
+                <button onClick={handleSend} className="button-recover">ENVIAR</button>
+              {recoverPass.message && <span className="span-recover">{recoverPass.message}: {recoverPass.email}</span>}
+              {showLoadinGif && <img src={loadingGif} alt="Cargando..." className="loading-gif-recover" />}  
             </div>
         </div>
     )

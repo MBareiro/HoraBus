@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { getNewPassword } from "../../../redux/actions/operadorActions/operadorActions";
-import { setSignIn } from "../../../redux/slices/operadorSlice";
+import { setRecoverPassword, setSignIn } from "../../../redux/slices/operadorSlice";
 
 export const ResetPassword = () => {
     const { token } = useParams();
@@ -34,6 +34,7 @@ export const ResetPassword = () => {
 
     const handleSignIn = () => {
         dispatch(setSignIn(true))
+        dispatch(setRecoverPassword({}))
         navigate("/")
     }
 
