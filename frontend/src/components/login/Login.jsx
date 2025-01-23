@@ -21,15 +21,19 @@ const [errorsLogin, setErrorsLogin] = useState({
     password: ""
 })
 
-const handleCloseModal = () => {
-    closeModal(false);
-    dispatch(setSignIn(false))
-  };
-
-    const [loginForm, setLoginForm] = useState({
+const [loginForm, setLoginForm] = useState({
         dni: "",
-        password: ""
+        password: "",
     })
+
+const [loginError, setLoginError] = useState({
+    loginError: ""
+})
+
+    const handleCloseModal = () => {
+        closeModal(false);
+        dispatch(setSignIn(false))
+      };
 
     const handleChange = ({target}) => {
         setLoginForm((prevForm) => ({
@@ -43,8 +47,28 @@ const handleCloseModal = () => {
         });
     }
 
-const handleLogin = () =>{
-dispatch(getLogin(loginForm))
+const handleLogin = () =>{ 
+    if(loginForm.dni === ""){
+        setErrorsLogin({
+            ...errorsLogin,
+            dni: "Este campo no puede estar vacío",
+          });
+    }
+    if(loginForm.password === ""){
+        setErrorsLogin({
+            ...errorsLogin,
+            password: "Este campo no puede estar vacío",
+          });
+    }
+    if (errorsLogin.dni  || errorsLogin.password ) {
+        setLoginError({
+            loginError: "No puede iniciar sesión debido a errores en los campos"
+          })
+      }
+      
+if(loginForm.dni && loginForm.password && !errorsLogin.dni && !errorsLogin.password){
+    dispatch(getLogin(loginForm))
+}
 }
 
 useEffect(() =>{
@@ -63,7 +87,7 @@ const handleShowPassword = () => {
     : setShowPassword(true)
 }
 
-console.log(errorsLogin)
+console.log(loginForm)
     return(
         <Modal
         isOpen={isOpen}
@@ -116,6 +140,7 @@ console.log(errorsLogin)
                     <button className='login-button' onClick={handleLogin}>INICIAR SESIÓN</button>
                     <button className='recover-button' onClick={handleClick}>Recuperar contraseña</button>
                 </div>
+                {loginError.loginError && <span className='span-error'>{loginError.loginError}</span>}
                 </div>
         </Modal>
     )

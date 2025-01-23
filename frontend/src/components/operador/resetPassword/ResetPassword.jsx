@@ -7,6 +7,7 @@ import "./ResetPassword.css"
 import loadingGif from '../../../pictures/loading.gif'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {faEye} from "@fortawesome/free-solid-svg-icons";
+import { validationsNewPassword } from "./validationsNewPassword";
 
 export const ResetPassword = () => {
     const { token } = useParams();
@@ -23,16 +24,45 @@ export const ResetPassword = () => {
         token: token
     })
 
+    const [errorsPassword, setErrorsPassword] = useState({
+        newPassword: ""
+    })
+
+    const [errorReset, setErrorReset] = useState({
+        errorReset: ""
+    })
+
     const handleChange = ({ target }) => {
         setNewPassword((prevForm) => ({
             ...prevForm,
             [target.name]: target.value
         }));
+
+        const fieldsErrors = validationsNewPassword(target.name, target.value);
+                setErrorsPassword({
+                  ...errorsPassword,
+                  [target.name]: fieldsErrors[target.name],
+                });
+                setErrorReset({
+                    errorReset: ""
+                })
     }
 
     const handleNewPassword = () => {
-        setShowLoadinGif(true)
-        dispatch(getNewPassword(newPassword))
+        if(newPassword.newPassword === ""){
+            setErrorsPassword({
+                newPassword: "Este campo no puede quedar vacío",
+              });
+        } else{
+            if(errorsPassword.newPassword){
+                setErrorReset({
+                    errorReset: "No puede restaurar su contraseña debido a errores en el campo"
+                })
+                } else{
+                    setShowLoadinGif(true)
+                    dispatch(getNewPassword(newPassword))
+                }
+        }
     }
 
     useEffect(() => {
@@ -51,6 +81,8 @@ export const ResetPassword = () => {
         setShowPassword(false)
         : setShowPassword(true)
     }
+
+    console.log(errorsPassword)
 
     return (
         <div className="conteiner-reset-password">
@@ -71,6 +103,7 @@ export const ResetPassword = () => {
                         <FontAwesomeIcon icon={faEye} />
                     </button>
                     </div>
+                    {errorsPassword.newPassword && <span className='span-error'>{errorsPassword.newPassword}</span>}
                 </form>
                 <button onClick={handleNewPassword} className="button-recover">ENVIAR</button>
                 {showLoadinGif && <img src={loadingGif} alt="Cargando..." className="loading-gif-recover" />}
@@ -79,8 +112,8 @@ export const ResetPassword = () => {
                         <span className="span-recover">{message}</span>
                         <button onClick={handleSignIn} className="button-recover"> INICIAR SESION </button>
                     </div>}
+                    {errorReset.errorReset && <span className="span-error">{errorReset.errorReset}</span>}
             </div>
-
         </div>
     )
 }
