@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const authController = require('../controllers/authController');
 const verifyToken = require('../middleware/verifyToken');
+const authValidator = require('../validators/authValidator');
 
 /**
  * @swagger
@@ -77,7 +78,7 @@ const verifyToken = require('../middleware/verifyToken');
  *                   type: string
  *                   example: Error interno al iniciar sesión.
  */
-router.post('/login', authController.loginUser);
+router.post('/login', authValidator.loginUserValidator, validationErrorHandler, authController.loginUser);
 
 /**
  * @swagger
@@ -105,7 +106,7 @@ router.post('/login', authController.loginUser);
  *       500:
  *         description: Error interno
  */
-router.post('/forgot-password', authController.forgotPassword);
+router.post('/forgot-password', authValidator.forgotPasswordValidator, validationErrorHandler, authController.forgotPassword);
 
 /**
  * @swagger
@@ -137,7 +138,7 @@ router.post('/forgot-password', authController.forgotPassword);
  *       500:
  *         description: Error interno
  */
-router.post('/reset-password', authController.resetPassword);
+router.post('/reset-password', authValidator.resetPasswordValidator, validationErrorHandler, authController.resetPassword);
 
 /**
  * @swagger
@@ -202,7 +203,7 @@ router.post('/reset-password', authController.resetPassword);
  *                   type: string
  *                   example: Error al procesar el refresh token.
  */
-router.post('/refresh_token', authController.refreshToken);
+router.post('/refresh_token', authValidator.refreshTokenValidator, validationErrorHandler, authController.refreshToken);
 
 
 module.exports = router;
