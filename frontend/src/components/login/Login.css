@@ -123,6 +123,11 @@
     background-color:transparent;
     border: none;
   }
+  .span-error{
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    color:#1b1b1b;
+    font-size: 15px;
+  }
   @media (max-width: 450px) {
     .modal-login {
       width: 80%;

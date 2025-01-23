@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getLogin } from '../../redux/actions/operadorActions/operadorActions';
 import { useNavigate } from 'react-router-dom';
 import { setSignIn } from '../../redux/slices/operadorSlice';
+import { validationsLogin } from './validationsLogin';
 
 export const Login = ({isOpen, closeModal}) => {
 const navigate = useNavigate()
@@ -14,6 +15,11 @@ const access = useSelector((state) => state.operador.access)
 const dispatch = useDispatch()
 
 const [showPassword, setShowPassword] = useState(false)
+
+const [errorsLogin, setErrorsLogin] = useState({
+    dni: "",
+    password: ""
+})
 
 const handleCloseModal = () => {
     closeModal(false);
@@ -30,6 +36,11 @@ const handleCloseModal = () => {
             ...prevForm,
             [target.name]: target.value
         }));
+        const fieldsErrors = validationsLogin(target.name, target.value);
+        setErrorsLogin({
+          ...errorsLogin,
+          [target.name]: fieldsErrors[target.name],
+        });
     }
 
 const handleLogin = () =>{
@@ -51,6 +62,8 @@ const handleShowPassword = () => {
     setShowPassword(false)
     : setShowPassword(true)
 }
+
+console.log(errorsLogin)
     return(
         <Modal
         isOpen={isOpen}
@@ -77,6 +90,7 @@ const handleShowPassword = () => {
                         value={loginForm.dni}
                         className='input-login'>
                         </input>
+                        {errorsLogin.dni && <span className='span-error'>{errorsLogin.dni} </span>}
                         <label className="label-login">
                             CONTRASEÑA
                         </label>
@@ -95,6 +109,7 @@ const handleShowPassword = () => {
                         <FontAwesomeIcon icon={faEye} />
                         </button>
                         </div>
+                        {errorsLogin.password && <span className='span-error'>{errorsLogin.password} </span>}
                     </form>
                 </div>
                 <div className='conteiner-buttons-login'>
