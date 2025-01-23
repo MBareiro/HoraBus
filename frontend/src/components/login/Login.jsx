@@ -1,6 +1,6 @@
 import Modal from 'react-modal'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faXmark} from "@fortawesome/free-solid-svg-icons";
+import { faXmark, faEye} from "@fortawesome/free-solid-svg-icons";
 import { useState, useEffect } from 'react';
 import './Login.css'
 import { useDispatch, useSelector } from 'react-redux';
@@ -12,6 +12,8 @@ export const Login = ({isOpen, closeModal}) => {
 const navigate = useNavigate()
 const access = useSelector((state) => state.operador.access)
 const dispatch = useDispatch()
+
+const [showPassword, setShowPassword] = useState(false)
 
 const handleCloseModal = () => {
     closeModal(false);
@@ -43,6 +45,12 @@ if(access){
 const handleClick = () => {
 navigate("/recoverPassword")
 }
+
+const handleShowPassword = () => {
+    showPassword ? 
+    setShowPassword(false)
+    : setShowPassword(true)
+}
     return(
         <Modal
         isOpen={isOpen}
@@ -72,14 +80,21 @@ navigate("/recoverPassword")
                         <label className="label-login">
                             CONTRASEÑA
                         </label>
+                        <div className='conteiner-input-password'>
                         <input
-                         type="password"
+                         type={showPassword ? "text" : "password"}
                          name="password"
                          id="password"
                          onChange={handleChange}
                          value={loginForm.password}
                          className='input-login'>
                         </input>
+                        <button className='eye-button'
+                        type='button'
+                        onClick={handleShowPassword}>
+                        <FontAwesomeIcon icon={faEye} />
+                        </button>
+                        </div>
                     </form>
                 </div>
                 <div className='conteiner-buttons-login'>

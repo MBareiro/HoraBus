@@ -53,7 +53,7 @@
     justify-content: flex-start;
   }
   .input-login{
-    width: 140%;
+    width: 100%;
     height: 4vh;
     border-radius:5px;
     border: none;
@@ -108,6 +108,20 @@
   }
   .login-button:hover{
     background-color: #b3b3b3;
+  }
+  .conteiner-input-password{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+  }
+  .eye-button{
+    margin-top: 0.1vh;
+    height: 4vh;
+    margin-left: 1vh;
+    cursor: pointer;
+    color:#1b1b1b;
+    background-color:transparent;
+    border: none;
   }
   @media (max-width: 450px) {
     .modal-login {
