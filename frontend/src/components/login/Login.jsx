@@ -6,15 +6,19 @@ import './Login.css'
 import { useDispatch, useSelector } from 'react-redux';
 import { getLogin } from '../../redux/actions/operadorActions/operadorActions';
 import { useNavigate } from 'react-router-dom';
-import { setSignIn } from '../../redux/slices/operadorSlice';
+import { setMessage, setSignIn } from '../../redux/slices/operadorSlice';
 import { validationsLogin } from './validationsLogin';
+import loadingGif from '../../pictures/loading.gif'
 
 export const Login = ({isOpen, closeModal}) => {
 const navigate = useNavigate()
 const access = useSelector((state) => state.operador.access)
+const message = useSelector((state) => state.operador.message)
 const dispatch = useDispatch()
 
+
 const [showPassword, setShowPassword] = useState(false)
+const [showLoadinGif, setShowLoadinGif] = useState(false)
 
 const [errorsLogin, setErrorsLogin] = useState({
     dni: "",
@@ -30,12 +34,19 @@ const [loginError, setLoginError] = useState({
     loginError: ""
 })
 
+const [showMessage, setShowMessage] = useState("")
+
     const handleCloseModal = () => {
         closeModal(false);
         dispatch(setSignIn(false))
       };
 
     const handleChange = ({target}) => {
+
+        setLoginError({
+            loginError: ""
+          })
+
         setLoginForm((prevForm) => ({
             ...prevForm,
             [target.name]: target.value
@@ -48,6 +59,7 @@ const [loginError, setLoginError] = useState({
     }
 
 const handleLogin = () =>{ 
+dispatch(setMessage(""))
     if(loginForm.dni === ""){
         setErrorsLogin({
             ...errorsLogin,
@@ -67,6 +79,7 @@ const handleLogin = () =>{
       }
       
 if(loginForm.dni && loginForm.password && !errorsLogin.dni && !errorsLogin.password){
+    setShowLoadinGif(true)
     dispatch(getLogin(loginForm))
 }
 }
@@ -87,7 +100,13 @@ const handleShowPassword = () => {
     : setShowPassword(true)
 }
 
-console.log(loginForm)
+useEffect(() => {
+if(message){
+    setShowLoadinGif(false)
+}
+setShowMessage(message)
+}, [message])
+
     return(
         <Modal
         isOpen={isOpen}
@@ -141,6 +160,8 @@ console.log(loginForm)
                     <button className='recover-button' onClick={handleClick}>Recuperar contraseña</button>
                 </div>
                 {loginError.loginError && <span className='span-error'>{loginError.loginError}</span>}
+                {showMessage && <span className='span-error' >{message}</span>}
+                {showLoadinGif && <img src={loadingGif} alt="Cargando..." className="loading-gif-recover" />}
                 </div>
         </Modal>
     )

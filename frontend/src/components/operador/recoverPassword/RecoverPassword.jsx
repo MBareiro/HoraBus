@@ -4,13 +4,17 @@ import { getRecoverPassword } from "../../../redux/actions/operadorActions/opera
 import './RecoverPassword.css'
 import loadingGif from '../../../pictures/loading.gif'
 import { validationsRecover } from "./validationsRecover";
+import { setMessage } from "../../../redux/slices/operadorSlice";
 
 export const RecoverPassword = () =>{
 
 const recoverPassword = useSelector((state) => state.operador.recoverPassword)
+const message = useSelector((state) => state.operador.message)
 const dispatch = useDispatch()
 
 const [showLoadinGif, setShowLoadinGif] = useState(false)
+
+const [showMessage, setShowMessage] = useState("")
 
         const [recoverForm, setRecoverForm] = useState({
             dni: "",
@@ -40,6 +44,7 @@ const [showLoadinGif, setShowLoadinGif] = useState(false)
         }
 
         const handleSend = () => {
+            dispatch(setMessage(""))
         if(!recoverForm.dni){
             setErrorsRecover({
                 ...errorsRecover,
@@ -66,6 +71,13 @@ const [showLoadinGif, setShowLoadinGif] = useState(false)
 
     }, [recoverPassword])
 
+    useEffect(() => {
+    if(message){
+        setShowLoadinGif(false)
+    }
+    setShowMessage(message)
+    }, [message])
+
     return(
         <div className="conteiner-recover-p">
             <div className="conteiner-form-recover">
@@ -84,7 +96,8 @@ const [showLoadinGif, setShowLoadinGif] = useState(false)
                 <button onClick={handleSend} className="button-recover">ENVIAR</button>
               {recoverPass.message && <span className="span-recover">{recoverPass.message}: {recoverPass.email}</span>}
               {showLoadinGif && <img src={loadingGif} alt="Cargando..." className="loading-gif-recover" />}
-              {errorsSend.dni && <span className="span-error">{errorsSend.dni}</span>}  
+              {errorsSend.dni && <span className="span-error">{errorsSend.dni}</span>} 
+              {showMessage && <span className="span-error">{message}</span>} 
             </div>
         </div>
     )

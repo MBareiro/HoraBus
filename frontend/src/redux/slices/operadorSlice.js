@@ -4,6 +4,7 @@ const initialState = {
  access: false,
  recoverPassword:{},
  signIn: false,
+ message: "",
 };
 
 const operadorSlice = createSlice({
@@ -18,10 +19,13 @@ const operadorSlice = createSlice({
     },
     setSignIn: (state, action) => {
       state.signIn = action.payload
+    },
+    setMessage: (state, action) =>{
+      state.message = action.payload
     }
   },
 });
 
-export const {setAccess, setRecoverPassword, setSignIn} = operadorSlice.actions;
+export const {setAccess, setRecoverPassword, setSignIn, setMessage} = operadorSlice.actions;
 
 export default operadorSlice.reducer;
