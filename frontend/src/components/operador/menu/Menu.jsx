@@ -1,7 +1,6 @@
 import { useState } from "react"
 import { ParadasOperador } from "../paradas/ParadasOperador"
-import { Horarios } from "../horarios/Horarios"
-
+import { HorariosButtonOperador } from '../horariosButton/HorariosButtonOperador'
 
 export const Menu = () => {
 
@@ -25,7 +24,7 @@ const handleOpenHorarios = () => {
             <button className="selector" onClick={handleOpenHorarios}>HORARIOS</button>
         </div>
         {openParadas && <ParadasOperador setOpenParadas={setOpenParadas}/> }
-        {openHorarios && <Horarios setOpenHorarios={setOpenHorarios}/>}
+        {openHorarios && <HorariosButtonOperador setOpenHorarios={setOpenHorarios}/>}
   </div>
     )
 }

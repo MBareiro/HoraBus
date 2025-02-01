@@ -42,7 +42,6 @@ const [showMessage, setShowMessage] = useState("")
                 dni: ""
             })
         }
-
         const handleSend = () => {
             dispatch(setMessage(""))
         if(!recoverForm.dni){

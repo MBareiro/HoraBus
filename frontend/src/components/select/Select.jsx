@@ -23,8 +23,6 @@ const handleDestinoChange = (event) =>{
     setShowError(false)
     
 }
-
-
 const handleOrigenChange = (event) =>{
     setOrigen(event.target.value)
     setShowError(false)
@@ -32,7 +30,6 @@ const handleOrigenChange = (event) =>{
       frequency: []
     }))
 }
-
 
 const handleBuscarHorarios = () => {
 if(destino && origen){
