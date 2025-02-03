@@ -5,23 +5,33 @@ export const ParadasOperador = ({setOpenParadas}) => {
 
 
     return (
-        <div>
-            <div>
-                <button onClick={() => setOpenParadas(false)} className='button-close'>
+        <div className="conteiner-hor-op">
+            <div className='button-login-conteiner'>
+            <button onClick={() => setOpenParadas(false)} className='button-close'>
                     <FontAwesomeIcon icon={faXmark}/>
                 </button>
-                <h2>PARADAS</h2>
-                <ul>
-                    <li>Elemento 1</li>
-                    <li>Elemento 2</li>
-                    <li>Elemento 3</li>
-                    </ul>
+
             </div>
-            <div>
-                <h2>
-                    MIS PARADAS
-                </h2>
-            </div>
+                <h2 className="center-text">PARADAS</h2>
+                 <table className="tabla">
+                              <thead>
+                                <tr>
+                                  <th>Paradas</th>
+                                  <th>Mis Paradas</th>
+                                  <th>Seleccionar</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                    <tr>
+                                      <td></td>
+                                      <td></td>
+                                      <td>
+                                        <input type="checkbox" />
+                                      </td>
+                                    </tr>
+                              </tbody>
+                            </table>
+              
         </div>
     )
 }
