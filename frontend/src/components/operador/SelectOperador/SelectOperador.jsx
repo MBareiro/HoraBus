@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 import './SelectOperador.css'
 import { setFilters } from "../../../redux/slices/userSlice";
 import { getHorarios } from "../../../redux/actions/userActions/userActions";
-import Horarios from "../../horarios/Horarios";
+import { HorariosOperador } from "../horarios/HorariosOperador";
 
 export const SelectOperador = () => {
 
@@ -80,7 +80,8 @@ setShowHorarios(false)
 
     </div>
     
-{showHorarios && <Horarios origen={origen} destino={destino} handleBuscarHorarios={handleBuscarHorarios}/> }
+{showHorarios && 
+<HorariosOperador origen={origen} destino={destino} handleBuscarHorarios={handleBuscarHorarios}/> }
 {showError && <p className="error">
 POR FAVOR, SELECCIONE EL ORIGEN Y EL DESTINO CORRECTAMENTE
 </p>}

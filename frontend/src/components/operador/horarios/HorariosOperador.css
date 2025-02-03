@@ -1,0 +1,11 @@
+.conteiner-opciones-h{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content:center;
+}
+.opciones-tabla-h{
+    border: none;
+    background-color: transparent;
+    font-size: 20px;
+}
