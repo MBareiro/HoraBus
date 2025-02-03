@@ -6,6 +6,7 @@ import Filtros from "../../filtros/Filtros/Filtros";
 import LimpiarFiltros from "../../filtros/LimpiarFiltros/LimpiarFiltros";
 import { useEffect, useState } from "react";
 import './HorariosOperador.css'
+import loadingGif from '../../../pictures/loading.gif'
 
 
 export const HorariosOperador = ({origen,destino,handleBuscarHorarios}) => {
@@ -21,52 +22,72 @@ export const HorariosOperador = ({origen,destino,handleBuscarHorarios}) => {
         setLoading(false)
       }
       }, [horarios])
-     return(
-        <div>
-             <h3 className="center-text">HORARIOS</h3>
-             <div className="buttons-filters-conteiner">
-            <Filtros origen={origen} destino={destino} setLoading={setLoading} filtrosOn={filtrosOn} setFiltrosOn={setFiltrosOn} 
-            openFiltrosModal={openFiltrosModal} setOpenFiltrosModal={setOpenFiltrosModal}/>
-            <LimpiarFiltros origen={origen} destino={destino} handleBuscarHorarios={handleBuscarHorarios} setLoading={setLoading} 
-            filtrosOn={filtrosOn} setFiltrosOn={setFiltrosOn}/>
+      return (
+        loading ? (
+          <div className="loading-container-op">
+            <img src={loadingGif} alt="Cargando..." className="loading-gif" />
+          </div>
+        ) : (
+          <div> 
+            <h3 className="center-text">HORARIOS</h3>
+            <div className="buttons-filters-conteiner">
+              <Filtros 
+                origen={origen} 
+                destino={destino} 
+                setLoading={setLoading} 
+                filtrosOn={filtrosOn} 
+                setFiltrosOn={setFiltrosOn} 
+                openFiltrosModal={openFiltrosModal} 
+                setOpenFiltrosModal={setOpenFiltrosModal}
+              />
+              <LimpiarFiltros 
+                origen={origen} 
+                destino={destino} 
+                handleBuscarHorarios={handleBuscarHorarios} 
+                setLoading={setLoading} 
+                filtrosOn={filtrosOn} 
+                setFiltrosOn={setFiltrosOn}
+              />
             </div>
-             <div className="conteiner-opciones-h">
+            <div className="conteiner-opciones-h">
               <OpcionesHorarios/>
-             </div>
-             <table className="tabla">
-        <thead>
-          <tr>
-            <th>{origen}</th>
-            <th>{destino}</th>
-            <th>Frecuencia</th>
-            <th>Habilitado</th>
-            <th>Editar</th>
-            <th>Seleccionar</th>
-          </tr>
-        </thead>
-        <tbody>
-        {horarios
-        .slice() // Crea una copia para evitar mutar el estado original
-        .sort((a, b) => a.departure_time.localeCompare(b.departure_time)) // Ordena por departure_time
-        .map((item) => (
-    <tr key={item.id}>
-      <td>{item.departure_time}</td>
-      <td>{item.arrival_time}</td>
-      <td>{item.frequency}</td>
-      <td>
-        <button className="opciones-tabla-h"><FontAwesomeIcon icon={faSquareCheck} style={{color: "#458762",}} /></button></td>
-     {/* <FontAwesomeIcon icon={faSquareXmark} style={{color: "#b12533",}} /> */}
-      <td> <button className="opciones-tabla-h"><FontAwesomeIcon icon={faPenToSquare} style={{color: "#ffc107",}} /> </button>
-        </td>
-      <td>
-                <input
-                  type="checkbox"
-                />
-              </td>
-    </tr>
-  ))}
-        </tbody>
-      </table>
-        </div>
-     )       
+            </div>
+            <table className="tabla">
+              <thead>
+                <tr>
+                  <th>{origen}</th>
+                  <th>{destino}</th>
+                  <th>Frecuencia</th>
+                  <th>Habilitado</th>
+                  <th>Editar</th>
+                  <th>Seleccionar</th>
+                </tr>
+              </thead>
+              <tbody>
+                {horarios
+                  .slice() // Crea una copia para evitar mutar el estado original
+                  .sort((a, b) => a.departure_time.localeCompare(b.departure_time)) // Ordena por departure_time
+                  .map((item) => (
+                    <tr key={item.id}>
+                      <td>{item.departure_time}</td>
+                      <td>{item.arrival_time}</td>
+                      <td>{item.frequency}</td>
+                      <td>
+                        <FontAwesomeIcon icon={faSquareCheck} style={{ color: "#458762" }} />
+                      </td>
+                      <td>
+                        <button className="opciones-tabla-h">
+                          <FontAwesomeIcon icon={faPenToSquare} style={{ color: "#ffc107" }} />
+                        </button>
+                      </td>
+                      <td>
+                        <input type="checkbox" />
+                      </td>
+                    </tr>
+                  ))}
+              </tbody>
+            </table>
+          </div>
+        )
+      );      
 }
