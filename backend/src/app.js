@@ -1,12 +1,13 @@
 const express = require('express');
 const http = require('http');
 const morgan = require('morgan');
-const setupSwagger = require('../config/swaggerConfig');
 
+const setupSwagger = require('../config/swaggerConfig');
 const { authenticateDB, syncDB } = require('../config/db');
 const routes = require('./routes');
 const setupMiddlewares = require('./middleware/security');
-//const limiter = require('../config/rateLimit');
+// const limiter = require('../config/rateLimit');
+
 const { setupWebSocket } = require('./controllers/gpsController');
 const { setGlobalTimeouts } = require('./services/timeoutService');
 const { limitPayloadSize } = require('./services/payloadSizeService');
@@ -14,23 +15,26 @@ const { limitPayloadSize } = require('./services/payloadSizeService');
 const app = express();
 const server = http.createServer(app);
 
-// Tiempo de espera para mantener la conexión abierta
+// Configuración del servidor
 server.keepAliveTimeout = 30 * 1000;  // 30 segundos (keep-alive)
 server.headersTimeout = 35 * 1000;    // 35 segundos para recibir los encabezados completos
 app.set('trust proxy', true);
 
 // Configuración de middlewares
 setupMiddlewares(app);
-/* app.use(limiter); */
 app.use(morgan('dev'));
-app.use(limitPayloadSize); 
+app.use(limitPayloadSize);
+// app.use(limiter);
 
+// Rutas
 app.use('/api', routes);
 
+// Configuraciones adicionales
 setGlobalTimeouts(app);
 setupWebSocket(server);
 setupSwagger(app);
 
+// Iniciar el servidor
 const PORT = process.env.PORT || 3000;
 
 authenticateDB()
