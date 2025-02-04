@@ -13,7 +13,6 @@ const options = {
   apis: ['./src/routes/*.js'], 
 };
 
-//const swaggerDocs = swaggerJSDoc(options);
 const swaggerSpec = swaggerJSDoc(options);
 
 const setupSwagger = (app) => {

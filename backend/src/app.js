@@ -35,7 +35,7 @@ setupWebSocket(server);
 setupSwagger(app);
 
 // Iniciar el servidor
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.DB_PORT || 3000;
 
 authenticateDB()
   .then(syncDB)
