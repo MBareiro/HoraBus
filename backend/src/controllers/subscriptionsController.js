@@ -10,7 +10,6 @@ const transporter = nodemailer.createTransport({
   }
 });
 
-// Suscribirse
 exports.subscribe = async (req, res) => {
   try {
     const { email } = req.body;
@@ -21,8 +20,12 @@ exports.subscribe = async (req, res) => {
   }
 };
 
-// Enviar notificación a todos los suscriptores
-exports.notifySubscribers = async (message) => {
+exports.notifySubscribers = async (req, res) => {
+  const { message } = req.body; 
+  if (!message) {
+    return res.status(400).json({ error: "El mensaje es requerido." });
+  }
+
   try {
     const subscribers = await Subscription.findAll();
     const emails = subscribers.map((s) => s.email);
@@ -35,7 +38,11 @@ exports.notifySubscribers = async (message) => {
         text: message
       });
     }
+
+    res.status(200).json({ message: "Notificaciones enviadas exitosamente." });
   } catch (error) {
     console.error('Error enviando notificaciones', error);
+    res.status(500).json({ error: "Error al enviar notificaciones." });
   }
 };
+

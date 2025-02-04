@@ -1,23 +1,21 @@
 const db = require('../../db/models');
 const Stop = db.stops; 
+const { stops, routes, schedules, companies } = db;
 
-// Obtener todas las paradas
+
 exports.getAllStops = async (req, res) => {
   try {
-    const { state } = req.query;
-    const where = {};
-    if (state) {
-      where.state = state;
-    }
-    const stops = await Stop.findAll({ where });
-    res.status(200).json(stops);
+    const stopsList = await stops.findAll({
+      attributes: ['id', 'name']
+    });
+
+    return res.status(200).json({ stops: stopsList });
   } catch (error) {
-    console.error('Error al obtener las paradas:', error);
-    res.status(500).json({ error: 'Error al obtener las paradas.' });
+    console.error('Error al obtener todas las paradas:', error);
+    return res.status(500).json({ message: 'Error al obtener las paradas.' });
   }
 };
 
-// Obtener una parada por ID
 exports.getStopById = async (req, res) => {
   try {
     const stop = await Stop.findByPk(req.params.id);
@@ -32,14 +30,19 @@ exports.getStopById = async (req, res) => {
   }
 };
 
-// Crear una nueva parada
 exports.createStop = async (req, res) => {
-  const { name, location } = req.body;
+  const { name, location, state } = req.body;
 
   // Validar que el objeto location y sus propiedades existan
- /*  if (!location || typeof location.latitude === 'undefined' || typeof location.longitude === 'undefined') {
+  if (!location || typeof location.latitude === 'undefined' || typeof location.longitude === 'undefined') {
     return res.status(400).json({ error: 'El objeto "location" con propiedades "latitude" y "longitude" es requerido.' });
-  } */
+  }
+
+  // Validar el estado
+  const validStates = ["ENABLED", "DISABLED", "PENDING"];
+  if (state && !validStates.includes(state)) {
+    return res.status(400).json({ error: 'Estado inválido. Use "ENABLED" o "DISABLED".' });
+  }
 
   const { latitude, longitude } = location;
 
@@ -52,7 +55,9 @@ exports.createStop = async (req, res) => {
 
     // Crear el nuevo objeto GEOGRAPHY utilizando el formato WKT: "POINT(longitude latitude)"
     const newStop = await Stop.create({
-      name
+      name,
+      location: db.sequelize.fn('ST_GeomFromText', `POINT(${longitude} ${latitude})`),
+      state: state || "ENABLED"  // Establecer el estado a "ENABLED" por defecto
     });
 
     res.status(201).json(newStop);
@@ -62,18 +67,23 @@ exports.createStop = async (req, res) => {
   }
 };
 
-
-// Actualizar una parada existente
 exports.updateStop = async (req, res) => {
-  const { name, latitude, longitude } = req.body; // Obtener latitud y longitud
+  const { name, latitude, longitude, state } = req.body; 
+
+  // Validar el estado si se proporciona
+  const validStates = ["ENABLED", "DISABLED"];
+  if (state && !validStates.includes(state)) {
+    return res.status(400).json({ error: 'Estado inválido. Use "ENABLED" o "DISABLED".' });
+  }
 
   if (latitude && longitude) {
     try {
-      // Actualizar las coordenadas si están presentes
+      // Actualizar las coordenadas y el estado si se proporcionan
       const [updated] = await Stop.update(
         { 
           name, 
-          location: db.sequelize.fn('ST_GeomFromText', `POINT(${longitude} ${latitude})`)
+          location: db.sequelize.fn('ST_GeomFromText', `POINT(${longitude} ${latitude})`),
+          state: state || undefined  // Actualizar el estado si se proporciona
         },
         { where: { id: req.params.id } }
       );
@@ -90,9 +100,9 @@ exports.updateStop = async (req, res) => {
     }
   } else {
     try {
-      // Solo actualizar el nombre si no hay nuevas coordenadas
+      // Solo actualizar el nombre y el estado si no hay nuevas coordenadas
       const [updated] = await Stop.update(
-        { name },
+        { name, state: state || undefined },
         { where: { id: req.params.id } }
       );
 
@@ -109,7 +119,6 @@ exports.updateStop = async (req, res) => {
   }
 };
 
-// Eliminar una parada
 exports.deleteStop = async (req, res) => {
   try {
     const deleted = await Stop.destroy({ where: { id: req.params.id } });
@@ -150,3 +159,83 @@ exports.updateStopState = async (req, res) => {
     res.status(500).json({ error: "Error en el servidor.", details: error.message });
   }
 };
+
+exports.getAvailableOrigins = async (req, res) => {
+  try {
+    const origins = await stops.findAll({
+      include: [
+        {
+          model: routes,
+          as: 'originRoutes',
+          include: [
+            {
+              model: schedules,
+              where: { state: 'enabled' }, 
+              attributes: ['id']
+            }
+          ]
+        }
+      ],
+      attributes: ['id', 'name'],
+      group: ['stops.id'] 
+    });
+
+    return res.status(200).json({ origins });
+  } catch (error) {
+    console.error('Error al obtener paradas de origen:', error);
+    return res.status(500).json({ message: 'Error al obtener las paradas de origen.' });
+  }
+};
+
+exports.getDestinationsByOrigin = async (req, res) => {
+  const { originId } = req.params;
+
+  try {
+    const destinations = await stops.findAll({
+      include: [
+        {
+          model: routes,
+          as: 'destinationRoutes',
+          where: { origin: originId }, 
+          include: [
+            {
+              model: schedules,
+              where: { state: 'enabled' },
+              attributes: ['id']
+            }
+          ]
+        }
+      ],
+      attributes: ['id', 'name'],
+      group: ['stops.id']
+    });
+
+    return res.status(200).json({ destinations });
+  } catch (error) {
+    console.error('Error al obtener destinos:', error);
+    return res.status(500).json({ message: 'Error al obtener los destinos.' });
+  }
+};
+
+exports.getCompanyStops = async (req, res) => {
+  const { companyId } = req.user; 
+  try {
+    const stopsList = await stops.findAll({
+      include: [
+        {
+          model: companies,
+          as: 'companies',
+          where: { id: companyId },
+          through: { attributes: [] } 
+        }
+      ],
+      attributes: ['id', 'name']
+    });
+
+    return res.status(200).json({ stops: stopsList });
+  } catch (error) {
+    console.error('Error al obtener paradas de la empresa:', error);
+    return res.status(500).json({ message: 'Error al obtener paradas de la empresa.' });
+  }
+};
+

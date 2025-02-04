@@ -14,7 +14,7 @@ const verifyToken = require('../middleware/verifyToken');
 
 /**
  * @swagger
- * /companies:
+ * /api/companies:
  *   get:
  *     summary: Obtiene todas las compañías
  *     tags: [Companies]
@@ -39,7 +39,7 @@ router.get('/',  companiesController.getAllCompanies);
 
 /**
  * @swagger
- * /companies/{id}:
+ * /api/companies/{id}:
  *   get:
  *     summary: Obtiene una compañía específica por ID
  *     tags: [Companies]
@@ -67,11 +67,11 @@ router.get('/',  companiesController.getAllCompanies);
  *       500:
  *         description: Error en el servidor
  */
-router.get('/:id', verifyToken(['Administrator']), companyValidator.getCompanyByIdValidator, validationErrorHandler, companiesController.getCompanyById); 
+router.get('/:id', companyValidator.getCompanyByIdValidator, validationErrorHandler, companiesController.getCompanyById); 
 
 /**
  * @swagger
- * /companies:
+ * /api/companies:
  *   post:
  *     summary: Crea una nueva compañía
  *     tags: [Companies]
@@ -95,11 +95,11 @@ router.get('/:id', verifyToken(['Administrator']), companyValidator.getCompanyBy
  *       500:
  *         description: Error en el servidor
  */
-router.post('/', verifyToken(['Administrator']), companyValidator.createCompanyValidator, validationErrorHandler, companiesController.createCompany);
+router.post('/', companyValidator.createCompanyValidator, validationErrorHandler, companiesController.createCompany);
 
 /**
  * @swagger
- * /companies/{id}:
+ * /api/companies/{id}:
  *   put:
  *     summary: Actualiza una compañía específica por ID
  *     tags: [Companies]
@@ -132,11 +132,11 @@ router.post('/', verifyToken(['Administrator']), companyValidator.createCompanyV
  *       500:
  *         description: Error en el servidor
  */
-router.put('/:id', verifyToken(['Administrator']), companyValidator.updateCompanyValidator, validationErrorHandler, companiesController.updateCompany);
+router.put('/:id', companyValidator.updateCompanyValidator, validationErrorHandler, companiesController.updateCompany);
 
 /**
  * @swagger
- * /companies/{id}:
+ * /api/companies/{id}:
  *   delete:
  *     summary: Elimina una compañía específica por ID
  *     tags: [Companies]
@@ -155,6 +155,6 @@ router.put('/:id', verifyToken(['Administrator']), companyValidator.updateCompan
  *       500:
  *         description: Error en el servidor
  */
-router.delete('/:id', verifyToken(['Administrator']), companyValidator.deleteCompanyValidator, validationErrorHandler, companiesController.deleteCompany);
+router.delete('/:id', companyValidator.deleteCompanyValidator, validationErrorHandler, companiesController.deleteCompany);
 
 module.exports = router;

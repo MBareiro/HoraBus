@@ -50,7 +50,7 @@ router.get('/', verifyToken(['Administrator']), usersController.getAllUsers);
 
 /**
  * @swagger
- * /users/{id}:
+ * /api/users/{id}:
  *   get:
  *     summary: Obtiene un usuario específico
  *     tags: [Users]
@@ -139,7 +139,7 @@ router.post('/',  userValidator.createUserValidator, validationErrorHandler, use
 
 /**
  * @swagger
- * /users/{id}:
+ * /api/users/{id}:
  *   put:
  *     summary: Actualiza un usuario existente
  *     tags: [Users]
@@ -189,7 +189,7 @@ router.put('/:id', verifyToken(['Administrator']), userValidator.updateUserValid
 
 /**
  * @swagger
- * /users/{id}:
+ * /api/users/{id}:
  *   delete:
  *     summary: Elimina un usuario existente
  *     tags: [Users]

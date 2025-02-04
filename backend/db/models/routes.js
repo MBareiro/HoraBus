@@ -22,25 +22,17 @@ module.exports = function(sequelize, DataTypes) {
         key: 'id',
       },
     },
-    company_id: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: 'companies',
-        key: 'id',
-      },
-    },
   });
 
   // Relación con 'Stop' para 'origin' y 'destination'
   Route.associate = function(models) {
+    // Relación con las paradas de origen y destino
     Route.belongsTo(models.stops, { foreignKey: 'origin', as: 'originStop' });
     Route.belongsTo(models.stops, { foreignKey: 'destination', as: 'destinationStop' });
-    Route.belongsTo(models.companies, { foreignKey: 'company_id', as: 'company' });
 
-    // Relación con Schedule (uno a muchos)
-    Route.hasMany(models.schedules, { foreignKey: 'route_id', as: 'schedule' });
+    // Relación con 'Company' (aunque 'company_id' ahora está en 'schedules')
+    Route.hasMany(models.schedules, { foreignKey: 'route_id', as: 'schedules' });
   };
-  
+
   return Route;
 };

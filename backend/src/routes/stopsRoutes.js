@@ -1,108 +1,52 @@
 const express = require('express');
 const router = express.Router();
 const stopsController = require('../controllers/stopsController');
-const stopValidator = require('../validators/stopValidator');
-const validationErrorHandler = require('../middleware/validationErrorHandler');
-const verifyToken = require('../middleware/verifyToken');
 
 /**
  * @swagger
  * tags:
- *   - name: Stops
- *     description: Endpoints para gestionar las paradas de colectivos
+ *   name: Stops
+ *   description: Endpoints para la gestión de paradas
  */
 
 /**
  * @swagger
- * components:
- *   schemas:
- *     Stop:
- *       type: object
- *       properties:
- *         id:
- *           type: integer
- *           description: ID de la parada.
- *         name:
- *           type: string
- *           description: Nombre de la parada.
- *         location:
- *           type: object
- *           description: Ubicación geográfica de la parada.
- *           properties:
- *             latitude:
- *               type: number
- *               format: float
- *               description: Latitud de la ubicación.
- *             longitude:
- *               type: number
- *               format: float
- *               description: Longitud de la ubicación.
- *       required:
- *         - name
- *         - location
- */
-
-/**
- * @swagger
- * /stops/{state}:
+ * /api/stops:
  *   get:
- *     summary: Obtiene las paradas filtradas por estado
+ *     summary: Obtener todas las paradas
  *     tags: [Stops]
- *     parameters:
- *       - in: path
- *         name: state
- *         required: true
- *         description: Estado de la parada (ENABLED o DISABLED)
- *         schema:
- *           type: string
- *           enum: [ENABLED, DISABLED]
  *     responses:
  *       200:
- *         description: Lista de paradas obtenida exitosamente
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 $ref: '#/components/schemas/Stop'
- *       500:
- *         description: Error en el servidor
+ *         description: Lista de todas las paradas
  */
-router.get('/:state', stopsController.getAllStops);
-
+router.get('/', stopsController.getAllStops);
 
 /**
  * @swagger
- * /stops/{id}:
+ * /api/stops/{id}:
  *   get:
- *     summary: Obtiene una parada específica
+ *     summary: Obtener una parada por ID
  *     tags: [Stops]
  *     parameters:
  *       - in: path
  *         name: id
  *         required: true
+ *         description: ID de la parada
  *         schema:
  *           type: integer
- *         description: ID de la parada
  *     responses:
  *       200:
- *         description: Parada encontrada
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Stop'
+ *         description: Detalles de la parada
  *       404:
  *         description: Parada no encontrada
- *       500:
- *         description: Error en el servidor
  */
-router.get('/:id', stopValidator.getStopByIdValidator, validationErrorHandler, stopsController.getStopById);
+router.get('/:id', stopsController.getStopById);
 
 /**
  * @swagger
- * /stops:
+ * /api/stops:
  *   post:
- *     summary: Crea una nueva parada
+ *     summary: Crear una nueva parada
  *     tags: [Stops]
  *     requestBody:
  *       required: true
@@ -110,48 +54,40 @@ router.get('/:id', stopValidator.getStopByIdValidator, validationErrorHandler, s
  *         application/json:
  *           schema:
  *             type: object
- *             required:
- *               - name
- *               - location
  *             properties:
  *               name:
  *                 type: string
- *                 description: Nombre de la parada
  *               location:
  *                 type: object
- *                 description: Ubicación de la parada.
  *                 properties:
  *                   latitude:
  *                     type: number
- *                     format: float
- *                     description: Latitud de la ubicación.
  *                   longitude:
  *                     type: number
- *                     format: float
- *                     description: Longitud de la ubicación.
+ *               state:
+ *                 type: string
+ *                 enum: [ENABLED, DISABLED, PENDING]
  *     responses:
  *       201:
  *         description: Parada creada exitosamente
  *       400:
- *         description: Datos inválidos en la solicitud
- *       500:
- *         description: Error en el servidor
+ *         description: Datos inválidos
  */
-router.post('/', stopValidator.createStopValidator, validationErrorHandler, stopsController.createStop);
+router.post('/', stopsController.createStop);
 
 /**
  * @swagger
- * /stops/{id}:
+ * /api/stops/{id}:
  *   put:
- *     summary: Actualiza una parada existente
+ *     summary: Actualizar una parada
  *     tags: [Stops]
  *     parameters:
  *       - in: path
  *         name: id
  *         required: true
+ *         description: ID de la parada
  *         schema:
  *           type: integer
- *         description: ID de la parada
  *     requestBody:
  *       required: true
  *       content:
@@ -161,65 +97,53 @@ router.post('/', stopValidator.createStopValidator, validationErrorHandler, stop
  *             properties:
  *               name:
  *                 type: string
- *                 description: Nombre de la parada
- *               location:
- *                 type: object
- *                 description: Ubicación de la parada.
- *                 properties:
- *                   latitude:
- *                     type: number
- *                     format: float
- *                     description: Latitud de la ubicación.
- *                   longitude:
- *                     type: number
- *                     format: float
- *                     description: Longitud de la ubicación.
+ *               latitude:
+ *                 type: number
+ *               longitude:
+ *                 type: number
+ *               state:
+ *                 type: string
+ *                 enum: [ENABLED, DISABLED]
  *     responses:
  *       200:
- *         description: Parada actualizada exitosamente
- *       400:
- *         description: Datos inválidos en la solicitud
+ *         description: Parada actualizada correctamente
  *       404:
  *         description: Parada no encontrada
- *       500:
- *         description: Error en el servidor
  */
-router.put('/:id', stopValidator.updateStopValidator, validationErrorHandler, stopsController.updateStop);
+router.put('/:id', stopsController.updateStop);
 
 /**
  * @swagger
- * /stops/{id}:
+ * /api/stops/{id}:
  *   delete:
- *     summary: Elimina una parada existente
+ *     summary: Eliminar una parada
  *     tags: [Stops]
  *     parameters:
  *       - in: path
  *         name: id
  *         required: true
+ *         description: ID de la parada
  *         schema:
  *           type: integer
- *         description: ID de la parada
  *     responses:
- *       200:
+ *       204:
  *         description: Parada eliminada exitosamente
  *       404:
  *         description: Parada no encontrada
- *       500:
- *         description: Error en el servidor
  */
-router.delete('/:id', stopValidator.deleteStopValidator, validationErrorHandler, stopsController.deleteStop);
+router.delete('/:id', stopsController.deleteStop);
 
 /**
  * @swagger
- * /stops/{id}/state:
+ * /api/stops/{id}/state:
  *   patch:
- *     summary: Actualiza el estado de una parada
+ *     summary: Actualizar el estado de una parada
  *     tags: [Stops]
  *     parameters:
  *       - in: path
  *         name: id
  *         required: true
- *         description: ID de la parada a actualizar
+ *         description: ID de la parada
  *         schema:
  *           type: integer
  *     requestBody:
@@ -232,20 +156,55 @@ router.delete('/:id', stopValidator.deleteStopValidator, validationErrorHandler,
  *               state:
  *                 type: string
  *                 enum: [ENABLED, DISABLED]
- *                 description: Nuevo estado de la parada (ENABLED o DISABLED)
  *     responses:
  *       200:
  *         description: Estado actualizado correctamente
  *       400:
  *         description: Estado inválido
- *       404:
- *         description: Parada no encontrada
- *       500:
- *         description: Error en el servidor
  */
-router.patch("/:id/state", stopsController.updateStopState);
+router.patch('/:id/state', stopsController.updateStopState);
 
+/**
+ * @swagger
+ * /api/stops/origins:
+ *   get:
+ *     summary: Obtener paradas de origen disponibles
+ *     tags: [Stops]
+ *     responses:
+ *       200:
+ *         description: Lista de paradas de origen disponibles
+ */
+router.get('/origins', stopsController.getAvailableOrigins);
 
+/**
+ * @swagger
+ * /api/stops/destinations/{originId}:
+ *   get:
+ *     summary: Obtener destinos desde un origen específico
+ *     tags: [Stops]
+ *     parameters:
+ *       - in: path
+ *         name: originId
+ *         required: true
+ *         description: ID del origen
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Lista de destinos disponibles
+ */
+router.get('/destinations/:originId', stopsController.getDestinationsByOrigin);
 
+/**
+ * @swagger
+ * /api/stops/company:
+ *   get:
+ *     summary: Obtener paradas asociadas a la empresa del usuario
+ *     tags: [Stops]
+ *     responses:
+ *       200:
+ *         description: Lista de paradas de la empresa
+ */
+router.get('/company', stopsController.getCompanyStops);
 
 module.exports = router;

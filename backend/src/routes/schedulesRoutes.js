@@ -13,7 +13,7 @@ const verifyToken = require('../middleware/verifyToken');
  */
 /**
  * @swagger
- * /schedules:
+ * /api/schedules:
  *   get:
  *     summary: Obtiene horarios filtrados por origen, destino, rango de horas, frecuencia y compañía
  *     tags: [Schedules]
@@ -96,7 +96,7 @@ router.get('/', schedulesController.getSchedules);
 
 /**
  * @swagger
- * /schedules/{id}:
+ * /api/schedules/{id}:
  *   get:
  *     summary: Obtiene un horario específico
  *     tags: [Schedules]
@@ -130,7 +130,7 @@ router.get('/:id', scheduleValidator.getScheduleByIdValidator, validationErrorHa
 
 /**
  * @swagger
- * /schedules:
+ * /api/schedules:
  *   post:
  *     summary: Crea un nuevo horario y, si es necesario, una ruta asociada
  *     tags: [Schedules]
@@ -151,11 +151,9 @@ router.get('/:id', scheduleValidator.getScheduleByIdValidator, validationErrorHa
  *               - company_id
  *             properties:
  *               frequency:
- *                 type: array
- *                 items:
- *                   type: string
+ *                 type: string
  *                 description: Lista de observaciones sobre el horario (e.g., ["Todos los días", "Fines de semana"]).
- *                 example: ["Todos los días", "Fines de semana"]
+ *                 example: "Todos los días"
  *               departure_time:
  *                 type: string
  *                 description: Hora de salida en formato HH:MM (24 horas).
@@ -176,6 +174,10 @@ router.get('/:id', scheduleValidator.getScheduleByIdValidator, validationErrorHa
  *                 type: integer
  *                 description: ID de la compañía que opera la ruta.
  *                 example: 1
+ *               status:
+ *                 type: string
+ *                 description: Estado del horario (e.g., "enabled", "disabled", "pending").
+ *                 example: "pending"
  *     responses:
  *       201:
  *         description: Horario y ruta creados exitosamente.
@@ -195,11 +197,9 @@ router.get('/:id', scheduleValidator.getScheduleByIdValidator, validationErrorHa
  *                       description: ID del horario recién creado.
  *                       example: 101
  *                     frequency:
- *                       type: array
- *                       items:
- *                         type: string
+ *                       type: string
  *                       description: Lista de observaciones del horario.
- *                       example: ["Todos los días", "Fines de semana"]
+ *                       example: "Fines de semana"
  *                     departure_time:
  *                       type: string
  *                       description: Hora de salida del horario.
@@ -208,6 +208,10 @@ router.get('/:id', scheduleValidator.getScheduleByIdValidator, validationErrorHa
  *                       type: string
  *                       description: Hora de llegada del horario.
  *                       example: "10:30"
+ *                     status:
+ *                       type: string
+ *                       description: Estado del horario.
+ *                       example: "pending"
  *       400:
  *         description: Faltan datos obligatorios o datos inválidos.
  *       404:
@@ -217,9 +221,10 @@ router.get('/:id', scheduleValidator.getScheduleByIdValidator, validationErrorHa
  */
 router.post('/',  scheduleValidator.createScheduleValidator, validationErrorHandler, schedulesController.createSchedule);
 
+
 /**
  * @swagger
- * /schedules/{id}:
+ * /api/schedules/{id}:
  *   put:
  *     summary: Actualiza un horario existente
  *     tags: [Schedules]
@@ -263,11 +268,11 @@ router.post('/',  scheduleValidator.createScheduleValidator, validationErrorHand
  *       404:
  *         description: Horario no encontrado
  */
-router.put('/:id', verifyToken(['Administrator', 'Operator']), scheduleValidator.updateScheduleValidator, validationErrorHandler, schedulesController.updateSchedule);
+router.put('/:id', scheduleValidator.updateScheduleValidator, validationErrorHandler, schedulesController.updateSchedule);
 
 /**
  * @swagger
- * /schedules/{id}:
+ * /api/schedules/{id}:
  *   delete:
  *     summary: Elimina un horario existente
  *     tags: [Schedules]
@@ -284,7 +289,7 @@ router.put('/:id', verifyToken(['Administrator', 'Operator']), scheduleValidator
  *       404:
  *         description: Horario no encontrado
  */
-router.delete('/:id', verifyToken(['Administrator', 'Operator']), scheduleValidator.deleteScheduleValidator, validationErrorHandler, schedulesController.deleteSchedule);
+router.delete('/:id',  scheduleValidator.deleteScheduleValidator, validationErrorHandler, schedulesController.deleteSchedule);
 
 
 

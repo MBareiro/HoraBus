@@ -4,7 +4,7 @@ const subscriptionsController = require('../controllers/subscriptionsController'
 
 /**
  * @swagger
- * /subscriptions/subscribe:
+ * /api/subscriptions/subscribe:
  *   post:
  *     summary: Suscribirse a notificaciones de cambios de horario
  *     description: Permite a los usuarios suscribirse proporcionando su correo electrónico.
@@ -30,14 +30,27 @@ router.post('/subscribe', subscriptionsController.subscribe);
 
 /**
  * @swagger
- * /subscriptions/notify:
+ * /api/subscriptions/notify:
  *   post:
  *     summary: Notificar a los suscriptores sobre cambios en los horarios
  *     description: Envía correos electrónicos a todos los usuarios suscritos notificándoles sobre cambios en los horarios.
  *     tags: [Subscriptions]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               message:
+ *                 type: string
+ *                 description: Mensaje que se enviará a los suscriptores.
+ *                 example: "Se han actualizado los horarios de los colectivos."
  *     responses:
  *       200:
  *         description: Notificaciones enviadas exitosamente
+ *       400:
+ *         description: El mensaje es requerido
  *       500:
  *         description: Error interno del servidor
  */

@@ -4,11 +4,9 @@ module.exports = {
   // Validaciones para crear un horario
   createScheduleValidator: [
     body('origin')
-      .notEmpty().withMessage('El campo origen es obligatorio.')
-      /* .isInt({ gt: 0 }).withMessage('El origen debe ser un ID válido y mayor que 0.') */,
+      .notEmpty().withMessage('El campo origen es obligatorio.'),
     body('destination')
       .notEmpty().withMessage('El campo destino es obligatorio.')
-      /* .isInt({ gt: 0 }).withMessage('El destino debe ser un ID válido y mayor que 0.') */
       .custom((value, { req }) => {
         if (value === req.body.origin) {
           throw new Error('El origen y el destino no pueden ser iguales.');
@@ -16,11 +14,11 @@ module.exports = {
         return true;
       }),
     body('departure_time')
-      .matches(/^([01]\d|2[0-3]):([0-5]\d):([0-5]\d)$/).withMessage('La hora de salida debe tener el formato HH:MM:SS.')
+      .matches(/^([01]\d|2[0-3]):([0-5]\d)(:[0-5]\d)?$/).withMessage('La hora de salida debe tener el formato HH:MM o HH:MM:SS.')
       .notEmpty().withMessage('La hora de salida es obligatoria.')
       .trim(),
     body('arrival_time')
-      .matches(/^([01]\d|2[0-3]):([0-5]\d):([0-5]\d)$/).withMessage('La hora de llegada debe tener el formato HH:MM:SS.')
+      .matches(/^([01]\d|2[0-3]):([0-5]\d)(:[0-5]\d)?$/).withMessage('La hora de llegada debe tener el formato HH:MM o HH:MM:SS.')
       .notEmpty().withMessage('La hora de llegada es obligatoria.')
       .trim(),
     body('departure_time').custom((value, { req }) => {
@@ -29,6 +27,10 @@ module.exports = {
       }
       return true;
     }),
+    body('status')
+      .isIn(['enabled', 'disabled', 'pending']).withMessage('El estado debe ser uno de los siguientes: enabled, disabled, pending.')
+      .optional()
+      .trim(),
     body('frequency')
       .optional()
       .custom((value) => {
@@ -61,11 +63,11 @@ module.exports = {
       .toInt(),
     body('departure_time')
       .optional()
-      .matches(/^([01]\d|2[0-3]):([0-5]\d):([0-5]\d)$/).withMessage('La hora de salida debe tener el formato HH:MM:SS.')
+      .matches(/^([01]\d|2[0-3]):([0-5]\d)(:[0-5]\d)?$/).withMessage('La hora de salida debe tener el formato HH:MM o HH:MM:SS.')
       .trim(),
     body('arrival_time')
       .optional()
-      .matches(/^([01]\d|2[0-3]):([0-5]\d):([0-5]\d)$/).withMessage('La hora de llegada debe tener el formato HH:MM:SS.')
+      .matches(/^([01]\d|2[0-3]):([0-5]\d)(:[0-5]\d)?$/).withMessage('La hora de llegada debe tener el formato HH:MM o HH:MM:SS.')
       .trim(),
     body('departure_time').custom((value, { req }) => {
       if (value && value >= req.body.arrival_time) {
@@ -73,6 +75,10 @@ module.exports = {
       }
       return true;
     }),
+    body('status')
+      .optional()
+      .isIn(['enabled', 'disabled', 'pending']).withMessage('El estado debe ser uno de los siguientes: enabled, disabled, pending.')
+      .trim(),
     body('frequency')
       .optional()
       .isString().withMessage('La frecuencia debe ser una cadena de texto.')

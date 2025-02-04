@@ -12,7 +12,7 @@ const { receiveCoordinates } = require('../controllers/gpsController');
 
 /**
  * @swagger
- * /gps:
+ * /api/gps:
  *   post:
  *     summary: Recibir coordenadas del GPS
  *     tags: [GPS]

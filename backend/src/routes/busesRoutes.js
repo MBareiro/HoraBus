@@ -11,7 +11,7 @@ const busesController = require('../controllers/busesController');
 
 /**
  * @swagger
- * /buses:
+ * /api/buses:
  *   post:
  *     summary: Crea un nuevo bus
  *     tags: [Buses]
@@ -51,7 +51,7 @@ router.post('/', busesController.createBus);
 
 /**
  * @swagger
- * /buses:
+ * /api/buses:
  *   get:
  *     summary: Obtiene todos los buses
  *     tags: [Buses]
@@ -82,7 +82,7 @@ router.get('/', busesController.getAllBuses);
 
 /**
  * @swagger
- * /buses/{id}:
+ * /api/buses/{id}:
  *   get:
  *     summary: Obtiene un bus específico por ID
  *     tags: [Buses]
@@ -120,7 +120,7 @@ router.get('/:id', busesController.getBusById);
 
 /**
  * @swagger
- * /buses/{id}:
+ * /api/buses/{id}:
  *   delete:
  *     summary: Elimina un bus específico por ID
  *     tags: [Buses]
@@ -143,7 +143,7 @@ router.delete('/:id', busesController.deleteBus);
 
 /**
  * 
- * /buses/buses-by-route:
+ * /api/buses/buses-by-route:
  *   get:
  *     summary: Obtiene los buses por ruta
  *     tags: [Buses]

@@ -14,7 +14,7 @@ const validationErrorHandler = require('../middleware/validationErrorHandler');
 
 /**
  * @swagger
- * /auth/login:
+ * /api/auth/login:
  *   post:
  *     summary: Iniciar sesión
  *     tags: [Auth]
@@ -83,7 +83,7 @@ router.post('/login', authValidator.loginUserValidator, validationErrorHandler, 
 
 /**
  * @swagger
- * /auth/forgot-password:
+ * /api/auth/forgot-password:
  *   post:
  *     summary: Solicitar recuperación de contraseña
  *     tags: [Auth]
@@ -111,7 +111,7 @@ router.post('/forgot-password', authValidator.forgotPasswordValidator, validatio
 
 /**
  * @swagger
- * /auth/reset-password:
+ * /api/auth/reset-password:
  *   post:
  *     summary: Restablecer la contraseña
  *     tags: [Auth]
@@ -143,7 +143,7 @@ router.post('/reset-password', authValidator.resetPasswordValidator, validationE
 
 /**
  * @swagger
- * /auth/refresh_token:
+ * /api/auth/refresh_token:
  *   post:
  *     summary: Refrescar el token de acceso usando un refresh token válido
  *     tags: [Auth]

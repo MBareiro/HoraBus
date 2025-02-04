@@ -4,7 +4,7 @@ const companiesStopsController = require('../controllers/companiesStopsControlle
 
 /**
  * @swagger
- * /companies_stops/companies/{company_id}/stops:
+ * /api/companies_stops/companies/{company_id}/stops:
  *   post:
  *     summary: Asociar paradas a una empresa
  *     description: Crea una asociación entre una empresa y una o más paradas.
@@ -39,7 +39,7 @@ router.post('/companies/:company_id/stops', companiesStopsController.associateSt
 
 /**
  * @swagger
- * /companies_stops/companies/{company_id}/stops:
+ * /api/companies_stops/companies/{company_id}/stops:
  *   delete:
  *     summary: Eliminar paradas de una empresa
  *     description: Elimina las asociaciones de paradas de una empresa.
@@ -74,7 +74,7 @@ router.delete('/companies/:company_id/stops', companiesStopsController.removeSto
 
 /**
  * @swagger
- * /companies_stops/companies/{company_id}/stops:
+ * /api/companies_stops/companies/{company_id}/stops:
  *   get:
  *     summary: Obtener paradas asociadas a una empresa
  *     description: Obtiene todas las paradas asociadas a una empresa específica.
@@ -97,7 +97,7 @@ router.get('/companies/:company_id/stops', companiesStopsController.getStopsByCo
 
 /**
  * @swagger
- * /companies_stops/stops/{stop_id}/companies:
+ * /api/companies_stops/stops/{stop_id}/companies:
  *   get:
  *     summary: Obtener empresas asociadas a una parada
  *     description: Obtiene todas las empresas asociadas a una parada específica.

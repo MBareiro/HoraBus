@@ -14,7 +14,7 @@ const verifyToken = require('../middleware/verifyToken');
 
 /**
  * @swagger
- * /frequencies:
+ * /api/frequencies:
  *   get:
  *     summary: Obtiene todas las frecuencias
  *     tags: [Frequencies]
@@ -39,7 +39,7 @@ router.get('/', frequenciesController.getAllFrequency);
 
 /**
  * @swagger
- * /frequencies/{id}:
+ * /api/frequencies/{id}:
  *   get:
  *     summary: Obtiene una frecuencia específica
  *     tags: [Frequencies]
@@ -71,7 +71,7 @@ router.get('/:id', frequencyValidator.getFrequencyByIdValidator, validationError
 
 /**
  * @swagger
- * /frequencies:
+ * /api/frequencies:
  *   post:
  *     summary: Crea una nueva frecuencia
  *     tags: [Frequencies]
@@ -99,7 +99,7 @@ router.post('/', frequencyValidator.createFrequencyValidator, validationErrorHan
 
 /**
  * @swagger
- * /frequencies/{id}:
+ * /api/frequencies/{id}:
  *   put:
  *     summary: Actualiza una frecuencia existente
  *     tags: [Frequencies]
@@ -134,7 +134,7 @@ router.put('/:id', verifyToken(['Administrator']), frequencyValidator.updateFreq
 
 /**
  * @swagger
- * /frequencies/{id}:
+ * /api/frequencies/{id}:
  *   delete:
  *     summary: Elimina una frecuencia existente
  *     tags: [Frequencies]

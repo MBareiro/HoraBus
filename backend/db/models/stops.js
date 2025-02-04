@@ -15,7 +15,7 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true
     },
     state: {
-      type: DataTypes.ENUM('enabled', 'disabled'),
+      type: DataTypes.ENUM('enabled', 'disabled', 'pending'),  
       allowNull: false
     },
     createdAt: {

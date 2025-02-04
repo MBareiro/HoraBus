@@ -14,7 +14,7 @@ const verifyToken = require('../middleware/verifyToken');
 
 /**
  * @swagger
- * /routes:
+ * /api/routes:
  *   get:
  *     summary: Obtiene todas las rutas
  *     tags: [Routes]
@@ -43,7 +43,7 @@ router.get('/', routesController.getAllRoutes);
 
 /**
  * @swagger
- * /routes:
+ * /api/routes:
  *   post:
  *     summary: Crea una nueva ruta
  *     tags: [Routes]
@@ -79,7 +79,7 @@ router.post('/', routeValidator.createRouteValidator , validationErrorHandler, r
 
 /**
  * @swagger
- * /routes/{id}:
+ * /api/routes/{id}:
  *   put:
  *     summary: Actualiza una ruta existente
  *     tags: [Routes]
@@ -120,7 +120,7 @@ router.put('/:id', routeValidator.updateRouteValidator , validationErrorHandler,
 
 /**
  * @swagger
- * /routes/{id}:
+ * /api/routes/{id}:
  *   delete:
  *     summary: Elimina una ruta existente
  *     tags: [Routes]
@@ -143,7 +143,7 @@ router.delete('/:id', routeValidator.deleteRouteValidator , validationErrorHandl
 
 /**
  * @swagger
- * /routes/with_transfers:
+ * /api/routes/with_transfers:
  *   get:
  *     summary: Obtiene todas las rutas donde el ID de la parada es el origen
  *     tags: [Routes]
