@@ -116,7 +116,7 @@ exports.with_transfers = async (req, res) => {
         },
       ],
     });
-
+    
     if (routes.length === 0) {
       return res.status(404).json({ message: `No se encontraron rutas desde la parada ${fromStop.name}` });
     }
@@ -147,7 +147,7 @@ exports.with_transfers = async (req, res) => {
           },
         ],
       });
-
+      console.log(JSON.stringify(connectingRoutes, null, 2));
       // Si hay rutas conectando, las agregamos a las respuestas
       if (connectingRoutes.length > 0) {
         connectingRoutes.forEach(connectingRoute => {
@@ -157,7 +157,7 @@ exports.with_transfers = async (req, res) => {
             const firstRouteArrival = route.schedule[0].arrival_time; // Tomamos solo el primer horario de la primera ruta
             return secondSchedule.departure_time > firstRouteArrival; // Aseguramos que el horario de salida del segundo tramo sea posterior a la llegada del primero
           });
-
+          
           // Si no hay rutas válidas para el segundo tramo, no continuar
           if (validSecondRouteSchedules.length === 0) return;
 

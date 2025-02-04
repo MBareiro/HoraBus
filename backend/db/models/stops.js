@@ -12,13 +12,30 @@ module.exports = function(sequelize, DataTypes) {
     },
     location: {
       type: DataTypes.GEOGRAPHY('POINT'),
+      allowNull: true
+    },
+    state: {
+      type: DataTypes.ENUM('enabled', 'disabled'),
+      allowNull: false
+    },
+    createdAt: {
+      type: DataTypes.DATE,
+      allowNull: false
+    },
+    updatedAt: {
+      type: DataTypes.DATE,
+      allowNull: false
     }
   });
 
   Stop.associate = function(models) {
-    // Relación con rutas
-    Stop.hasMany(models.routes, { foreignKey: 'origin', as: 'originRoutes' });
-    Stop.hasMany(models.routes, { foreignKey: 'destination', as: 'destinationRoutes' });
+    // Relación muchos a muchos con Company
+    Stop.belongsToMany(models.companies, {
+      through: 'companies_stops',
+      foreignKey: 'stop_id',
+      otherKey: 'company_id',
+      as: 'companies'
+    });
   };
 
   return Stop;

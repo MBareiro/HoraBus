@@ -35,7 +35,7 @@ const verifyToken = require('../middleware/verifyToken');
  *       500:
  *         description: Error en el servidor
  */
-router.get('/', verifyToken(['Administrator']), companiesController.getAllCompanies);
+router.get('/',  companiesController.getAllCompanies);
 
 /**
  * @swagger

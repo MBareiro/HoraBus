@@ -4,7 +4,12 @@ const Stop = db.stops;
 // Obtener todas las paradas
 exports.getAllStops = async (req, res) => {
   try {
-    const stops = await Stop.findAll();
+    const { state } = req.query;
+    const where = {};
+    if (state) {
+      where.state = state;
+    }
+    const stops = await Stop.findAll({ where });
     res.status(200).json(stops);
   } catch (error) {
     console.error('Error al obtener las paradas:', error);
@@ -29,22 +34,25 @@ exports.getStopById = async (req, res) => {
 
 // Crear una nueva parada
 exports.createStop = async (req, res) => {
-  const { name, latitude, longitude } = req.body; 
-  
-  if (!latitude || !longitude) {
-    return res.status(400).json({ error: 'Latitud y longitud son requeridos.' });
-  }
+  const { name, location } = req.body;
+
+  // Validar que el objeto location y sus propiedades existan
+ /*  if (!location || typeof location.latitude === 'undefined' || typeof location.longitude === 'undefined') {
+    return res.status(400).json({ error: 'El objeto "location" con propiedades "latitude" y "longitude" es requerido.' });
+  } */
+
+  const { latitude, longitude } = location;
 
   try {
+    // Verificar si ya existe una parada con el mismo nombre
     const existingStop = await Stop.findOne({ where: { name } });
     if (existingStop) {
       return res.status(409).json({ message: 'La parada ya existe.' });
     }
 
-    // Crear el nuevo objeto GEOGRAPHY
+    // Crear el nuevo objeto GEOGRAPHY utilizando el formato WKT: "POINT(longitude latitude)"
     const newStop = await Stop.create({
-      name,
-      location: db.sequelize.fn('ST_GeomFromText', `POINT(${longitude} ${latitude})`)
+      name
     });
 
     res.status(201).json(newStop);
@@ -53,6 +61,7 @@ exports.createStop = async (req, res) => {
     res.status(500).json({ error: 'Error al crear la parada.', details: error.message });
   }
 };
+
 
 // Actualizar una parada existente
 exports.updateStop = async (req, res) => {
@@ -113,5 +122,31 @@ exports.deleteStop = async (req, res) => {
   } catch (error) {
     console.error('Error al eliminar la parada:', error);
     res.status(500).json({ error: 'Error al eliminar la parada.' });
+  }
+};
+
+exports.updateStopState = async (req, res) => {
+  const { id } = req.params;
+  const { state } = req.body;
+
+  // Validar que el estado sea válido
+  const validStates = ["ENABLED", "DISABLED"];
+  if (!validStates.includes(state)) {
+    return res.status(400).json({ error: "Estado inválido. Use 'ENABLED' o 'DISABLED'." });
+  }
+
+  try {
+    const stop = await Stop.findByPk(id);
+    if (!stop) {
+      return res.status(404).json({ error: "Parada no encontrada." });
+    }
+
+    stop.state = state;
+    await stop.save();
+
+    res.status(200).json({ message: "Estado actualizado correctamente.", stop });
+  } catch (error) {
+    console.error("Error al actualizar el estado de la parada:", error);
+    res.status(500).json({ error: "Error en el servidor.", details: error.message });
   }
 };

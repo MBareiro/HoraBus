@@ -14,10 +14,48 @@ const verifyToken = require('../middleware/verifyToken');
 
 /**
  * @swagger
- * /stops:
+ * components:
+ *   schemas:
+ *     Stop:
+ *       type: object
+ *       properties:
+ *         id:
+ *           type: integer
+ *           description: ID de la parada.
+ *         name:
+ *           type: string
+ *           description: Nombre de la parada.
+ *         location:
+ *           type: object
+ *           description: Ubicación geográfica de la parada.
+ *           properties:
+ *             latitude:
+ *               type: number
+ *               format: float
+ *               description: Latitud de la ubicación.
+ *             longitude:
+ *               type: number
+ *               format: float
+ *               description: Longitud de la ubicación.
+ *       required:
+ *         - name
+ *         - location
+ */
+
+/**
+ * @swagger
+ * /stops/{state}:
  *   get:
- *     summary: Obtiene todas las paradas
+ *     summary: Obtiene las paradas filtradas por estado
  *     tags: [Stops]
+ *     parameters:
+ *       - in: path
+ *         name: state
+ *         required: true
+ *         description: Estado de la parada (ENABLED o DISABLED)
+ *         schema:
+ *           type: string
+ *           enum: [ENABLED, DISABLED]
  *     responses:
  *       200:
  *         description: Lista de paradas obtenida exitosamente
@@ -26,22 +64,12 @@ const verifyToken = require('../middleware/verifyToken');
  *             schema:
  *               type: array
  *               items:
- *                 type: object
- *                 properties:
- *                   id:
- *                     type: integer
- *                   name:
- *                     type: string
- *                   latitude:
- *                     type: number
- *                     format: float
- *                   longitude:
- *                     type: number
- *                     format: float
+ *                 $ref: '#/components/schemas/Stop'
  *       500:
  *         description: Error en el servidor
  */
-router.get('/', stopsController.getAllStops);
+router.get('/:state', stopsController.getAllStops);
+
 
 /**
  * @swagger
@@ -62,18 +90,7 @@ router.get('/', stopsController.getAllStops);
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 id:
- *                   type: integer
- *                 name:
- *                   type: string
- *                 latitude:
- *                   type: number
- *                   format: float
- *                 longitude:
- *                   type: number
- *                   format: float
+ *               $ref: '#/components/schemas/Stop'
  *       404:
  *         description: Parada no encontrada
  *       500:
@@ -95,20 +112,23 @@ router.get('/:id', stopValidator.getStopByIdValidator, validationErrorHandler, s
  *             type: object
  *             required:
  *               - name
- *               - latitude
- *               - longitude
+ *               - location
  *             properties:
  *               name:
  *                 type: string
  *                 description: Nombre de la parada
- *               latitude:
- *                 type: number
- *                 format: float
- *                 description: Latitud de la parada
- *               longitude:
- *                 type: number
- *                 format: float
- *                 description: Longitud de la parada
+ *               location:
+ *                 type: object
+ *                 description: Ubicación de la parada.
+ *                 properties:
+ *                   latitude:
+ *                     type: number
+ *                     format: float
+ *                     description: Latitud de la ubicación.
+ *                   longitude:
+ *                     type: number
+ *                     format: float
+ *                     description: Longitud de la ubicación.
  *     responses:
  *       201:
  *         description: Parada creada exitosamente
@@ -117,7 +137,7 @@ router.get('/:id', stopValidator.getStopByIdValidator, validationErrorHandler, s
  *       500:
  *         description: Error en el servidor
  */
-router.post('/', stopValidator.createStopValidator, validationErrorHandler, stopsController.createStop );
+router.post('/', stopValidator.createStopValidator, validationErrorHandler, stopsController.createStop);
 
 /**
  * @swagger
@@ -142,14 +162,18 @@ router.post('/', stopValidator.createStopValidator, validationErrorHandler, stop
  *               name:
  *                 type: string
  *                 description: Nombre de la parada
- *               latitude:
- *                 type: number
- *                 format: float
- *                 description: Latitud de la parada
- *               longitude:
- *                 type: number
- *                 format: float
- *                 description: Longitud de la parada
+ *               location:
+ *                 type: object
+ *                 description: Ubicación de la parada.
+ *                 properties:
+ *                   latitude:
+ *                     type: number
+ *                     format: float
+ *                     description: Latitud de la ubicación.
+ *                   longitude:
+ *                     type: number
+ *                     format: float
+ *                     description: Longitud de la ubicación.
  *     responses:
  *       200:
  *         description: Parada actualizada exitosamente
@@ -160,7 +184,7 @@ router.post('/', stopValidator.createStopValidator, validationErrorHandler, stop
  *       500:
  *         description: Error en el servidor
  */
-router.put('/:id', stopValidator.updateStopValidator, validationErrorHandler, stopsController.updateStop );
+router.put('/:id', stopValidator.updateStopValidator, validationErrorHandler, stopsController.updateStop);
 
 /**
  * @swagger
@@ -184,5 +208,44 @@ router.put('/:id', stopValidator.updateStopValidator, validationErrorHandler, st
  *         description: Error en el servidor
  */
 router.delete('/:id', stopValidator.deleteStopValidator, validationErrorHandler, stopsController.deleteStop);
+
+/**
+ * @swagger
+ * /stops/{id}/state:
+ *   patch:
+ *     summary: Actualiza el estado de una parada
+ *     tags: [Stops]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: ID de la parada a actualizar
+ *         schema:
+ *           type: integer
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               state:
+ *                 type: string
+ *                 enum: [ENABLED, DISABLED]
+ *                 description: Nuevo estado de la parada (ENABLED o DISABLED)
+ *     responses:
+ *       200:
+ *         description: Estado actualizado correctamente
+ *       400:
+ *         description: Estado inválido
+ *       404:
+ *         description: Parada no encontrada
+ *       500:
+ *         description: Error en el servidor
+ */
+router.patch("/:id/state", stopsController.updateStopState);
+
+
+
 
 module.exports = router;

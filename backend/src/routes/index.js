@@ -9,17 +9,21 @@ const usersRoutes = require('./usersRoutes');
 const authRoutes = require('./authRoutes');
 const gpsRoutes = require('./gpsRoutes');
 const frequenciesRoutes = require('./frequenciesRoutes');
+const companiesStopsRoutes = require('./companiesStopsRoutes');
+const subscriptionsRoutes = require('./subscriptionsRoutes');
 
 
 router.use('/auth', authRoutes);
 router.use('/buses', busesRoutes);
 router.use('/companies', companiesRoutes);
+router.use('/companies_stops', companiesStopsRoutes); 
 router.use('/stops', stopsRoutes);
 router.use('/routes', routesRoutes);
 router.use('/schedules', schedulesRoutes);
 router.use('/users', usersRoutes);
 router.use('/gps', gpsRoutes);
 router.use('/frequencies', frequenciesRoutes);
+router.use('/subscriptions', subscriptionsRoutes);
 
 
 module.exports = router;

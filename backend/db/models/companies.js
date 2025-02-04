@@ -9,14 +9,25 @@ module.exports = function(sequelize, DataTypes) {
     name: {
       type: DataTypes.STRING(255),
       allowNull: false
+    },
+    createdAt: {
+      type: DataTypes.DATE,
+      allowNull: false
+    },
+    updatedAt: {
+      type: DataTypes.DATE,
+      allowNull: false
     }
   });
 
   Company.associate = function(models) {
-    // Relación con buses
-    Company.hasMany(models.buses, { foreignKey: 'company_id', as: 'buses' });
-    // Relación con rutas
-    Company.hasMany(models.routes, { foreignKey: 'company_id', as: 'routes' });
+    // Relación muchos a muchos con Stop
+    Company.belongsToMany(models.stops, {
+      through: 'companies_stops',
+      foreignKey: 'company_id',
+      otherKey: 'stop_id',
+      as: 'stops'
+    });
   };
 
   return Company;

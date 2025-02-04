@@ -95,7 +95,7 @@ router.get('/:id', frequencyValidator.getFrequencyByIdValidator, validationError
  *       500:
  *         description: Error en el servidor
  */
-router.post('/', verifyToken(['Administrator']), frequencyValidator.createFrequencyValidator, validationErrorHandler, frequenciesController.createFrequency );
+router.post('/', frequencyValidator.createFrequencyValidator, validationErrorHandler, frequenciesController.createFrequency );
 
 /**
  * @swagger

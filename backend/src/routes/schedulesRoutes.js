@@ -215,7 +215,7 @@ router.get('/:id', scheduleValidator.getScheduleByIdValidator, validationErrorHa
  *       500:
  *         description: Error interno del servidor.
  */
-router.post('/', verifyToken(['Administrator', 'Operator']),  scheduleValidator.createScheduleValidator, validationErrorHandler, schedulesController.createSchedule);
+router.post('/',  scheduleValidator.createScheduleValidator, validationErrorHandler, schedulesController.createSchedule);
 
 /**
  * @swagger

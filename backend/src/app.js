@@ -1,12 +1,12 @@
 const express = require('express');
 const http = require('http');
 const morgan = require('morgan');
-const swaggerUi = require('swagger-ui-express');
+const setupSwagger = require('../config/swaggerConfig');
+
 const { authenticateDB, syncDB } = require('../config/db');
-const swaggerDocs = require('../config/swaggerConfig');
 const routes = require('./routes');
 const setupMiddlewares = require('./middleware/security');
-const limiter = require('../config/rateLimit');
+//const limiter = require('../config/rateLimit');
 const { setupWebSocket } = require('./controllers/gpsController');
 const { setGlobalTimeouts } = require('./services/timeoutService');
 const { limitPayloadSize } = require('./services/payloadSizeService');
@@ -25,11 +25,11 @@ setupMiddlewares(app);
 app.use(morgan('dev'));
 app.use(limitPayloadSize); 
 
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 app.use('/api', routes);
 
 setGlobalTimeouts(app);
 setupWebSocket(server);
+setupSwagger(app);
 
 const PORT = process.env.PORT || 3000;
 
