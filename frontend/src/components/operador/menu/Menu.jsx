@@ -1,6 +1,7 @@
 import { useState } from "react"
 import { ParadasOperador } from "../paradas/ParadasOperador"
 import { HorariosButtonOperador } from '../horariosButton/HorariosButtonOperador'
+import './Menu.css'
 
 export const Menu = () => {
 
@@ -18,7 +19,7 @@ const handleOpenHorarios = () => {
 }
 
     return(
-        <div className="select-container">
+        <div className="menu-container">
         <div className="select-container-buttons">
             <button className="selector" onClick={handleOpenParadas}>PARADAS</button>
             <button className="selector" onClick={handleOpenHorarios}>HORARIOS</button>

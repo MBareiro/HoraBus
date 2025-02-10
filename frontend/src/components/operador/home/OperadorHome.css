@@ -1,15 +1,56 @@
-.logo-container-operador{
-    background-color: rgba(255, 255, 255, 0); /* Fondo gris oscuro para el logo */
+.app-operador {
     display: flex;
     flex-direction: column;
     align-items: center;
-}
+    background-color: #d3d3d3; /* Fondo gris claro */
+    min-height: 100vh;
+    width: 100vw;
+    box-sizing: border-box;
+  }
+  .conteiner-menu-panel{
+    width: 30%;
+    margin-top: 3vh;
+    background-color: brown;
+  }
+  .home-operador{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+    height: auto;
+    background-color: blue;
+  }
+  .conteiner-home-op {
+    display: flex;
+    width: 100%;
+    justify-content: flex-end; 
+    align-items: center;
+  }
+  
+  .logo-container-operador {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: lightblue;
+  }
+  .conteiner-panel-user-op {
+    background-color: #6a6c6d;
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap:2vh;
+    width: 20%;
+  }
 
-.button-operador{
+  .button-operador{
     font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-    color:#1b1b1b;
-    font-size: 15px;
-    background-color:#fefefe ;
+    color:#ffc107;
+    font-size: 18px;
+    background-color: transparent ;
     border-radius: 5px;
     border: none;
-}
+  }
+  

@@ -25,9 +25,8 @@
 .selector {
     background-color: #fefefe; /* Fondo gris claro */
     border: none;
-    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
     font-size: 1em;
-    font-weight: bold;
     color:  1px solid #1b1b1b;
     border-radius: 10px;
     cursor: pointer;

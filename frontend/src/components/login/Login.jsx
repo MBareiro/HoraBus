@@ -119,7 +119,7 @@ setShowMessage(message)
                                 <FontAwesomeIcon icon={faXmark}/>
                 </button>
                 </div>
-                <h1 className="h2-login">INICIO DE SESIÓN</h1>
+                <h1 className="h2-login">ACCESO PARA EMPRESAS</h1>
                 <div className='conteiner-form-login'>
                     <form className='conteiner-form-login'>
                         <label className="label-login" >

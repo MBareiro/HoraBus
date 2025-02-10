@@ -6,19 +6,30 @@ const api = 'https://hora-bus-backend.vercel.app/api'
 export const getLogin = (loginForm) => async (dispatch) => {
   try {
     const response = await axios.post(`${api}/auth/login`, loginForm);
+
     if (response.data.message && response.data.token) {
+        const token = response.data.token;
+        
+  
+        const payloadBase64 = token.split(".")[1]; 
+        const payload = JSON.parse(atob(payloadBase64)); 
+        const userId = payload.id; 
+
         const authData = {
             access: true,
-            token: response.data.token,
-          };
-          localStorage.setItem("auth", JSON.stringify(authData));
-          dispatch(setAccess(true))
-      }
+            token: token,
+            userId: userId, 
+        };
+
+        localStorage.setItem("auth", JSON.stringify(authData));
+        dispatch(setAccess(true));
+    }
   } catch (error) {
-    dispatch(setMessage(error.response.data.error))
-    console.log(error.response.data.error );
+    dispatch(setMessage(error.response.data.error));
+    console.log(error.response.data.error);
   }
 };
+
 
 export const getRecoverPassword = (dni) => async (dispatch) => {
   console.log(dni)
@@ -33,7 +44,6 @@ export const getRecoverPassword = (dni) => async (dispatch) => {
   }
   catch(error){
     dispatch(setMessage(error.response.data.error))
-    console.log(error.response.data.error)
   }
 }
 

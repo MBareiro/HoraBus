@@ -1,0 +1,12 @@
+.menu-container{
+    display: flex;
+    flex-direction:column;
+    justify-content:space-between;
+    align-items: center;
+    background-color:rgba(216, 112, 147, 0); /* Fondo gris oscuro */
+    border-radius: 15px;
+    gap: 2em;
+    width: 50%;
+    height:auto;
+    margin-top: 3vh;
+}

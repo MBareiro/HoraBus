@@ -1,29 +1,36 @@
 import { useEffect } from 'react';
-import logo from '../../../pictures/horabus2.png';
+import logo from '../../../pictures/horabus3.png';
+import logoTekhne from '../../../pictures/Fondo Transparente Letras Oscuras.png'
 import './OperadorHome.css'
 import { useDispatch } from 'react-redux';
-import { setAccess } from '../../../redux/slices/operadorSlice';
+import { setSignIn } from '../../../redux/slices/operadorSlice';
 import { Menu } from '../menu/Menu';
+import { useNavigate } from 'react-router-dom';
+import { UserPanelOp } from '../userPanel/UserPanelOp';
 
 export const OperadorHome = () => {
+const navigate = useNavigate()
 const dispatch = useDispatch()
 
   useEffect(()=>{
-    const {access} = 
-        JSON.parse(localStorage.getItem("auth"))
-    dispatch(setAccess(access))
+        const authData = JSON.parse(localStorage.getItem("auth"));
+        if (!authData) {
+         dispatch(setSignIn(true))
+         navigate("/");
+        }
   }, [])
-    return (
-        <div className="app">
-             <div className="access-conteiner">
-                           <div>
-                            <button className="button-operador">ROL OPERADOR</button>
-                            </div>
-                    </div>
-            <div className="logo-container-operador">
-                    <img src={logo} alt="Horabus Logo" className="logo" />
-                  </div>
-                  <Menu/>
-        </div>
-    )
+  return (
+    <div className="app-operador">
+       <div className='conteiner-logo-user'>
+              <div className='conteiner-barra'>
+              <img src={logoTekhne} alt="Tekhne Logo" className="logoTekhne" />
+              <UserPanelOp/>
+              </div>
+            <div className="logo-container">
+              <img src={logo} alt="Horabus Logo" className="logo" />
+            </div>
+            </div>
+            <Menu />
+    </div>
+  ); 
 }

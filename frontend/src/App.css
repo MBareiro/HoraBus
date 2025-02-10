@@ -21,11 +21,28 @@ html, body { height: 100%; margin: 0; padding: 0; }
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin-bottom: 3vh;
 }
 
 .logo {
-  width: 360px; /* Ajusta el tamaño del logo */
+  width: 400px; /* Ajusta el tamaño del logo */
   height: auto;
+}
+.logoTekhne{
+  width: 100px;
+  margin-top: 2vh;
+  margin-left: 2vh;
+}
+.conteiner-logo-user{
+  display: flex;
+  flex-direction: column;
+  background-color: #6a6c6d;
+  width: 100%;
+}
+.conteiner-barra{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 }
 
 @media (max-width: 550px) {
