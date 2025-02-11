@@ -141,7 +141,7 @@ router.post('/',  userValidator.createUserValidator, validationErrorHandler, use
  * @swagger
  * /api/users/{id}:
  *   put:
- *     summary: Actualiza un usuario existente
+ *     summary: Actualiza los datos generales de un usuario existente (sin contraseña)
  *     tags: [Users]
  *     parameters:
  *       - in: path
@@ -166,15 +166,12 @@ router.post('/',  userValidator.createUserValidator, validationErrorHandler, use
  *               email:
  *                 type: string
  *                 description: Correo electrónico del usuario
- *               password:
- *                 type: string
- *                 description: Contraseña del usuario
  *               role:
  *                 type: string
  *                 description: Rol del usuario
  *               company_id:
  *                 type: integer
- *                 description: ID de la compania
+ *                 description: ID de la compañía
  *     responses:
  *       200:
  *         description: Usuario actualizado exitosamente
@@ -185,7 +182,46 @@ router.post('/',  userValidator.createUserValidator, validationErrorHandler, use
  *       500:
  *         description: Error en el servidor
  */
-router.put('/:id', verifyToken(['Administrator']), userValidator.updateUserValidator, validationErrorHandler, usersController.updateUser);
+router.put('/:id', userValidator.updateUserValidator, validationErrorHandler, usersController.updateUser);
+
+/**
+ * @swagger
+ * /api/users/{id}/update-password:
+ *   put:
+ *     summary: Actualiza la contraseña de un usuario existente
+ *     tags: [Users]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID del usuario
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               currentPassword:
+ *                 type: string
+ *                 description: Contraseña actual del usuario
+ *               newPassword:
+ *                 type: string
+ *                 description: Nueva contraseña del usuario
+ *     responses:
+ *       200:
+ *         description: Contraseña actualizada exitosamente
+ *       400:
+ *         description: Contraseña actual incorrecta o datos inválidos
+ *       404:
+ *         description: Usuario no encontrado
+ *       500:
+ *         description: Error en el servidor
+ */
+router.put('/:id/update-password', userValidator.updatePasswordValidator, validationErrorHandler, usersController.updatePassword);
+
 
 /**
  * @swagger
