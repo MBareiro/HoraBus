@@ -1,0 +1,32 @@
+.conteiner-confirm-changes{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    align-items: center;
+    justify-content: flex-start;
+}
+.span-confirm{
+    font-family:monospace;
+    font-size: 20px;
+    margin-bottom: 3vh;
+    color:#222222;
+}
+.conteiner-buttons-confirm{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    width: 100%;
+    margin-bottom: 3vh;
+}
+.button-no{
+    background-color: #fefefe;
+    font-family:monospace;
+    color:#2b2a2a;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 18px;
+    border: 1px solid #6a6a6a;
+}
+.button-no:hover{
+    background-color: #b3b3b3;
+}

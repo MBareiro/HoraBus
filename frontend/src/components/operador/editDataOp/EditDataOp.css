@@ -1,0 +1,102 @@
+.modal-edit-data{
+    background-color:#6a6c6d;;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 30%;
+    height: auto;
+    border-radius: 15px;
+}
+.conteiner-form-edit{
+    background-color:#6a6c6d;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    border-radius: 15px;
+}
+.form-edit{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+.h2-op-edit{
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    background-color:#6a6c6d;
+    border-radius: 5px;
+    padding-right: 1vh;
+    padding-left: 1vh;
+    color: #fecc26;
+    margin-top: 0vh;
+}
+.label-email-edit{
+    margin-bottom: 2vh;
+    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    font-size:20px;
+    font-weight: normal;
+    align-self: flex-start;
+    margin-left: 6vh;
+}
+.input-edit{
+    width: 80%;
+    height: 4vh;
+    border-radius:5px;
+    border: none;
+    margin-bottom: 3vh;
+    font-size: 15px ;
+    background-color: #d6d6d6;
+    border: 1px solid #282828;
+}
+
+.button-change-p{
+    background-color: #d6d6d6;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-bottom: 3vh;
+    font-size: 15px;
+}
+.button-change-p:hover{
+    background-color: #b3b3b3
+}
+.conteiner-guardar-cambios{
+    width: 100%;
+    height: auto;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+}
+.button-guardar-cambios{
+    background-color: #d6d6d6;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 18px;
+    margin-bottom: 3vh;
+    border: none;
+}
+.button-guardar-cambios:hover{
+    border: 1px solid #fecc26;
+}
+
+.button-close-conteiner{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-content: flex-end;
+    width: 100%;
+}
+.button-close-edit{
+    cursor: pointer;
+    color:#fefefe;
+    background-color:transparent;
+    border: none;
+    font-size: 20px;
+    border-radius: 5px;
+}
+.button-close-edit:hover {
+    color: #ee7a7a; /* Color de hover */
+  }

@@ -1,15 +1,16 @@
 import axios from 'axios'
-import { setAccess, setMessage, setRecoverPassword } from '../../slices/operadorSlice';
+import { setAccess, setMessage, setOperadorData, setRecoverPassword } from '../../slices/operadorSlice';
+import { getToken } from '../../../hooks/token';
 
 const api = 'https://hora-bus-backend.vercel.app/api'
+
 
 export const getLogin = (loginForm) => async (dispatch) => {
   try {
     const response = await axios.post(`${api}/auth/login`, loginForm);
 
-    if (response.data.message && response.data.token) {
+        if (response.data.message && response.data.token) {
         const token = response.data.token;
-        
   
         const payloadBase64 = token.split(".")[1]; 
         const payload = JSON.parse(atob(payloadBase64)); 
@@ -48,7 +49,6 @@ export const getRecoverPassword = (dni) => async (dispatch) => {
 }
 
 export const getNewPassword = (newPassword) => async (dispatch) => {
-  console.log(newPassword)
   try{
     const response = await axios.post(`${api}/auth/reset-password`, newPassword);
     dispatch(setRecoverPassword(response.data))
@@ -56,4 +56,34 @@ export const getNewPassword = (newPassword) => async (dispatch) => {
   catch(error){
     console.error(error)
   }
+}
+
+export const getOperadorData = (operadorId) => async (dispatch) =>{
+try{
+  
+  const response = await axios.get(`${api}/users/${operadorId}`, {
+    headers: {
+        Authorization: `Bearer ${getToken()}`,
+    },
+})
+dispatch(setOperadorData(response.data))
+}
+catch(error){
+console.log(error)
+}
+}
+
+export const editDataOp = (operadorId, datos) => async (dispatch) =>{
+  try{
+    
+    const response = await axios.put(`${api}/users/${operadorId}`, datos, {
+      headers: {
+          Authorization: `Bearer ${getToken()}`,
+      },
+  })
+  dispatch(setOperadorData(response.data))
+  }
+  catch(error){
+    console.log(error)
+    }
 }
