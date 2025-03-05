@@ -14,7 +14,7 @@ const verifyToken = require('../middleware/verifyToken');
 
 /**
  * @swagger
- * /users:
+ * /api/users:
  *   get:
  *     summary: Obtiene todos los usuarios
  *     tags: [Users]
@@ -46,7 +46,7 @@ const verifyToken = require('../middleware/verifyToken');
  *       500:
  *         description: Error en el servidor
  */
-router.get('/', verifyToken(['Administrator']), usersController.getAllUsers);
+router.get('/', usersController.getAllUsers);
 
 /**
  * @swagger
@@ -89,11 +89,11 @@ router.get('/', verifyToken(['Administrator']), usersController.getAllUsers);
  *       500:
  *         description: Error en el servidor
  */
-router.get('/:id', verifyToken(['Administrator']), userValidator.getUserByIdValidator, validationErrorHandler, usersController.getUserById);
+router.get('/:id', userValidator.getUserByIdValidator, validationErrorHandler, usersController.getUserById);
 
 /**
  * @swagger
- * /users:
+ * /api/users:
  *   post:
  *     summary: Crea un nuevo usuario
  *     tags: [Users]
@@ -244,7 +244,7 @@ router.put('/:id/update-password', userValidator.updatePasswordValidator, valida
  *       500:
  *         description: Error en el servidor
  */
-router.delete('/:id', verifyToken(['Administrator']), userValidator.deleteUserValidator, validationErrorHandler, usersController.deleteUser);
+router.delete('/:id', userValidator.deleteUserValidator, validationErrorHandler, usersController.deleteUser);
 
 module.exports = router;
 

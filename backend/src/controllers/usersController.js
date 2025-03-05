@@ -1,10 +1,16 @@
 const db = require('../../db/models');
 const bcrypt = require('bcryptjs');
 const User = db.users;
+const Company = db.companies;
 
 exports.getAllUsers = async (req, res) => {
   try {
     const users = await User.findAll();
+    if (!users || users.length === 0) {
+      return res.status(404).json({
+        message: 'No se encontraron usuarios.',
+      });
+    }
     res.status(200).json(users);
   } catch (error) {
     console.error('Error al obtener los usuarios:', error);
@@ -30,14 +36,19 @@ exports.createUser = async (req, res) => {
   const { name, dni, email, password, role, company_id } = req.body;
 
   try {
+    const company = await Company.findByPk(company_id);
+    if (!company) {
+      return res.status(400).json({ error: 'La compañía especificada no existe.' });
+    }
+
     const existingUser = await User.findOne({ where: { email } });
     if (existingUser) {
       return res.status(409).json({ error: 'El correo electrónico ya está registrado.' });
     }
+
     const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = await User.create({ name, dni, email, password: hashedPassword, role, company_id });
-    console.log(hashedPassword);
-    
+
     res.status(201).json({
       message: 'Usuario creado exitosamente.',
       user: {
@@ -54,6 +65,7 @@ exports.createUser = async (req, res) => {
     res.status(500).json({ error: 'Error interno al crear el usuario.' });
   }
 };
+
 
 exports.updateUser = async (req, res) => {
   const { name, dni, email, role, company_id } = req.body;
