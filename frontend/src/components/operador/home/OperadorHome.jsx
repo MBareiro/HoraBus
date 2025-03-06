@@ -7,7 +7,7 @@ import { setSignIn } from '../../../redux/slices/operadorSlice';
 import { Menu } from '../menu/Menu';
 import { useNavigate } from 'react-router-dom';
 import { UserPanelOp } from '../userPanel/UserPanelOp';
-import { getOperadorData } from '../../../redux/actions/operadorActions/operadorActions';
+import { getOperadorData, getStops } from '../../../redux/actions/operadorActions/operadorActions';
 
 export const OperadorHome = () => {
 const navigate = useNavigate()
@@ -20,7 +20,9 @@ const dispatch = useDispatch()
          navigate("/");
         } else{
           dispatch(getOperadorData(authData.userId))
+          dispatch(getStops())
         }
+
   }, [])
 
   return (

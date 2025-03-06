@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { setAccess, setMessage, setOperadorData, setRecoverPassword } from '../../slices/operadorSlice';
+import { setAccess, setMessage, setMyStops, setOperadorData, setRecoverPassword, setStops } from '../../slices/operadorSlice';
 import { getToken } from '../../../hooks/token';
 
 const api = 'https://hora-bus-backend.vercel.app/api'
@@ -67,6 +67,7 @@ try{
     },
 })
 dispatch(setOperadorData(response.data))
+console.log(response)
 }
 catch(error){
 console.log(error)
@@ -82,8 +83,43 @@ export const editDataOp = (operadorId, datos) => async (dispatch) =>{
       },
   })
   dispatch(setOperadorData(response.data))
+if(response.status = 200){
+  dispatch(setMessage("Datos actualizados correctamente"))
+}
   }
   catch(error){
     console.log(error)
     }
+}
+
+export const getStops = () => async (dispatch) => {
+  try{
+    const response = await axios.get(`${api}/stops`,{
+      headers: {
+          Authorization: `Bearer ${getToken()}`,
+      },
+  })
+  dispatch(setStops(response.data))
+  }
+  catch (error){
+    dispatch(setMessage(error.response.data.error))
+  }
+}
+
+export const getMyStops = (company_id) => async (dispatch) => {
+  try{
+    const response = await axios.get(`${api}/companies_stops/companies/${company_id}/stops`,{
+      headers: {
+          Authorization: `Bearer ${getToken()}`,
+      },
+  })
+  dispatch(setMyStops(response.data))
+  }
+  catch (error){
+    dispatch(setMessage(error.response.data.error))
+  }
+}
+
+export const addNewStop = (newStop) => async (dispatch) =>{
+
 }

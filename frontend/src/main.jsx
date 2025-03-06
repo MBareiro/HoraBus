@@ -10,6 +10,7 @@ import { OperadorHome } from './components/operador/home/OperadorHome';
 import { RecoverPassword } from './components/operador/recoverPassword/RecoverPassword';
 import { ResetPassword } from './components/operador/resetPassword/ResetPassword';
 import { Login } from './components/login/Login';
+import { ChangePasswordOp } from './components/operador/editDataOp/changePassword/ChangePasswordOp';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -20,6 +21,7 @@ root.render(
         <Route path="/operador" element={<OperadorHome />} />
         <Route path="/recoverPassword" element={<RecoverPassword/>} />
         <Route path="/reset-password/:token" element={<ResetPassword/>}/>
+        <Route path="/operador/changePassword" element={<ChangePasswordOp/>}/>
       </Routes>
       <Analytics />
     </Router>

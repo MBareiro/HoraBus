@@ -7,9 +7,12 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getOperadorData } from '../../../redux/actions/operadorActions/operadorActions';
 import { ConfirmSaveChanges } from './ConfirmSaveChanges';
+import { setMessage } from '../../../redux/slices/operadorSlice';
+import { useNavigate } from 'react-router-dom';
 
 
 export const EditDataOp = ({openModalEdit, setOpenModalEdit}) => {
+const navigate = useNavigate()
 const operadorData = useSelector((state)=> state.operador.data)
 const dispatch = useDispatch()
 
@@ -46,6 +49,7 @@ useEffect(() => {
     } else{
       setOpenModalEdit(false)
     }
+    dispatch(setMessage(""))
   }
 
   useEffect(() =>{
@@ -64,7 +68,7 @@ dispatch(getOperadorData(operatorId))
     setOpenConfirmChanges(true)
   }
 
-  console.log(opDataState)
+  
     return(
       <Modal
       isOpen={openModalEdit}
@@ -88,12 +92,14 @@ dispatch(getOperadorData(operatorId))
             <label className="label-email-edit">EMAIL</label>
             <input   className='input-edit' value={opDataState.email}  onChange={handleChange}
             name='email' id="email"></input>
-            <button className='button-change-p'  type="button">CAMBIAR CONTRASEÑA</button>
+            <button className='button-change-p'  type="button"
+             onClick={() => navigate("/operador/changePassword")}>CAMBIAR CONTRASEÑA</button>
           </form>
           <button className='button-guardar-cambios' onClick={handleClickSaveChanges}>GUARDAR CAMBIOS</button>
         </div>
         <ConfirmSaveChanges setOpenConfirmChanges={setOpenConfirmChanges} openConfirmChanges={openConfirmChanges}
-        operatorId={operatorId} operadorData={operadorData} opDataState={opDataState}/>
+        operatorId={operatorId} operadorData={operadorData} opDataState={opDataState}
+        setOpenModalEdit={setOpenModalEdit}/>
  
      </Modal>
     )
