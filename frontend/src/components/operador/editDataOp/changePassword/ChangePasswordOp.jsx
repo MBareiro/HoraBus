@@ -4,6 +4,7 @@ import { setSignIn } from "../../../../redux/slices/operadorSlice";
 import { getOperadorData } from "../../../../redux/actions/operadorActions/operadorActions";
 import { useEffect, useState } from "react";
 import loadingGif from '../../../../pictures/loading.gif'
+import './ChangePassword.css'
 
 export const ChangePasswordOp = () => {
 
@@ -21,7 +22,12 @@ const dispatch = useDispatch()
       }, [])
 
     
-      const [showLoadinGif, setShowLoadinGif] = useState(false)
+      const [showLoadinGif, setShowLoadingGif] = useState(false)
+
+      const handleSubmit = async (event) => {
+        event.preventDefault();
+        setShowLoadingGif(true);
+    };
     
     return(
           <div className="conteiner-recover-p">
@@ -30,15 +36,18 @@ const dispatch = useDispatch()
                      <div className="conteiner-form-button">
                      <form className="conteiner-form">
                          <label className="label-recover">INGRESE SU CONTRASEÑA ACTUAL</label>
+                         <div className="conteiner-input-button-img">
                          <input
                          type="text"
                          name="dni"
                          id="dni"
                          className="input-recover"></input>
-                     </form>
-                 {showLoadinGif ?
+                          {showLoadinGif ?
                  <img src={loadingGif} alt="Cargando..." className="loading-gif-recover" /> :
-                 <button className="button-recover">ENVIAR</button>} 
+                 <button className="button-recover" onClick={handleSubmit}>ENVIAR</button>} 
+                         </div> 
+                     </form>
+                
                      </div>
                  </div>
              </div>
