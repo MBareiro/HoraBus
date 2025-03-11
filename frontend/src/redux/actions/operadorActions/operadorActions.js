@@ -92,6 +92,26 @@ if(response.status = 200){
     }
 }
 
+export const changePassword = (datos) => async (dispatch) => {
+  const id = datos.operatorId
+  const requiredData = {
+    currentPassword: datos.currentPassword,
+    newPassword: datos.newPassword
+  }
+
+  try {
+    const response = await axios.post(`/${api}/users/${id}/update-password`, requiredData, {
+      headers: {
+        Authorization: `Bearer ${getToken()}`,
+      },
+    });
+  console.log(response)
+  } catch (error) {
+    dispatch(setMessage(error.response.data.error));
+  }
+};
+
+
 export const getStops = () => async (dispatch) => {
   try{
     const response = await axios.get(`${api}/stops`,{

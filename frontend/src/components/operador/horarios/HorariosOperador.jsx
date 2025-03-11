@@ -8,7 +8,6 @@ import { useEffect, useState } from "react";
 import './HorariosOperador.css'
 import loadingGif from '../../../pictures/loading.gif'
 
-
 export const HorariosOperador = ({origen,destino,handleBuscarHorarios}) => {
 
     const horarios = useSelector((state) => state.user.horarios)
@@ -57,6 +56,7 @@ export const HorariosOperador = ({origen,destino,handleBuscarHorarios}) => {
                 <tr>
                   <th>{origen}</th>
                   <th>{destino}</th>
+                  <th>Estado</th>
                   <th>Frecuencia</th>
                   <th>Habilitado</th>
                   <th>Editar</th>
@@ -65,12 +65,20 @@ export const HorariosOperador = ({origen,destino,handleBuscarHorarios}) => {
               </thead>
               <tbody>
                 {horarios
-                  .slice() // Crea una copia para evitar mutar el estado original
-                  .sort((a, b) => a.departure_time.localeCompare(b.departure_time)) // Ordena por departure_time
+                  .slice()
+                  .sort((a, b) => a.departure_time.localeCompare(b.departure_time)) 
                   .map((item) => (
                     <tr key={item.id}>
                       <td>{item.departure_time}</td>
                       <td>{item.arrival_time}</td>
+                      <td>
+                        <select>
+    <option value="on-time">A tiempo</option>
+    <option value="delayed">Demorado</option>
+    <option value="cancelled">Cancelado</option>
+    <option value="en-route">En camino</option>
+  </select></td>
+
                       <td>{item.frequency}</td>
                       <td>
                         <FontAwesomeIcon icon={faSquareCheck} style={{ color: "#458762" }} />
