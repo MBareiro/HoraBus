@@ -12,6 +12,7 @@ const [loading, setLoading] = useState(true)
 const [filtrosOn, setFiltrosOn] = useState(false)
 const [openFiltrosModal, setOpenFiltrosModal]=useState(false)
 
+
 useEffect(() => {
   if (horarios.length !== 0){
     setOpenFiltrosModal(false)

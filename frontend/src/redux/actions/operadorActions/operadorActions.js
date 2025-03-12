@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { setAccess, setMessage, setMyStops, setOperadorData, setRecoverPassword, setStops } from '../../slices/operadorSlice';
+import { setAccess, setMessage, setMyStops, setOperadorData, setRecoverPassword, setScheduleData, setStops } from '../../slices/operadorSlice';
 import { getToken } from '../../../hooks/token';
 
 const api = 'https://hora-bus-backend.vercel.app/api'
@@ -142,4 +142,20 @@ export const getMyStops = (company_id) => async (dispatch) => {
 
 export const addNewStop = (newStop) => async (dispatch) =>{
 
+}
+
+export const getScheduleData = (scheduleId) => async (dispatch) => {
+  console.log(scheduleId)
+  try{
+    const response = await axios.get(`/${api}/schedules/${scheduleId}`,{
+      headers: {
+          Authorization: `Bearer ${getToken()}`,
+      },
+  })
+  dispatch(setScheduleData(response.data))
+  console.log(response)
+  }
+  catch (error){
+    dispatch(setMessage(error.response.data.error))
+  }
 }

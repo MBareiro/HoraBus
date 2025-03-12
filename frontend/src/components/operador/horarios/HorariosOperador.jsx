@@ -1,12 +1,13 @@
 import { useSelector } from "react-redux"
 import { OpcionesHorarios } from "../opcionesHorarios/OpcionesHorarios"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSquareXmark, faSquareCheck, faPenToSquare} from "@fortawesome/free-solid-svg-icons";
+import { faSquareXmark, faSquareCheck, faPenToSquare, faHandLizard} from "@fortawesome/free-solid-svg-icons";
 import Filtros from "../../filtros/Filtros/Filtros";
 import LimpiarFiltros from "../../filtros/LimpiarFiltros/LimpiarFiltros";
 import { useEffect, useState } from "react";
 import './HorariosOperador.css'
 import loadingGif from '../../../pictures/loading.gif'
+import { EditarHorarios } from "./editarHorarios/EditarHorarios";
 
 export const HorariosOperador = ({origen,destino,handleBuscarHorarios}) => {
 
@@ -14,6 +15,8 @@ export const HorariosOperador = ({origen,destino,handleBuscarHorarios}) => {
     const [loading, setLoading] = useState(true)
     const [filtrosOn, setFiltrosOn] = useState(false)
     const [openFiltrosModal, setOpenFiltrosModal]=useState(false)
+    const [openModalEdit, setOpenModalEdit] = useState(false)
+    const [horarioId, setHorarioId] = useState(null)
     
     useEffect(() => {
       if (horarios.length !== 0){
@@ -21,6 +24,21 @@ export const HorariosOperador = ({origen,destino,handleBuscarHorarios}) => {
         setLoading(false)
       }
       }, [horarios])
+
+
+    const handleEdit = (itemId) => {
+      setHorarioId(itemId)
+    }
+
+    useEffect(() =>{
+      if(horarioId !== null){
+        setOpenModalEdit(true)
+        console.log(horarioId)
+      }
+
+    }, [horarioId])
+
+
       return (
         loading ? (
           <div className="loading-container-op">
@@ -84,7 +102,8 @@ export const HorariosOperador = ({origen,destino,handleBuscarHorarios}) => {
                         <FontAwesomeIcon icon={faSquareCheck} style={{ color: "#458762" }} />
                       </td>
                       <td>
-                        <button className="opciones-tabla-h">
+                        <button className="opciones-tabla-h"
+                        onClick={() => handleEdit(item.id)}>
                           <FontAwesomeIcon icon={faPenToSquare} style={{ color: "#ffc107" }} />
                         </button>
                       </td>
@@ -95,6 +114,7 @@ export const HorariosOperador = ({origen,destino,handleBuscarHorarios}) => {
                   ))}
               </tbody>
             </table>
+            <EditarHorarios isOpen={openModalEdit} horarioId={horarioId}/>
           </div>
         )
       );      

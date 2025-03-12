@@ -1,9 +1,25 @@
+import { useEffect } from 'react'
+import Modal from 'react-modal'
+import { useDispatch } from 'react-redux'
+import { getScheduleData } from '../../../../redux/actions/operadorActions/operadorActions'
 
+export const EditarHorarios = ({isOpen, horarioId}) =>{
+const dispatch = useDispatch()
 
-export const EditarHorarios = () =>{
+    useEffect (() =>{
+        dispatch(getScheduleData(horarioId))
+    }, [])
+    
     return(
-        <div>
+        <Modal
+        isOpen={isOpen}
+        className="modal-login"
+        overlayClassName="login-overlay">
+            <div>
             
-        </div>
+            </div>
+
+        </Modal>
+        
     )
 }

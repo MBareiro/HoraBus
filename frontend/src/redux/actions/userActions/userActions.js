@@ -11,8 +11,8 @@ export const getHorarios = (origen, destino) => async (dispatch) => {
     const response = await axios.get(`${api}/schedules`, {
       params: { from: origen, to: destino }
     });
+    console.log(origen, destino)
 
-    console.log(response.data)
     const horarios = response.data.map(item => ({
       id: item.id,
       departure_time: item.departure_time.split(':').slice(0, 2).join(':'),
@@ -21,7 +21,8 @@ export const getHorarios = (origen, destino) => async (dispatch) => {
       company: item.company
     }));
 
-    // Usar la acción predefinida
+    
+
     dispatch(setHorarios(horarios));
   } catch (error) {
     console.error("Error fetching horarios:", error);
