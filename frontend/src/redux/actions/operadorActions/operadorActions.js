@@ -2,7 +2,7 @@ import axios from 'axios'
 import { setAccess, setMessage, setMyStops, setOperadorData, setRecoverPassword, setScheduleData, setStops } from '../../slices/operadorSlice';
 import { getToken } from '../../../hooks/token';
 
-const api = 'https://hora-bus-backend.vercel.app/api'
+const api = 'https://horabus.onrender.com/api'
 
 
 export const getLogin = (loginForm) => async (dispatch) => {
@@ -119,7 +119,7 @@ export const getStops = () => async (dispatch) => {
           Authorization: `Bearer ${getToken()}`,
       },
   })
-  dispatch(setStops(response.data))
+  dispatch(setStops(response.data.stops))
   }
   catch (error){
     dispatch(setMessage(error.response.data.error))

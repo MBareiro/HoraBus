@@ -90,7 +90,7 @@ export const HorariosOperador = ({origen,destino,handleBuscarHorarios}) => {
                       <td>{item.departure_time}</td>
                       <td>{item.arrival_time}</td>
                       <td>
-                        <select>
+                        <select className="select-state">
     <option value="on-time">A tiempo</option>
     <option value="delayed">Demorado</option>
     <option value="cancelled">Cancelado</option>
@@ -99,12 +99,12 @@ export const HorariosOperador = ({origen,destino,handleBuscarHorarios}) => {
 
                       <td>{item.frequency}</td>
                       <td>
-                        <FontAwesomeIcon icon={faSquareCheck} style={{ color: "#458762" }} />
+                        <FontAwesomeIcon icon={faSquareCheck} style={{ color: "#458762", fontSize: "24px" }} />
                       </td>
                       <td>
                         <button className="opciones-tabla-h"
                         onClick={() => handleEdit(item.id)}>
-                          <FontAwesomeIcon icon={faPenToSquare} style={{ color: "#ffc107" }} />
+                          <FontAwesomeIcon icon={faPenToSquare} style={{ color: "#ffc107", fontSize: "22px"}} />
                         </button>
                       </td>
                       <td>
@@ -114,7 +114,8 @@ export const HorariosOperador = ({origen,destino,handleBuscarHorarios}) => {
                   ))}
               </tbody>
             </table>
-            <EditarHorarios isOpen={openModalEdit} horarioId={horarioId}/>
+            <EditarHorarios isOpen={openModalEdit} horarioId={horarioId}
+            setOpenModalEdit={setOpenModalEdit} origen={origen} destino={destino}/>
           </div>
         )
       );      

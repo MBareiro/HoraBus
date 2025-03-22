@@ -14,6 +14,7 @@
     cursor: pointer;
     border: none;
     margin-right: 1vh;
+    padding: 3px 6px
 }
 .filtro-button:hover {
     background-color: #b3b3b3; /* Color de hover */
