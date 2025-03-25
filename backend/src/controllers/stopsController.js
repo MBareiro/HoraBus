@@ -6,7 +6,7 @@ const { stops, routes, schedules, companies } = db;
 exports.getAllStops = async (req, res) => {
   try {
     const stopsList = await stops.findAll({
-      attributes: ['id', 'name']
+      attributes: ['id', 'name', 'location', 'state']
     });
 
     return res.status(200).json({ stops: stopsList });
@@ -48,16 +48,28 @@ exports.createStop = async (req, res) => {
 
   try {
     // Verificar si ya existe una parada con el mismo nombre
-    const existingStop = await Stop.findOne({ where: { name } });
-    if (existingStop) {
-      return res.status(409).json({ message: 'La parada ya existe.' });
+    const existingStopByName = await Stop.findOne({ where: { name } });
+    if (existingStopByName) {
+      return res.status(409).json({ message: 'La parada ya existe con este nombre.' });
+    }
+
+    // Verificar si ya existe una parada con las mismas coordenadas
+    const existingStopByCoords = await Stop.findOne({
+      where: db.sequelize.where(
+        db.sequelize.fn('ST_Equals', db.sequelize.col('location'), db.sequelize.fn('ST_GeomFromText', `POINT(${longitude} ${latitude})`)),
+        true
+      ),
+    });
+
+    if (existingStopByCoords) {
+      return res.status(409).json({ message: 'Ya existe una parada en estas coordenadas.' });
     }
 
     // Crear el nuevo objeto GEOGRAPHY utilizando el formato WKT: "POINT(longitude latitude)"
     const newStop = await Stop.create({
       name,
       location: db.sequelize.fn('ST_GeomFromText', `POINT(${longitude} ${latitude})`),
-      state: state || "enabled"  // Establecer el estado a "enabled" por defecto
+      state: state || "enabled", // Establecer el estado a "enabled" por defecto
     });
 
     res.status(201).json(newStop);
@@ -66,6 +78,7 @@ exports.createStop = async (req, res) => {
     res.status(500).json({ error: 'Error al crear la parada.', details: error.message });
   }
 };
+
 
 exports.updateStop = async (req, res) => {
   const { name, latitude, longitude, state } = req.body; 

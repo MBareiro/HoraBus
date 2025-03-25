@@ -1,5 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
-    const Subscription = sequelize.define('Subscription', {
+    const Subscription = sequelize.define('subscription', {
       email: {
         type: DataTypes.STRING,
         allowNull: false,

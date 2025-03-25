@@ -20,7 +20,7 @@ const associateStopsToCompany = async (req, res) => {
 
     // Asociar las paradas a la empresa
     await company.addStops(stops);
-    return res.status(200).json({ message: 'Paradas asociadas exitosamente' });
+    return res.status(200).json({ message: 'Paradas asociadas exitosamente', stops: stops });
   } catch (error) {
     return res.status(500).json({ error: 'Error al asociar paradas', details: error.message });
   }
