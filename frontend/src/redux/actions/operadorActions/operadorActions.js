@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { setAccess, setMessage, setMyStops, setOperadorData, setRecoverPassword, setScheduleData, setStops } from '../../slices/operadorSlice';
+import { setAccess, setMessage, setMyStops, setNewStop, setOperadorData, setQuitarStop, setRecoverPassword, setScheduleData, setStops } from '../../slices/operadorSlice';
 import { getToken } from '../../../hooks/token';
 
 const api = 'https://horabus.onrender.com/api'
@@ -140,9 +140,51 @@ export const getMyStops = (company_id) => async (dispatch) => {
   }
 }
 
-export const addNewStop = (newStop) => async (dispatch) =>{
+export const asociarStop = (company_id, stopId) => async (dispatch) => {
 
+  const stop_id = {
+    stop_ids: [stopId] 
+  };
+
+  try {
+    const response = await axios.post(
+      `${api}/companies_stops/companies/${company_id}/stops`,
+      stop_id, 
+      {
+        headers: {
+          Authorization: `Bearer ${getToken()}`,
+        },
+      }
+    );
+    dispatch(setMessage(response.data.message))
+    dispatch(setNewStop(response.data.stops[0]))
+  } catch (error) {
+    console.error("Error al asociar la parada:", error);
+  }
+};
+
+export const quitarStop = (company_id, stopId) => async (dispatch) =>{
+
+  const stop_id = {
+    stop_ids: [stopId] 
+  };
+try{
+  const response = await axios.delete(
+    `${api}/companies_stops/companies/${company_id}/stops`,
+    {
+      data: stop_id,
+      headers: {
+        Authorization: `Bearer ${getToken()}`,
+      },
+    }
+  );
+dispatch(setQuitarStop(stopId))
 }
+catch(error){
+console.log(error)
+}
+}
+
 
 export const getScheduleData = (scheduleId) => async (dispatch) => {
   console.log(scheduleId)

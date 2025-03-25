@@ -8,7 +8,7 @@ const initialState = {
  data:{},
  stops: [],
  myStops: [],
- scheduleData: {}
+ scheduleData: {},
 };
 
 const operadorSlice = createSlice({
@@ -36,17 +36,20 @@ const operadorSlice = createSlice({
     setMyStops: (state, action) => {
       state.myStops =  action.payload
     },
-    setNewStop: (state,action) =>{
-      state.myStops = [...state.myStops, action.payload]
+    setNewStop: (state, action) =>{
+      state.myStops = [...state.myStops, action.payload ]
+    },
+    setQuitarStop: (state,action) =>{
+      state.myStops = state.myStops.filter(stop => stop.id !== action.payload)
     },
     setScheduleData: (state, action) =>{
       state.scheduleData = action.payload
-    }
+    },
   },
 });
 
 export const {setAccess, setRecoverPassword, setSignIn, setMessage, setOperadorData,
-  setStops, setMyStops, setNewStop, setScheduleData
+  setStops, setMyStops, setNewStop, setScheduleData, setStatus, setQuitarStop
 } = operadorSlice.actions;
 
 export default operadorSlice.reducer;
