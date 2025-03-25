@@ -66,7 +66,7 @@ router.get('/:id', stopsController.getStopById);
  *                     type: number
  *               state:
  *                 type: string
- *                 enum: [ENABLED, DISABLED, PENDING]
+ *                 enum: [enabled, disabled, PENDING]
  *     responses:
  *       201:
  *         description: Parada creada exitosamente
@@ -103,7 +103,7 @@ router.post('/', stopsController.createStop);
  *                 type: number
  *               state:
  *                 type: string
- *                 enum: [ENABLED, DISABLED]
+ *                 enum: [enabled, disabled]
  *     responses:
  *       200:
  *         description: Parada actualizada correctamente
@@ -155,7 +155,7 @@ router.delete('/:id', stopsController.deleteStop);
  *             properties:
  *               state:
  *                 type: string
- *                 enum: [ENABLED, DISABLED]
+ *                 enum: [enabled, disabled]
  *     responses:
  *       200:
  *         description: Estado actualizado correctamente

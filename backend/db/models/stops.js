@@ -13,7 +13,7 @@ module.exports = function (sequelize, DataTypes) {
         notEmpty: {
           msg: 'El nombre de la parada es obligatorio.'
         },
-        isLength: {
+        len: {
           args: [3],
           msg: 'El nombre de la parada debe tener al menos 3 caracteres.'
         }
@@ -26,6 +26,7 @@ module.exports = function (sequelize, DataTypes) {
     state: {
       type: DataTypes.STRING,
       allowNull: false,
+      defaultValue: "enabled", 
       validate: {
         isIn: {
           args: [['enabled', 'disabled']],
@@ -36,22 +37,21 @@ module.exports = function (sequelize, DataTypes) {
     createdAt: {
       type: DataTypes.DATE,
       allowNull: false,
-      defaultValue: DataTypes.NOW // Valor por defecto para la fecha de creación
+      defaultValue: DataTypes.NOW 
     },
     updatedAt: {
       type: DataTypes.DATE,
       allowNull: false,
-      defaultValue: DataTypes.NOW // Valor por defecto para la fecha de actualización
+      defaultValue: DataTypes.NOW 
     }
   });
 
   Stop.associate = function (models) {
-    // Relación muchos a muchos con Company
     Stop.belongsToMany(models.companies, {
       through: 'companies_stops',
       foreignKey: 'stop_id',
       otherKey: 'company_id',
-      as: 'companies' // Alias consistente con las consultas
+      as: 'companies'
     });
   };
 

@@ -7,7 +7,6 @@ const Company = db.companies;
 const associateStopsToCompany = async (req, res) => {  
   const { company_id } = req.params;
   const { stop_ids } = req.body;
-  console.log(company_id);
   
   try {
     // Buscar la empresa
