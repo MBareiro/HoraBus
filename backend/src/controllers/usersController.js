@@ -34,7 +34,8 @@ exports.getUserById = async (req, res) => {
 
 exports.createUser = async (req, res) => {
   const { name, dni, email, password, role, company_id } = req.body;
-
+  console.log(email);
+  
   try {
     const company = await Company.findByPk(company_id);
     if (!company) {

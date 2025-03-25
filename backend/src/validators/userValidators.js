@@ -10,8 +10,7 @@ module.exports = {
       .trim().escape(),
     body('email')
       .isEmail().withMessage('El email debe tener un formato válido.')
-      .notEmpty().withMessage('El email es obligatorio.')
-      .normalizeEmail(),
+      .notEmpty().withMessage('El email es obligatorio.'),
     body('password')
       .isString().withMessage('La contraseña debe ser una cadena de texto.')
       .isLength({ min: 8 }).withMessage('La contraseña debe tener al menos 8 caracteres.')
@@ -41,8 +40,7 @@ module.exports = {
       .trim().escape(),
     body('email')
       .optional()
-      .isEmail().withMessage('El email debe tener un formato válido.')
-      .normalizeEmail(),
+      .isEmail().withMessage('El email debe tener un formato válido.'),
     // Se elimina la validación de 'password' ya que se actualiza en un endpoint separado
     body('role')
       .optional()
