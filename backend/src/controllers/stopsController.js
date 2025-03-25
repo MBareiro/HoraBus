@@ -41,7 +41,7 @@ exports.createStop = async (req, res) => {
   // Validar el estado
   const validStates = ["enabled", "disabled"];
   if (state && !validStates.includes(state)) {
-    return res.status(400).json({ error: 'Estado inválido. Use "ENABLED" o "DISABLED".' });
+    return res.status(400).json({ error: 'Estado inválido. Use "enabled" o "disabled".' });
   }
 
   const { latitude, longitude } = location;
@@ -57,7 +57,7 @@ exports.createStop = async (req, res) => {
     const newStop = await Stop.create({
       name,
       location: db.sequelize.fn('ST_GeomFromText', `POINT(${longitude} ${latitude})`),
-      state: state || "ENABLED"  // Establecer el estado a "ENABLED" por defecto
+      state: state || "enabled"  // Establecer el estado a "enabled" por defecto
     });
 
     res.status(201).json(newStop);
@@ -71,9 +71,9 @@ exports.updateStop = async (req, res) => {
   const { name, latitude, longitude, state } = req.body; 
 
   // Validar el estado si se proporciona
-  const validStates = ["ENABLED", "DISABLED"];
+  const validStates = ["enabled", "disabled"];
   if (state && !validStates.includes(state)) {
-    return res.status(400).json({ error: 'Estado inválido. Use "ENABLED" o "DISABLED".' });
+    return res.status(400).json({ error: 'Estado inválido. Use "enabled" o "disabled".' });
   }
 
   if (latitude && longitude) {
@@ -139,9 +139,9 @@ exports.updateStopState = async (req, res) => {
   const { state } = req.body;
 
   // Validar que el estado sea válido
-  const validStates = ["ENABLED", "DISABLED"];
+  const validStates = ["enabled", "disabled"];
   if (!validStates.includes(state)) {
-    return res.status(400).json({ error: "Estado inválido. Use 'ENABLED' o 'DISABLED'." });
+    return res.status(400).json({ error: "Estado inválido. Use 'enabled' o 'disabled'." });
   }
 
   try {

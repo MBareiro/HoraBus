@@ -56,45 +56,56 @@ module.exports = {
       .escape()
   ],
 
-  // Validaciones para actualizar un horario
-  updateScheduleValidator: [
-    param('id')
-      .isInt({ gt: 0 }).withMessage('El ID del horario debe ser un número entero mayor que 0.')
-      .toInt(),
-    body('departure_time')
-      .optional()
-      .matches(/^([01]\d|2[0-3]):([0-5]\d)(:[0-5]\d)?$/).withMessage('La hora de salida debe tener el formato HH:MM o HH:MM:SS.')
-      .trim(),
-    body('arrival_time')
-      .optional()
-      .matches(/^([01]\d|2[0-3]):([0-5]\d)(:[0-5]\d)?$/).withMessage('La hora de llegada debe tener el formato HH:MM o HH:MM:SS.')
-      .trim(),
-    body('departure_time').custom((value, { req }) => {
-      if (value && value >= req.body.arrival_time) {
-        throw new Error('La hora de salida no puede ser igual o posterior a la hora de llegada.');
+// Validaciones para actualizar un horario
+updateScheduleValidator: [
+  param('id')
+    .isInt({ gt: 0 }).withMessage('El ID del horario debe ser un número entero mayor que 0.')
+    .toInt(),
+
+  body('departure_time')
+    .optional()
+    .matches(/^([01]\d|2[0-3]):([0-5]\d)(:[0-5]\d)?$/).withMessage('La hora de salida debe tener el formato HH:MM o HH:MM:SS.')
+    .trim(),
+
+  body('arrival_time')
+    .optional()
+    .matches(/^([01]\d|2[0-3]):([0-5]\d)(:[0-5]\d)?$/).withMessage('La hora de llegada debe tener el formato HH:MM o HH:MM:SS.')
+    .trim(),
+
+  body('departure_time').optional().custom((value, { req }) => {
+    if (value && req.body.arrival_time && value >= req.body.arrival_time) {
+      throw new Error('La hora de salida no puede ser igual o posterior a la hora de llegada.');
+    }
+    return true;
+  }),
+
+  body('status')
+    .optional()
+    .isIn(['enabled', 'disabled', 'pending']).withMessage('El estado debe ser uno de los siguientes: enabled, disabled, pending.')
+    .trim(),
+
+  body('frequency')
+    .optional()
+    .isString().withMessage('La frecuencia debe ser una cadena de texto.')
+    .isLength({ max: 255 }).withMessage('La frecuencia no debe superar los 255 caracteres.')
+    .trim().escape(),
+
+  body('origin')
+    .optional()
+    .isString().withMessage('El campo origen debe ser una cadena de texto.')
+    .trim(),
+
+  body('destination')
+    .optional()
+    .isString().withMessage('El campo destino debe ser una cadena de texto.')
+    .trim()
+    .custom((value, { req }) => {
+      if (value && value === req.body.origin) {
+        throw new Error('El origen y el destino no pueden ser iguales.');
       }
       return true;
     }),
-    body('status')
-      .optional()
-      .isIn(['enabled', 'disabled', 'pending']).withMessage('El estado debe ser uno de los siguientes: enabled, disabled, pending.')
-      .trim(),
-    body('frequency')
-      .optional()
-      .isString().withMessage('La frecuencia debe ser una cadena de texto.')
-      .isLength({ max: 255 }).withMessage('La frecuencia no debe superar los 255 caracteres.')
-      .trim().escape(),
-    body('origin')
-      .notEmpty().withMessage('El campo origen es obligatorio.'),
-    body('destination')
-      .notEmpty().withMessage('El campo destino es obligatorio.')
-      .custom((value, { req }) => {
-        if (value === req.body.origin) {
-          throw new Error('El origen y el destino no pueden ser iguales.');
-        }
-        return true;
-      }),
-  ],
+],
 
   // Validaciones para obtener un horario por ID
   getScheduleByIdValidator: [

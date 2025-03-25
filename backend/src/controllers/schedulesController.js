@@ -122,6 +122,7 @@ exports.getSchedules = async (req, res) => {
     res.status(500).json({ message: "Error al obtener los horarios." });
   }
 };
+
 exports.getScheduleById = async (req, res) => {
   try {
     const schedule = await schedules.findByPk(req.params.id, {
@@ -249,36 +250,62 @@ exports.createSchedule = async (req, res) => {
 };
 
 exports.updateSchedule = async (req, res) => {
-  const { frequency, departure_time, arrival_time, origin, destination } = req.body;
-
   try {
-    if (!origin || !destination) {
-      return res.status(400).json({ error: "Origen y destino son obligatorios." });
-    }
+    const { frequency, departure_time, arrival_time, origin, destination } = req.body;
+    const scheduleId = req.params.id;
 
-    const originStop = await stops.findOne({ where: { name: origin } });
-    const destinationStop = await stops.findOne({ where: { name: destination } });
-
-    if (!originStop || !destinationStop) {
-      return res.status(400).json({ error: "Origen o destino no válidos." });
-    }
-
-    // Buscar o crear la ruta
-    let route = await routes.findOne({
-      where: {
-        origin: originStop.id,
-        destination: destinationStop.id,
-      },
+    // Buscar el horario existente
+    const schedule = await schedules.findByPk(scheduleId, {
+      include: [{ model: routes, as: "route" }],
     });
 
-    if (!route) {
-      route = await routes.create({
-        origin: originStop.id,
-        destination: destinationStop.id,
-      });
+    if (!schedule) {
+      return res.status(404).json({ error: "Horario no encontrado." });
     }
 
-    // Validar la frecuencia si está presente
+    let routeId = schedule.route_id; // Mantener la ruta actual si no se cambia el origen o destino
+    let newOriginId = schedule.route?.origin;
+    let newDestinationId = schedule.route?.destination;
+
+    // Actualizar solo el origen si se proporciona
+    if (origin) {
+      const originStop = await stops.findOne({ where: { name: origin } });
+      if (!originStop) {
+        return res.status(400).json({ error: "Origen no válido." });
+      }
+      newOriginId = originStop.id;
+    }
+
+    // Actualizar solo el destino si se proporciona
+    if (destination) {
+      const destinationStop = await stops.findOne({ where: { name: destination } });
+      if (!destinationStop) {
+        return res.status(400).json({ error: "Destino no válido." });
+      }
+      newDestinationId = destinationStop.id;
+    }
+
+    // Verificar si la nueva ruta existe
+    if (origin || destination) {
+      let route = await routes.findOne({
+        where: {
+          origin: newOriginId,
+          destination: newDestinationId,
+        },
+      });
+
+      // Si no existe, crear la nueva ruta
+      if (!route) {
+        route = await routes.create({
+          origin: newOriginId,
+          destination: newDestinationId,
+        });
+      }
+
+      routeId = route.id;
+    }
+
+    // Validar frecuencia si está presente
     let frequencyRecord = null;
     if (frequency) {
       frequencyRecord = await Frequency.findOne({ where: { name: frequency } });
@@ -287,24 +314,23 @@ exports.updateSchedule = async (req, res) => {
       }
     }
 
+    // Crear objeto con solo los campos enviados
+    const updateData = {};
+    if (departure_time) updateData.departure_time = departure_time;
+    if (arrival_time) updateData.arrival_time = arrival_time;
+    if (frequencyRecord) updateData.frequency_id = frequencyRecord.id;
+    if (routeId) updateData.route_id = routeId;
+
     // Actualizar el horario
-    const [updated] = await schedules.update(
-      {
-        frequency_id: frequencyRecord ? frequencyRecord.id : null,
-        departure_time,
-        arrival_time,
-        route_id: route.id,
-      },
-      { where: { id: req.params.id } }
-    );
+    const [updated] = await schedules.update(updateData, { where: { id: scheduleId } });
 
     if (!updated) {
-      return res.status(404).json({ error: "Horario no encontrado." });
+      return res.status(404).json({ error: "No se pudo actualizar el horario." });
     }
 
-    // Obtener el horario actualizado con relaciones
+    // Obtener el horario actualizado con sus relaciones
     const updatedSchedule = await schedules.findOne({
-      where: { id: req.params.id },
+      where: { id: scheduleId },
       include: [
         {
           model: routes,
