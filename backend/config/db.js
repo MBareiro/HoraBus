@@ -7,21 +7,21 @@ const sequelize = new Sequelize(config.database, config.username, config.passwor
   dialect: config.dialect,
   logging: config.logging || false, // Habilitar/deshabilitar logs de consultas SQL
   dialectOptions: config.dialectOptions, // Opciones adicionales de dialecto si es necesario
-  dialectModule: require('mysql2'), 
+  dialectModule: require('mysql2'),
   port: process.env.DB_PORT || 3306,
-
 });
 
-// Función para autenticar la conexión a la base de datos
-const authenticateDB = async () => {
-  try {
-    await sequelize.authenticate();
-    console.log('Conexión a la base de datos establecida correctamente.');
-  } catch (error) {
-    console.error('Error al conectar a la base de datos:', error);
-    throw new Error('No se pudo establecer la conexión con la base de datos.');
-  }
-};
+// Models
+const Stop = require('../db/models/stops')(sequelize, Sequelize.DataTypes);
+const Bus = require('../db/models/buses')(sequelize, Sequelize.DataTypes);
+const Company = require('../db/models/companies')(sequelize, Sequelize.DataTypes);
+const Frequency = require('../db/models/frequencies')(sequelize, Sequelize.DataTypes);
+const PasswordReset = require('../db/models/passwordReset')(sequelize, Sequelize.DataTypes);
+const Route = require('../db/models/routes')(sequelize, Sequelize.DataTypes);
+const Schedule = require('../db/models/schedules')(sequelize, Sequelize.DataTypes);
+const CompaniesStops = require('../db/models/companiesStops')(sequelize, Sequelize.DataTypes);
+const Subscription = require('../db/models/subscription')(sequelize, Sequelize.DataTypes);
+const User = require('../db/models/users')(sequelize, Sequelize.DataTypes);
 
 // Función para sincronizar los modelos de Sequelize con la base de datos
 const syncDB = async () => {
@@ -35,8 +35,16 @@ const syncDB = async () => {
   }
 };
 
-
-
+// Función para autenticar la conexión a la base de datos
+const authenticateDB = async () => {
+  try {
+    await sequelize.authenticate();
+    console.log('Conexión a la base de datos establecida correctamente.');
+  } catch (error) {
+    console.error('Error al conectar a la base de datos:', error);
+    throw new Error('No se pudo establecer la conexión con la base de datos.');
+  }
+};
 
 // Exportar la instancia de Sequelize y las funciones de conexión y sincronización
 module.exports = {

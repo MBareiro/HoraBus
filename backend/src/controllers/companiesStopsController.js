@@ -1,35 +1,28 @@
-const { Company, Stop } = require('../../db/models'); // Asumiendo que tienes estas relaciones configuradas en los modelos
+//const { Company, Stop } = require('../../db/models');
+const db = require('../../db/models');
+const Stop = db.stops;
+const Company = db.companies;
 
 // Asociar paradas a una empresa
-const associateStopsToCompany = async (req, res) => {
-    console.log('associateStopsToCompany');
-    
+const associateStopsToCompany = async (req, res) => {  
   const { company_id } = req.params;
   const { stop_ids } = req.body;
-
+  console.log(company_id);
+  
   try {
+    // Buscar la empresa
     const company = await Company.findByPk(company_id);
+    if (!company) return res.status(404).json({ error: 'Empresa no encontrada' });
 
-    if (!company) {
-      return res.status(404).json({ error: 'Empresa no encontrada' });
-    }
-
-    const stops = await Stop.findAll({
-      where: {
-        id: stop_ids,
-      },
-    });
-
-    if (stops.length !== stop_ids.length) {
-      return res.status(404).json({ error: 'Una o más paradas no se encuentran' });
-    }
+    // Buscar las paradas
+    const stops = await Stop.findAll({ where: { id: stop_ids } });
+    if (stops.length !== stop_ids.length) return res.status(404).json({ error: 'Una o más paradas no se encuentran' });
 
     // Asociar las paradas a la empresa
     await company.addStops(stops);
-
-    return res.status(200).json({ message: 'Paradas asociadas a la empresa exitosamente' });
+    return res.status(200).json({ message: 'Paradas asociadas exitosamente' });
   } catch (error) {
-    return res.status(500).json({ error: 'Error al asociar paradas' });
+    return res.status(500).json({ error: 'Error al asociar paradas', details: error.message });
   }
 };
 
@@ -39,28 +32,19 @@ const removeStopsFromCompany = async (req, res) => {
   const { stop_ids } = req.body;
 
   try {
+    // Buscar la empresa
     const company = await Company.findByPk(company_id);
+    if (!company) return res.status(404).json({ error: 'Empresa no encontrada' });
 
-    if (!company) {
-      return res.status(404).json({ error: 'Empresa no encontrada' });
-    }
+    // Buscar las paradas
+    const stops = await Stop.findAll({ where: { id: stop_ids } });
+    if (stops.length !== stop_ids.length) return res.status(404).json({ error: 'Una o más paradas no se encuentran' });
 
-    const stops = await Stop.findAll({
-      where: {
-        id: stop_ids,
-      },
-    });
-
-    if (stops.length !== stop_ids.length) {
-      return res.status(404).json({ error: 'Una o más paradas no se encuentran' });
-    }
-
-    // Eliminar las relaciones entre las paradas y la empresa
+    // Eliminar la asociación de las paradas de la empresa
     await company.removeStops(stops);
-
-    return res.status(200).json({ message: 'Paradas eliminadas de la empresa exitosamente' });
+    return res.status(200).json({ message: 'Paradas eliminadas exitosamente' });
   } catch (error) {
-    return res.status(500).json({ error: 'Error al eliminar las paradas' });
+    return res.status(500).json({ error: 'Error al eliminar paradas', details: error.message });
   }
 };
 
@@ -69,17 +53,16 @@ const getStopsByCompany = async (req, res) => {
   const { company_id } = req.params;
 
   try {
+    // Buscar la empresa e incluir las paradas asociadas
     const company = await Company.findByPk(company_id, {
-      include: { model: Stop, through: { attributes: [] } }, // Incluir las paradas relacionadas
+      include: { model: Stop, as: 'stops', through: { attributes: [] } },
     });
 
-    if (!company) {
-      return res.status(404).json({ error: 'Empresa no encontrada' });
-    }
+    if (!company) return res.status(404).json({ error: 'Empresa no encontrada' });
 
-    return res.status(200).json(company.Stops);
+    return res.status(200).json(company.stops);
   } catch (error) {
-    return res.status(500).json({ error: 'Error al obtener las paradas de la empresa' });
+    return res.status(500).json({ error: 'Error al obtener paradas', details: error.message });
   }
 };
 
@@ -88,17 +71,16 @@ const getCompaniesByStop = async (req, res) => {
   const { stop_id } = req.params;
 
   try {
+    // Buscar la parada e incluir las empresas asociadas
     const stop = await Stop.findByPk(stop_id, {
-      include: { model: Company, through: { attributes: [] } }, // Incluir las empresas relacionadas
+      include: { model: Company, as: 'companies', through: { attributes: [] } },
     });
 
-    if (!stop) {
-      return res.status(404).json({ error: 'Parada no encontrada' });
-    }
+    if (!stop) return res.status(404).json({ error: 'Parada no encontrada' });
 
-    return res.status(200).json(stop.Companies);
+    return res.status(200).json(stop.companies);
   } catch (error) {
-    return res.status(500).json({ error: 'Error al obtener las empresas de la parada' });
+    return res.status(500).json({ error: 'Error al obtener empresas', details: error.message });
   }
 };
 

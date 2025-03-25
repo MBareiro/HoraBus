@@ -39,7 +39,7 @@ exports.createStop = async (req, res) => {
   }
 
   // Validar el estado
-  const validStates = ["ENABLED", "DISABLED", "PENDING"];
+  const validStates = ["enabled", "disabled"];
   if (state && !validStates.includes(state)) {
     return res.status(400).json({ error: 'Estado inválido. Use "ENABLED" o "DISABLED".' });
   }
