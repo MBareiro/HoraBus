@@ -23,7 +23,7 @@ function initModels(sequelize) {
   companies.hasMany(routes, { as: "routes", foreignKey: "company_id"});
   schedules.belongsTo(routes, { as: "route", foreignKey: "route_id"});
   routes.hasMany(schedules, { as: "schedules", foreignKey: "route_id"});
-  frequencies.hasMany(schedules, { as: "schedules", foreignKey: "frequency_id" }); // Asociación entre Frequency y Schedule
+  frequencies.hasMany(schedules, { as: "schedules", foreignKey: "frequency_id" }); 
 
   return {
     buses,
@@ -32,7 +32,7 @@ function initModels(sequelize) {
     schedules,
     stops,
     users,
-    frequencies, // Asegúrate de exportar el modelo de frecuencias
+    frequencies, 
   };
 }
 

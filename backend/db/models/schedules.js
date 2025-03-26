@@ -17,9 +17,14 @@ module.exports = function (sequelize, DataTypes) {
         allowNull: false,
       },
       status: {
-        type: DataTypes.ENUM('enabled', 'disabled', 'pending'),
+        type: DataTypes.ENUM('on_time', 'delayed', 'canceled'),
         allowNull: false,
-        defaultValue: 'pending',
+        defaultValue: 'on_time',
+      },
+      enabled: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: true,
       },
       route_id: {
         type: DataTypes.INTEGER,
@@ -54,20 +59,20 @@ module.exports = function (sequelize, DataTypes) {
         type: DataTypes.DATE,
         allowNull: false,
         defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
-        onUpdate: sequelize.literal('CURRENT_TIMESTAMP')
+        onUpdate: sequelize.literal('CURRENT_TIMESTAMP'),
       },
     },
     {
       timestamps: true,
       createdAt: 'createdAt',
-      updatedAt: 'updatedAt'
+      updatedAt: 'updatedAt',
     }
   );
 
   // Definir asociaciones
   Schedule.associate = function (models) {
     Schedule.belongsTo(models.routes, { foreignKey: 'route_id', as: 'route' });
-    Schedule.belongsTo(models.frequency, { foreignKey: 'frequency_id', as: 'frequency' });
+    Schedule.belongsTo(models.frequencies, { foreignKey: 'frequency_id', as: 'frequency' });
     Schedule.belongsTo(models.companies, { foreignKey: 'company_id', as: 'company' });
   };
 

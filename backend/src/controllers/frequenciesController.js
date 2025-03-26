@@ -1,11 +1,11 @@
 const db = require('../../db/models');
-const { frequency: Frequency } = db; // Renombramos la constante para evitar conflictos
+const { frequencies } = db; 
 
 // Obtener todas las frecuencias
 exports.getAllFrequency = async (req, res) => {
   try {
-    const frequencies = await Frequency.findAll();
-    res.status(200).json(frequencies);
+    const Frequencies = await frequencies.findAll();
+    res.status(200).json(Frequencies);
   } catch (error) {
     console.error('Error al obtener las frecuencias:', error);
     res.status(500).json({ error: 'Error al obtener las frecuencias.' });
@@ -15,7 +15,7 @@ exports.getAllFrequency = async (req, res) => {
 // Obtener una frecuencia por ID
 exports.getFrequencyById = async (req, res) => {
   try {
-    const frequency = await Frequency.findByPk(req.params.id); // Cambio aquí
+    const frequency = await frequencies.findByPk(req.params.id); // Cambio aquí
     if (frequency) {
       res.status(200).json(frequency); // Cambio aquí
     } else {
@@ -33,13 +33,13 @@ exports.createFrequency = async (req, res) => {
 
   try {
     // Verificar si la frecuencia ya existe
-    const existingFrequency = await Frequency.findOne({ where: { name } });
+    const existingFrequency = await frequencies.findOne({ where: { name } });
     if (existingFrequency) {
       return res.status(409).json({ message: 'La frecuencia ya existe.' });
     }
 
     // Crear la nueva frecuencia
-    const newFrequency = await Frequency.create({ name });
+    const newFrequency = await frequencies.create({ name });
     res.status(201).json(newFrequency);
   } catch (error) {
     console.error('Error al crear la frecuencia:', error);
@@ -52,10 +52,10 @@ exports.updateFrequency = async (req, res) => {
   const { name } = req.body;
 
   try {
-    const [updated] = await Frequency.update({ name }, { where: { id: req.params.id } });
+    const [updated] = await frequencies.update({ name }, { where: { id: req.params.id } });
 
     if (updated) {
-      const updatedFrequency = await Frequency.findByPk(req.params.id);
+      const updatedFrequency = await frequencies.findByPk(req.params.id);
       res.status(200).json(updatedFrequency);
     } else {
       res.status(404).json({ error: 'Frecuencia no encontrada.' });
@@ -69,7 +69,7 @@ exports.updateFrequency = async (req, res) => {
 // Eliminar una frecuencia
 exports.deleteFrequency = async (req, res) => {
   try {
-    const deleted = await Frequency.destroy({ where: { id: req.params.id } });
+    const deleted = await frequencies.destroy({ where: { id: req.params.id } });
 
     if (deleted) {
       res.status(204).send();

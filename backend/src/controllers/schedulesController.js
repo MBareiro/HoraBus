@@ -1,11 +1,9 @@
 const db = require("../../db/models");
 const { Op } = require("sequelize");
-const { schedules, routes, stops, companies } = db;
-const { Sequelize } = require("sequelize");
-const { frequency: Frequency } = db; 
+const { schedules, routes, stops, companies, frequencies } = db;
 
 exports.getSchedules = async (req, res) => {
-  const { from, to, horaMin, horaMax, frequency, company } = req.query;
+  const { from, to, horaMin, horaMax, frequency, company, status, enabled } = req.query;
   try {
     // Validar que el origen y destino no sean iguales
     if (from === to) {
@@ -26,7 +24,7 @@ exports.getSchedules = async (req, res) => {
     if (frequency) {
       // Manejo de frecuencias en caso de que se envíen múltiples
       if (Array.isArray(frequency)) {
-        const frequencyRecords = await Frequency.findAll({
+        const frequencyRecords = await frequencies.findAll({
           where: { name: { [Op.in]: frequency } },
         });
 
@@ -40,7 +38,7 @@ exports.getSchedules = async (req, res) => {
 
         frequencyIds = frequencyRecords.map(f => f.id);
       } else {
-        const frequencyRecord = await Frequency.findOne({ where: { name: frequency } });
+        const frequencyRecord = await frequencies.findOne({ where: { name: frequency } });
         if (!frequencyRecord) {
           return res.status(404).json({ message: `La frecuencia "${frequency}" no existe.` });
         }
@@ -76,9 +74,18 @@ exports.getSchedules = async (req, res) => {
       scheduleConditions.departure_time = { [Op.lte]: horaMax };
     }
 
+    // Filtrar por status y enabled si se proporcionan
+    if (status) {
+      scheduleConditions.status = status;
+    }
+
+    if (enabled !== undefined) {
+      scheduleConditions.enabled = enabled === "true";
+    }
+
     // Obtener los horarios con los filtros aplicados
     const schedulesData = await schedules.findAll({
-      attributes: ["id", "departure_time", "arrival_time", "frequency_id"],
+      attributes: ["id", "departure_time", "arrival_time", "frequency_id", "status", "enabled"],
       where: scheduleConditions,
       include: [
         {
@@ -92,7 +99,7 @@ exports.getSchedules = async (req, res) => {
           attributes: ["name"],
         },
         {
-          model: Frequency, // Relación definida en Schedule
+          model: frequencies, // Relación definida en Schedule
           as: "frequency",
           attributes: ["name"],
         },
@@ -106,6 +113,8 @@ exports.getSchedules = async (req, res) => {
       arrival_time: schedule.arrival_time,
       frequency: schedule.frequency?.name,
       company: schedule.route?.company?.name,
+      status: schedule.status,
+      enabled: schedule.enabled,
     }));
 
     // Si no se encuentran horarios, devolver un mensaje
@@ -126,10 +135,10 @@ exports.getSchedules = async (req, res) => {
 exports.getScheduleById = async (req, res) => {
   try {
     const schedule = await schedules.findByPk(req.params.id, {
-      attributes: ['departure_time', 'arrival_time'],
+      attributes: ['departure_time', 'arrival_time', 'status', 'enabled'],
       include: [
         {
-          model: Frequency,
+          model: frequencies,
           as: 'frequency',
           attributes: ['name'],
         },
@@ -153,15 +162,16 @@ exports.getScheduleById = async (req, res) => {
       return res.status(404).json({ error: "Horario no encontrado." });
     }
 
-    console.log('Datos de schedule:', schedule);
-
+    // Formatear la respuesta de forma eficiente
     const formattedSchedule = {
       departure_time: schedule.departure_time,
       arrival_time: schedule.arrival_time,
-      frequency: schedule.frequency?.name || null,
-      origin: schedule.route?.originStop?.name || null,
-      destination: schedule.route?.destinationStop?.name || null,
-      company: schedule.company?.name || null,
+      status: schedule.status, // Incluyendo el estado
+      enabled: schedule.enabled, // Incluyendo el estado de habilitación
+      frequency: schedule.frequency ? schedule.frequency.name : null,
+      origin: schedule.route?.originStop?.name ?? null,
+      destination: schedule.route?.destinationStop?.name ?? null,
+      company: schedule.company?.name ?? null,
     };
 
     res.status(200).json(formattedSchedule);
@@ -171,8 +181,9 @@ exports.getScheduleById = async (req, res) => {
   }
 };
 
+
 exports.createSchedule = async (req, res) => {
-  const { frequency, departure_time, arrival_time, origin, destination, company_id, status } = req.body;
+  const { frequency, departure_time, arrival_time, origin, destination, company_id, status, enabled } = req.body;
 
   try {
     // Verificar que se han enviado los datos obligatorios
@@ -205,7 +216,7 @@ exports.createSchedule = async (req, res) => {
     }
 
     // Buscar el registro de frecuencia
-    const frequencyRecord = await Frequency.findOne({ where: { name: frequency } });
+    const frequencyRecord = await frequencies.findOne({ where: { name: frequency } });
 
     if (!frequencyRecord) {
       return res.status(400).json({ message: `La frecuencia '${frequency}' no es válida.` });
@@ -218,20 +229,6 @@ exports.createSchedule = async (req, res) => {
       return res.status(400).json({ message: "La empresa con el ID proporcionado no existe." });
     }
 
-    // Verificar si ya existe un horario con la misma frecuencia, hora de salida y hora de llegada
-    const existingSchedule = await schedules.findOne({
-      where: {
-        frequency_id: frequencyRecord.id,
-        departure_time,
-        arrival_time,
-        route_id: route.id,
-      }
-    });
-
-    if (existingSchedule) {
-      return res.status(400).json({ message: "Ya existe un horario con la misma frecuencia, hora de salida y hora de llegada." });
-    }
-
     // Crear el nuevo horario
     const newSchedule = await schedules.create({
       frequency_id: frequencyRecord.id, 
@@ -239,7 +236,8 @@ exports.createSchedule = async (req, res) => {
       arrival_time,
       route_id: route.id,
       company_id,  // Asegúrate de incluir el company_id aquí
-      status: status || 'pending', // Usar el valor recibido o 'pending' por defecto
+      status: status || 'on_time', // Establecer el status por defecto como 'on_time'
+      enabled: enabled !== undefined ? enabled : true, // Establecer enabled por defecto como true
     });
 
     res.status(201).json({ message: "Horario y ruta creados exitosamente.", schedule: newSchedule });
@@ -251,7 +249,7 @@ exports.createSchedule = async (req, res) => {
 
 exports.updateSchedule = async (req, res) => {
   try {
-    const { frequency, departure_time, arrival_time, origin, destination } = req.body;
+    const { frequency, departure_time, arrival_time, origin, destination, status, enabled } = req.body;
     const scheduleId = req.params.id;
 
     // Buscar el horario existente
@@ -308,7 +306,7 @@ exports.updateSchedule = async (req, res) => {
     // Validar frecuencia si está presente
     let frequencyRecord = null;
     if (frequency) {
-      frequencyRecord = await Frequency.findOne({ where: { name: frequency } });
+      frequencyRecord = await frequencies.findOne({ where: { name: frequency } });
       if (!frequencyRecord) {
         return res.status(400).json({ error: "Frecuencia no válida." });
       }
@@ -320,6 +318,8 @@ exports.updateSchedule = async (req, res) => {
     if (arrival_time) updateData.arrival_time = arrival_time;
     if (frequencyRecord) updateData.frequency_id = frequencyRecord.id;
     if (routeId) updateData.route_id = routeId;
+    if (status !== undefined) updateData.status = status; // Agregado para actualizar el estado
+    if (enabled !== undefined) updateData.enabled = enabled; // Agregado para actualizar el estado habilitado
 
     // Actualizar el horario
     const [updated] = await schedules.update(updateData, { where: { id: scheduleId } });
@@ -341,7 +341,7 @@ exports.updateSchedule = async (req, res) => {
           ],
         },
         {
-          model: Frequency,
+          model: frequencies,
           as: "frequency",
           attributes: ["name"],
         },
@@ -361,6 +361,8 @@ exports.updateSchedule = async (req, res) => {
       origin: updatedSchedule.route?.originStop?.name || null,
       destination: updatedSchedule.route?.destinationStop?.name || null,
       company: updatedSchedule.company?.name || null,
+      status: updatedSchedule.status, // Incluyendo el estado actualizado
+      enabled: updatedSchedule.enabled, // Incluyendo el estado de habilitación
     };
 
     res.status(200).json(response);
@@ -369,7 +371,6 @@ exports.updateSchedule = async (req, res) => {
     res.status(500).json({ error: "Error al actualizar el horario." });
   }
 };
-
 
 exports.deleteSchedule = async (req, res) => {
   try {

@@ -11,11 +11,12 @@ const verifyToken = require('../middleware/verifyToken');
  *   - name: Schedules
  *     description: Endpoints para gestionar horarios de colectivos
  */
+
 /**
  * @swagger
  * /api/schedules:
  *   get:
- *     summary: Obtiene horarios filtrados por origen, destino, rango de horas, frecuencia y compañía
+ *     summary: Obtiene horarios filtrados por origen, destino, rango de horas, frecuencia, compañía, estatus y habilitación
  *     tags: [Schedules]
  *     parameters:
  *       - in: query
@@ -52,6 +53,20 @@ const verifyToken = require('../middleware/verifyToken');
  *         schema:
  *           type: integer
  *         description: ID de la empresa
+ *       - in: query
+ *         name: status
+ *         schema:
+ *           type: string
+ *           enum:
+ *             - on_time
+ *             - delayed
+ *             - canceled
+ *         description: Estado del horario (e.g., "on_time", "delayed", "canceled")
+ *       - in: query
+ *         name: enabled
+ *         schema:
+ *           type: boolean
+ *         description: Filtra horarios habilitados (true) o deshabilitados (false)
  *     responses:
  *       200:
  *         description: Lista de horarios obtenida exitosamente
@@ -78,6 +93,13 @@ const verifyToken = require('../middleware/verifyToken');
  *                     items:
  *                       type: string
  *                     description: Frecuencia de los horarios, como un arreglo de cadenas
+ *                   status:
+ *                     type: string
+ *                     description: Estado del horario (e.g., "on_time", "delayed", "canceled")
+ *                   enabled:
+ *                     type: boolean
+ *                     description: Estado de habilitación del horario
+ *                     example: true
  *                   company:
  *                     type: object
  *                     description: Información de la empresa
@@ -123,6 +145,14 @@ router.get('/', schedulesController.getSchedules);
  *                   type: string
  *                 arrival_time:
  *                   type: string
+ *                 status:
+ *                   type: string
+ *                   description: Estado del horario
+ *                   example: "on_time"
+ *                 enabled:
+ *                   type: boolean
+ *                   description: Estado de habilitación del horario
+ *                   example: true
  *       404:
  *         description: Horario no encontrado
  */
@@ -176,8 +206,12 @@ router.get('/:id', scheduleValidator.getScheduleByIdValidator, validationErrorHa
  *                 example: 1
  *               status:
  *                 type: string
- *                 description: Estado del horario (e.g., "enabled", "disabled", "pending").
- *                 example: "pending"
+ *                 description: Estado del horario (e.g., "on_time", "delayed", "canceled").
+ *                 example: "on_time"
+ *               enabled:
+ *                 type: boolean
+ *                 description: Estado de habilitación del horario.
+ *                 example: true
  *     responses:
  *       201:
  *         description: Horario y ruta creados exitosamente.
@@ -211,7 +245,11 @@ router.get('/:id', scheduleValidator.getScheduleByIdValidator, validationErrorHa
  *                     status:
  *                       type: string
  *                       description: Estado del horario.
- *                       example: "pending"
+ *                       example: "on_time"
+ *                     enabled:
+ *                       type: boolean
+ *                       description: Estado de habilitación del horario.
+ *                       example: true
  *       400:
  *         description: Faltan datos obligatorios o datos inválidos.
  *       404:
@@ -220,7 +258,6 @@ router.get('/:id', scheduleValidator.getScheduleByIdValidator, validationErrorHa
  *         description: Error interno del servidor.
  */
 router.post('/',  scheduleValidator.createScheduleValidator, validationErrorHandler, schedulesController.createSchedule);
-
 
 /**
  * @swagger
@@ -262,6 +299,14 @@ router.post('/',  scheduleValidator.createScheduleValidator, validationErrorHand
  *                 type: string
  *                 description: Nombre de la parada de destino.
  *                 example: "Capiovi"
+ *               status:
+ *                 type: string
+ *                 description: Estado del horario (e.g., "on_time", "delayed", "canceled").
+ *                 example: "on_time"
+ *               enabled:
+ *                 type: boolean
+ *                 description: Estado de habilitación del horario.
+ *                 example: true
  *     responses:
  *       200:
  *         description: Horario actualizado exitosamente
