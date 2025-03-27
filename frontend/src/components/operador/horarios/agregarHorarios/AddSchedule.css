@@ -1,0 +1,17 @@
+.modal-add-s{
+    display: flex;
+    flex-direction: column;
+    justify-content:flex-start;
+    align-items: center;
+    width: 30%; 
+    height: auto; 
+    max-height: 80vh; 
+    background-color: #6a6c6d; 
+    border-radius: 10px; 
+    overflow-y: auto; 
+}
+.h1-add{
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    font-size: 24px;
+    color: #333;
+}

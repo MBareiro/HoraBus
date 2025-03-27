@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import { setHorarios, setParadas, clearHorarios, setFrecuencias, filterFrequencies, setFilters, setErrorFilter } from '../../slices/userSlice';
 import axios from 'axios';
 
-const api = 'https://hora-bus-backend.vercel.app/api'
+const api = 'https://horabus.onrender.com/api'
 
 export const getHorarios = (origen, destino) => async (dispatch) => {
   try {

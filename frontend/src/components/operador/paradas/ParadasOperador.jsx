@@ -7,6 +7,7 @@ import { faSquareXmark, faSquareCheck } from "@fortawesome/free-solid-svg-icons"
 import { AsociarParada } from "./AsociarParada";
 import loadingGif from '../../../pictures/loading.gif'
 import { QuitarParada } from "./QuitarParada";
+import './ParadasOperador.css'
 
 export const ParadasOperador = ({ setOpenParadas }) => {
   const dispatch = useDispatch()
@@ -26,14 +27,15 @@ export const ParadasOperador = ({ setOpenParadas }) => {
   }, [operadorData])
 
   useEffect(() => {
-    if (myStops.length > 0) {
+    if (Array.isArray(myStops) && myStops.length > 0 || myStops === null) {
       setLoading(false);
     }
+    if(Array.isArray(myStops) && myStops.length > 0  )
     setMyStopsState(myStops)
   }, [myStops]);
 
   useEffect(() => {
-    if (myStopsState.length > 0) {
+    if ((Array.isArray(myStops) && myStops.length > 0)) {
       setShowLoadingGif(false)
     }
   }, [myStops])
@@ -70,21 +72,27 @@ export const ParadasOperador = ({ setOpenParadas }) => {
                     {loading ? (
                       <span>Cargando...</span>
                     ) : (
+                      myStops === null ?
+                      <FontAwesomeIcon
+                          icon={faSquareXmark}
+                          style={{ color: "#e94e56", fontSize: "26px" }}
+                        />
+                        :
                       myStops.some((stop) => stop.id === item.id) ? (
                         <FontAwesomeIcon
                           icon={faSquareCheck}
-                          style={{ color: "#6eaf82", fontSize: "24px" }}
+                          style={{ color: "#6eaf82", fontSize: "26px" }}
                         />
                       ) : !myStops.some((stop) => stop.id === item.id) && (
                         <FontAwesomeIcon
                           icon={faSquareXmark}
-                          style={{ color: "#e94e56", fontSize: "24px" }}
+                          style={{ color: "#e94e56", fontSize: "26px" }}
                         />
                       )
                     )}
                   </td>
                   <td>
-                    {myStops.some((stop) => stop.id === item.id) ?
+                    {myStops !== null && myStops.some((stop) => stop.id === item.id) ?
 
                       <QuitarParada company_id={companyId} stop_id={item.id} 
                       setShowLoadingGif={setShowLoadingGif}/>

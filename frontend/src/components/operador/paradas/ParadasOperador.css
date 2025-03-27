@@ -1,0 +1,18 @@
+.button-add-withdraw{
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    text-align: center;
+    font-size: 16px; 
+    padding: 3px 6px; 
+    border-radius: 8px; 
+    background-color: #f8f9fa;
+    color: #333; 
+    outline: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.button-add-withdraw:hover{
+    background-color: #bbbcbd
+}

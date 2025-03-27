@@ -18,12 +18,14 @@
 .select-state{
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
     text-align: center;
-    font-size: 16px; /* Tamaño del texto */
-    padding: 6px 10px; /* Espaciado interno */
-    border-radius: 8px; /* Bordes redondeados */
-    background-color: #f8f9fa; /* Fondo claro */
-    color: #333; /* Color del texto */
+    font-size: 16px; 
+    padding: 6px 10px; 
+    border-radius: 8px; 
+    background-color: #f8f9fa;
+    color: #333; 
     outline: none;
     cursor: pointer;
     transition: all 0.3s ease;
+    margin-top: 5px;
+    margin-bottom: 5px;
 }

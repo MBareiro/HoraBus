@@ -34,10 +34,10 @@ const operadorSlice = createSlice({
       state.stops =  action.payload
     },
     setMyStops: (state, action) => {
-      state.myStops =  action.payload
+      state.myStops =  action.payload === null ? null : action.payload
     },
     setNewStop: (state, action) =>{
-      state.myStops = [...state.myStops, action.payload ]
+      state.myStops = state.myStops !== null ? [...state.myStops, action.payload ] : [action.payload]
     },
     setQuitarStop: (state,action) =>{
       state.myStops = state.myStops.filter(stop => stop.id !== action.payload)

@@ -1,7 +1,6 @@
 import { useDispatch } from "react-redux"
 import { asociarStop } from "../../../redux/actions/operadorActions/operadorActions"
 
-
 export const AsociarParada = ({ company_id, stop_id, setLoading, setShowLoadingGif,
     setMyStopsState
  }) => {
@@ -16,7 +15,7 @@ export const AsociarParada = ({ company_id, stop_id, setLoading, setShowLoadingG
 
     return (
         <div>
-            <button onClick={handleAsociarStops}>AGREGAR</button>
+            <button onClick={handleAsociarStops} className="button-add-withdraw">AGREGAR</button>
         </div>
     )
 }

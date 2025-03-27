@@ -12,11 +12,14 @@ import { EditarHorarios } from "./editarHorarios/EditarHorarios";
 export const HorariosOperador = ({ origen, destino, handleBuscarHorarios }) => {
 
   const horarios = useSelector((state) => state.user.horarios)
+  const operatorData = useSelector((state) => state.operador.data)
+
   const [loading, setLoading] = useState(true)
   const [filtrosOn, setFiltrosOn] = useState(false)
   const [openFiltrosModal, setOpenFiltrosModal] = useState(false)
   const [openModalEdit, setOpenModalEdit] = useState(false)
-  const [horarioId, setHorarioId] = useState(null)
+  const [horario, setHorario] = useState(null)
+  const [companyId, setCompanyId] = useState(null)
 
   useEffect(() => {
     if (horarios.length !== 0) {
@@ -26,18 +29,14 @@ export const HorariosOperador = ({ origen, destino, handleBuscarHorarios }) => {
   }, [horarios])
 
 
-  const handleEdit = (itemId) => {
-    setHorarioId(itemId)
+  const handleEdit = (item) => {
+    setHorario(item)
+    setOpenModalEdit(true)
   }
 
-  useEffect(() => {
-    if (horarioId !== null) {
-      setOpenModalEdit(true)
-      console.log(horarioId)
-    }
-
-  }, [horarioId])
-
+  useEffect(()=>{
+setCompanyId(operatorData.company_id)
+  }, [operatorData])
 
   return (
     loading ? (
@@ -67,7 +66,7 @@ export const HorariosOperador = ({ origen, destino, handleBuscarHorarios }) => {
           />
         </div>
         <div className="conteiner-opciones-h">
-          <OpcionesHorarios />
+          <OpcionesHorarios company_id={companyId} origin={origen} destination={destino}/>
         </div>
         <table className="tabla">
           <thead>
@@ -94,18 +93,18 @@ export const HorariosOperador = ({ origen, destino, handleBuscarHorarios }) => {
                       <option value="on-time">A tiempo</option>
                       <option value="delayed">Demorado</option>
                       <option value="cancelled">Cancelado</option>
-                      <option value="en-route">En camino</option>
                     </select></td>
 
                   <td>{item.frequency}</td>
                   <td>
                     <FontAwesomeIcon icon={faSquareCheck} style={{ color: "#458762", fontSize: "24px" }} />
                   </td>
-                  <td>
+                  <td key={item.id}>
                     <button className="opciones-tabla-h"
-                      onClick={() => handleEdit(item.id)}>
+                      onClick={() => handleEdit(item)}>
                       <FontAwesomeIcon icon={faPenToSquare} style={{ color: "#ffc107", fontSize: "22px" }} />
                     </button>
+
                   </td>
                   <td>
                     <input type="checkbox" />
@@ -114,8 +113,15 @@ export const HorariosOperador = ({ origen, destino, handleBuscarHorarios }) => {
               ))}
           </tbody>
         </table>
-        <EditarHorarios isOpen={openModalEdit} horarioId={horarioId}
-          setOpenModalEdit={setOpenModalEdit} origen={origen} destino={destino} />
+        {openModalEdit && (
+          <EditarHorarios
+            isOpen={openModalEdit}
+            setOpenModalEdit={setOpenModalEdit}
+            origin={origen}
+            destination={destino}
+            horario={horario}
+          />
+        )}
       </div>
     )
   );

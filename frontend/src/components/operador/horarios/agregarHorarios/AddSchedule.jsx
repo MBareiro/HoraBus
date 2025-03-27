@@ -1,0 +1,88 @@
+import Modal from 'react-modal'
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faXmark, faArrowRight } from "@fortawesome/free-solid-svg-icons";
+import { useState } from 'react';
+import './AddSchedule.css'
+
+export const AddSchedule = ({ origin, destination, isOpen, setIsOpen, company_id }) => {
+
+    const [addScheduleData, setAddScheduleData] = useState({
+        frequency: "",
+        departure_time: "",
+        arrival_time: "",
+        origin: origin,
+        destination: destination,
+        company_id: company_id,
+        status: "on_time",
+        enabled: true
+    })
+
+    const handleChange = (e) => {
+        const { name, value } = e.target
+
+        setAddScheduleData((prevState) => ({
+            ...prevState,
+            [name]: value
+        }));
+    }
+
+    const handleAdd = () =>{
+        
+    }
+
+    return (
+        <Modal
+            isOpen={isOpen}
+            className="modal-add-s"
+            overlayClassName="login-overlay">
+
+            <div className='conteiner-edit-s'>
+
+                <div className='conteiner-button-close-es'>
+                    <button className='button-close' onClick={() => setIsOpen(false)}>
+                        <FontAwesomeIcon icon={faXmark} />
+                    </button>
+                </div>
+                <div className='conteiner-edit-h-i'>
+                    <h1 className="h1-add">AGREGAR HORARIO</h1>
+
+                    <h2 className="h2">
+                        {origin} <FontAwesomeIcon icon={faArrowRight} style={{ color: "#ffc107", }} /> {destination}</h2>
+
+                    <label className='edit-label-s'>Horario de salida</label>
+                    <input
+                        type="text"
+                        name="departure_time"
+                        value={addScheduleData.departure_time}
+                        onChange={handleChange}
+                        className='input-edit-s'
+                    ></input>
+
+                    <label className='edit-label-s'>Horario de llegada</label>
+                    <input
+                        type="text"
+                        name="arrival_time"
+                        value={addScheduleData.arrival_time}
+                        onChange={handleChange}
+                        className='input-edit-s'
+                    ></input>
+
+                    <label className='edit-label-s'>Frecuencia</label>
+                    <input
+                        type="text"
+                        name="frequency"
+                        value={addScheduleData.frequency}
+                        onChange={handleChange}
+                        className='input-edit-s'
+                    ></input>
+
+                    <button onClick={handleAdd} className='button-edit-s'>GUARDAR CAMBIOS</button>
+
+                </div>
+
+
+
+            </div>
+        </Modal>
+    )
+}

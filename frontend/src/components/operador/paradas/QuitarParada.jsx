@@ -13,7 +13,7 @@ const dispatch = useDispatch()
 
     return(
      <div>
-        <button onClick={handleQuitarStop}> QUITAR</button>
+        <button onClick={handleQuitarStop} className="button-add-withdraw"> QUITAR</button>
      </div>
     )
 }

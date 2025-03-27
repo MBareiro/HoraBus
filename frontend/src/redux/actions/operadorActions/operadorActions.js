@@ -133,6 +133,8 @@ export const getMyStops = (company_id) => async (dispatch) => {
           Authorization: `Bearer ${getToken()}`,
       },
   })
+  response.data.length === 0 ? 
+  dispatch(setMyStops(null)) :
   dispatch(setMyStops(response.data))
   }
   catch (error){
@@ -200,4 +202,23 @@ export const getScheduleData = (scheduleId) => async (dispatch) => {
   catch (error){
     dispatch(setMessage(error.response.data.error))
   }
+}
+
+export const editSchedule = (scheduleId, datos) => async (dispatch) =>{
+
+  console.log()
+  try{
+    
+    const response = await axios.put(`${api}/schedules/${scheduleId}`, datos, {
+      headers: {
+          Authorization: `Bearer ${getToken()}`,
+      },
+  })
+
+  console.log(response)
+  
+  }
+  catch(error){
+    console.log(error)
+    }
 }
