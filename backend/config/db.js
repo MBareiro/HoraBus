@@ -27,7 +27,7 @@ const User = require('../db/models/users')(sequelize, Sequelize.DataTypes);
 const syncDB = async () => {
   try {
     // Sincroniza los modelos (elimina las tablas y las recrea si usas `force: true`)
-    await sequelize.sync({ force: true }); // Cambia a `force: true` para eliminar y recrear las tablas
+    await sequelize.sync({ force: false }); // Cambia a `force: true` para eliminar y recrear las tablas
     console.log('Base de datos sincronizada correctamente.');
   } catch (error) {
     console.error('Error al sincronizar la base de datos:', error);
