@@ -2,15 +2,14 @@ const db = require("../../db/models");
 const { Op } = require("sequelize");
 const { schedules, routes, stops, companies, frequencies } = db;
 
+
 exports.getSchedules = async (req, res) => {
   const { from, to, horaMin, horaMax, frequency, company, status, enabled } = req.query;
+
   try {
-    // Validar que el origen y destino no sean iguales
     if (from === to) {
       return res.status(400).json({ message: "El origen y el destino no pueden ser iguales." });
     }
-
-    // Buscar las paradas de origen y destino
     const [fromStop, toStop] = await Promise.all([
       stops.findOne({ where: { name: from } }),
       stops.findOne({ where: { name: to } })
@@ -22,7 +21,6 @@ exports.getSchedules = async (req, res) => {
 
     let frequencyIds = [];
     if (frequency) {
-      // Manejo de frecuencias en caso de que se envíen múltiples
       if (Array.isArray(frequency)) {
         const frequencyRecords = await frequencies.findAll({
           where: { name: { [Op.in]: frequency } },
@@ -46,18 +44,6 @@ exports.getSchedules = async (req, res) => {
       }
     }
 
-    // Condiciones para la ruta
-    const routeConditions = {
-      origin: fromStop.id,
-      destination: toStop.id,
-    };
-
-    // Si se especifica la empresa, añadir la condición correspondiente
-    if (company) {
-      routeConditions.company_id = company;
-    }
-
-    // Condiciones para los horarios
     const scheduleConditions = {};
 
     if (frequencyIds.length > 0) {
@@ -74,7 +60,6 @@ exports.getSchedules = async (req, res) => {
       scheduleConditions.departure_time = { [Op.lte]: horaMax };
     }
 
-    // Filtrar por status y enabled si se proporcionan
     if (status) {
       scheduleConditions.status = status;
     }
@@ -83,7 +68,6 @@ exports.getSchedules = async (req, res) => {
       scheduleConditions.enabled = enabled === "true";
     }
 
-    // Obtener los horarios con los filtros aplicados
     const schedulesData = await schedules.findAll({
       attributes: ["id", "departure_time", "arrival_time", "frequency_id", "status", "enabled"],
       where: scheduleConditions,
@@ -91,46 +75,48 @@ exports.getSchedules = async (req, res) => {
         {
           model: routes,
           as: "route",
-          attributes: ["id", "origin", "destination"], // Asegurarse de que las rutas sean correctas
+          attributes: ["id", "origin", "destination"],
+          where: {
+            origin: fromStop.id,
+            destination: toStop.id
+          }
         },
         {
-          model: companies, // Se trae la compañía desde la relación en Schedule
-          as: "company", // Relación definida en Schedule
+          model: companies,
+          as: "company",
           attributes: ["name"],
+          where: company ? { id: company } : undefined // Filtra solo si se especifica
         },
         {
-          model: frequencies, // Relación definida en Schedule
+          model: frequencies,
           as: "frequency",
           attributes: ["name"],
         },
       ],
     });
 
-    // Formatear los horarios para la respuesta
     const formattedSchedules = schedulesData.map(schedule => ({
       id: schedule.id,
       departure_time: schedule.departure_time,
       arrival_time: schedule.arrival_time,
       frequency: schedule.frequency?.name,
-      company: schedule.route?.company?.name,
+      company: schedule.company?.name,
       status: schedule.status,
       enabled: schedule.enabled,
     }));
 
-    // Si no se encuentran horarios, devolver un mensaje
     if (formattedSchedules.length === 0) {
       return res.status(404).json({
         message: "No se encontraron horarios para los filtros proporcionados.",
       });
     }
-
-    // Responder con los horarios encontrados
     res.status(200).json(formattedSchedules);
   } catch (error) {
     console.error("Error al obtener los horarios:", error);
     res.status(500).json({ message: "Error al obtener los horarios." });
   }
 };
+
 
 exports.getScheduleById = async (req, res) => {
   try {
