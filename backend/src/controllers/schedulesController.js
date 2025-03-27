@@ -182,7 +182,7 @@ exports.createSchedule = async (req, res) => {
       return res.status(400).json({ message: "El origen y el destino no pueden ser iguales." });
     }
 
-    // Obtener las paradas por nombre (deberías tener implementada la función `getStopByName`)
+    // Obtener las paradas por nombre
     const [originStop, destinationStop] = await Promise.all([getStopByName(origin), getStopByName(destination)]);
 
     if (!originStop || !destinationStop) {
@@ -221,17 +221,31 @@ exports.createSchedule = async (req, res) => {
       departure_time,
       arrival_time,
       route_id: route.id,
-      company_id,  // Asegúrate de incluir el company_id aquí
-      status: status || 'on_time', // Establecer el status por defecto como 'on_time'
-      enabled: enabled !== undefined ? enabled : true, // Establecer enabled por defecto como true
+      company_id,  
+      status: status || 'on_time', 
+      enabled: enabled !== undefined ? enabled : true, 
     });
 
-    res.status(201).json({ message: "Horario y ruta creados exitosamente.", schedule: newSchedule });
+    // Responder con la información, incluyendo el nombre de la frecuencia
+    res.status(201).json({ 
+      message: "Horario y ruta creados exitosamente.",
+      schedule: {
+        id: newSchedule.id,
+        departure_time: newSchedule.departure_time,
+        arrival_time: newSchedule.arrival_time,
+        frequency: frequencyRecord.name,  // Se devuelve el nombre en lugar del ID
+        company_id: newSchedule.company_id,
+        status: newSchedule.status,
+        enabled: newSchedule.enabled
+      }
+    });
+
   } catch (error) {
     console.error("Error al crear el horario o la ruta:", error);
     res.status(500).json({ message: "Error al crear el horario o la ruta." });
   }
 };
+
 
 exports.updateSchedule = async (req, res) => {
   try {
