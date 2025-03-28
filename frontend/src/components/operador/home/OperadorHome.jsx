@@ -8,6 +8,7 @@ import { Menu } from '../menu/Menu';
 import { useNavigate } from 'react-router-dom';
 import { UserPanelOp } from '../userPanel/UserPanelOp';
 import { getOperadorData, getStops } from '../../../redux/actions/operadorActions/operadorActions';
+import { getFrequencies } from '../../../redux/actions/userActions/userActions';
 
 export const OperadorHome = () => {
 const navigate = useNavigate()
@@ -21,6 +22,7 @@ const dispatch = useDispatch()
         } else{
           dispatch(getOperadorData(authData.userId))
           dispatch(getStops())
+          dispatch(getFrequencies())
         }
 
   }, [])

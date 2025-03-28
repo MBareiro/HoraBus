@@ -1,5 +1,7 @@
 import axios from 'axios'
-import { setAccess, setMessage, setMyStops, setNewStop, setOperadorData, setQuitarStop, setRecoverPassword, setScheduleData, setStops } from '../../slices/operadorSlice';
+import { clearHorariosOp, setAccess, setHorariosOp, setMessage, setMyStops, setNewSchedule, 
+  setNewStop, setOperadorData, setQuitarStop, setRecoverPassword, setScheduleData, setStops, 
+  setUpdatedState} from '../../slices/operadorSlice';
 import { getToken } from '../../../hooks/token';
 
 const api = 'https://horabus.onrender.com/api'
@@ -33,7 +35,7 @@ export const getLogin = (loginForm) => async (dispatch) => {
 
 
 export const getRecoverPassword = (dni) => async (dispatch) => {
-  console.log(dni)
+ 
   try{
     const response = await axios.post(`${api}/auth/forgot-password`, dni);
     const recoverPassword = {
@@ -67,7 +69,7 @@ try{
     },
 })
 dispatch(setOperadorData(response.data))
-console.log(response)
+
 }
 catch(error){
 console.log(error)
@@ -105,9 +107,32 @@ export const changePassword = (datos) => async (dispatch) => {
         Authorization: `Bearer ${getToken()}`,
       },
     });
-  console.log(response)
+ 
   } catch (error) {
     dispatch(setMessage(error.response.data.error));
+  }
+};
+
+export const getHorariosOp = (origen, destino) => async (dispatch) => {
+  try {
+    dispatch(clearHorariosOp());
+    const response = await axios.get(`${api}/schedules`, {
+      params: { from: origen, to: destino }
+    });
+    
+    const horarios = response.data.map(item => ({
+      id: item.id,
+      departure_time: item.departure_time.split(':').slice(0, 2).join(':'),
+      arrival_time: item.arrival_time.split(':').slice(0, 2).join(':'),
+      frequency: item.frequency,
+      company: item.company,
+      enabled: item.enabled,
+      status: item.status
+    }));
+
+    dispatch(setHorariosOp(horarios));
+  } catch (error) {
+    console.error("Error fetching horarios:", error);
   }
 };
 
@@ -189,7 +214,7 @@ console.log(error)
 
 
 export const getScheduleData = (scheduleId) => async (dispatch) => {
-  console.log(scheduleId)
+ 
   try{
     const response = await axios.get(`/${api}/schedules/${scheduleId}`,{
       headers: {
@@ -197,7 +222,7 @@ export const getScheduleData = (scheduleId) => async (dispatch) => {
       },
   })
   dispatch(setScheduleData(response.data))
-  console.log(response)
+
   }
   catch (error){
     dispatch(setMessage(error.response.data.error))
@@ -206,7 +231,6 @@ export const getScheduleData = (scheduleId) => async (dispatch) => {
 
 export const editSchedule = (scheduleId, datos) => async (dispatch) =>{
 
-  console.log()
   try{
     
     const response = await axios.put(`${api}/schedules/${scheduleId}`, datos, {
@@ -214,11 +238,47 @@ export const editSchedule = (scheduleId, datos) => async (dispatch) =>{
           Authorization: `Bearer ${getToken()}`,
       },
   })
-
-  console.log(response)
   
   }
   catch(error){
     console.log(error)
     }
+}
+
+export const addSchedule = (dataSchedule) => async (dispatch) => {
+ 
+  try {
+    const response = await axios.post(
+      `${api}/schedules`,dataSchedule, 
+      {
+        headers: {
+          Authorization: `Bearer ${getToken()}`,
+        },
+      }
+    );
+    dispatch(setNewSchedule(response.data.schedule))
+  } catch (error) {
+    console.error("Error al asociar la parada:", error);
+  }
+}
+
+export const updateState = (updateItem) => async (dispatch) => {
+  
+  console.log(updateItem)
+
+  try{
+    const response = await axios.put(`${api}/schedules/${updateItem.id}`, updateItem, {
+      headers: {
+          Authorization: `Bearer ${getToken()}`,
+      },
+  })
+
+  console.log(response.data)
+  dispatch(setUpdatedState(response.data))
+  
+  }
+  catch(error){
+    console.log(error)
+    }
+  
 }

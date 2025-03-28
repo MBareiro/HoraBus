@@ -1,7 +1,7 @@
 import { useSelector } from "react-redux"
 import { OpcionesHorarios } from "../opcionesHorarios/OpcionesHorarios"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSquareXmark, faSquareCheck, faPenToSquare, faHandLizard } from "@fortawesome/free-solid-svg-icons";
+import { faSquareXmark, faSquareCheck, faPenToSquare} from "@fortawesome/free-solid-svg-icons";
 import Filtros from "../../filtros/Filtros/Filtros";
 import LimpiarFiltros from "../../filtros/LimpiarFiltros/LimpiarFiltros";
 import { useEffect, useState } from "react";
@@ -11,7 +11,7 @@ import { EditarHorarios } from "./editarHorarios/EditarHorarios";
 
 export const HorariosOperador = ({ origen, destino, handleBuscarHorarios }) => {
 
-  const horarios = useSelector((state) => state.user.horarios)
+  const horarios = useSelector((state) => state.operador.schedules)
   const operatorData = useSelector((state) => state.operador.data)
 
   const [loading, setLoading] = useState(true)
@@ -20,6 +20,9 @@ export const HorariosOperador = ({ origen, destino, handleBuscarHorarios }) => {
   const [openModalEdit, setOpenModalEdit] = useState(false)
   const [horario, setHorario] = useState(null)
   const [companyId, setCompanyId] = useState(null)
+  const [selectedItems, setSelectedItems] = useState([]);
+  const [selectedItemsData, setSelectedItemsData] = useState([])
+
 
   useEffect(() => {
     if (horarios.length !== 0) {
@@ -28,15 +31,25 @@ export const HorariosOperador = ({ origen, destino, handleBuscarHorarios }) => {
     }
   }, [horarios])
 
+  
+  useEffect(()=>{
+    setCompanyId(operatorData.company_id)
+      }, [operatorData])    
+
 
   const handleEdit = (item) => {
     setHorario(item)
     setOpenModalEdit(true)
   }
 
-  useEffect(()=>{
-setCompanyId(operatorData.company_id)
-  }, [operatorData])
+  const handleCheckboxChange = (id) => {
+    if (!selectedItems.includes(id)) {
+      setSelectedItems((prev) => [...prev, id]);
+      setSelectedItemsData(horarios.filter((horario) => horario.id === id))
+    } else {
+      setSelectedItems((prev) => prev.filter((item) => item !== id));
+    }
+  };
 
   return (
     loading ? (
@@ -66,7 +79,9 @@ setCompanyId(operatorData.company_id)
           />
         </div>
         <div className="conteiner-opciones-h">
-          <OpcionesHorarios company_id={companyId} origin={origen} destination={destino}/>
+          <OpcionesHorarios company_id={companyId} origin={origen} destination={destino}
+          selectedItemsData={selectedItemsData} setSelectedItems={setSelectedItems}
+          setSelectedItemsData={setSelectedItemsData}/>
         </div>
         <table className="tabla">
           <thead>
@@ -97,7 +112,13 @@ setCompanyId(operatorData.company_id)
 
                   <td>{item.frequency}</td>
                   <td>
-                    <FontAwesomeIcon icon={faSquareCheck} style={{ color: "#458762", fontSize: "24px" }} />
+                    {item.enabled ?
+                    <FontAwesomeIcon icon={faSquareCheck} style={{ color: "#6eaf82", fontSize: "26px" }} /> :
+                    <FontAwesomeIcon
+                    icon={faSquareXmark}
+                    style={{ color: "#e94e56", fontSize: "26px" }}
+                  />
+                    }
                   </td>
                   <td key={item.id}>
                     <button className="opciones-tabla-h"
@@ -107,7 +128,8 @@ setCompanyId(operatorData.company_id)
 
                   </td>
                   <td>
-                    <input type="checkbox" />
+                    <input type="checkbox" checked={selectedItems.includes(item.id)}
+                    onChange={(e) => handleCheckboxChange(item.id, e.target.checked)} />
                   </td>
                 </tr>
               ))}

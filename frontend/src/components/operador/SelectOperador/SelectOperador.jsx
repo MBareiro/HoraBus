@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import './SelectOperador.css'
 import { setFilters } from "../../../redux/slices/userSlice";
-import { getHorarios } from "../../../redux/actions/userActions/userActions";
 import { HorariosOperador } from "../horarios/HorariosOperador";
+import { getHorariosOp } from "../../../redux/actions/operadorActions/operadorActions";
 
 
 export const SelectOperador = () => {
@@ -36,7 +36,8 @@ const handleOrigenChange = (event) =>{
 const handleBuscarHorarios = () => {
 if(destino && origen){
   setShowError(false)
-  dispatch(getHorarios(origen, destino))
+  dispatch(getHorariosOp(origen, destino))
+  console.log("si")
   setShowHorarios(true)
 } else
 {

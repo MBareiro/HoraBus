@@ -3,8 +3,14 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark, faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import { useState } from 'react';
 import './AddSchedule.css'
+import { useDispatch, useSelector } from 'react-redux';
+import { addSchedule } from '../../../../redux/actions/operadorActions/operadorActions';
 
 export const AddSchedule = ({ origin, destination, isOpen, setIsOpen, company_id }) => {
+
+    const dispatch = useDispatch()
+    const frequencies = useSelector((state) => state.user.frecuencias)
+
 
     const [addScheduleData, setAddScheduleData] = useState({
         frequency: "",
@@ -26,8 +32,9 @@ export const AddSchedule = ({ origin, destination, isOpen, setIsOpen, company_id
         }));
     }
 
-    const handleAdd = () =>{
-        
+    const handleAdd = () => {
+        dispatch(addSchedule(addScheduleData))
+        setIsOpen(false)
     }
 
     return (
@@ -68,15 +75,19 @@ export const AddSchedule = ({ origin, destination, isOpen, setIsOpen, company_id
                     ></input>
 
                     <label className='edit-label-s'>Frecuencia</label>
-                    <input
-                        type="text"
+                    <select
                         name="frequency"
                         value={addScheduleData.frequency}
                         onChange={handleChange}
-                        className='input-edit-s'
-                    ></input>
+                        className="select-freq"
+                    >
+                        <option value="" disabled >Selecciona una frecuencia</option>
+                        {frequencies.map((item) => (
+                            <option key={item} value={item}>{item}</option>
+                        ))}
+                    </select>
 
-                    <button onClick={handleAdd} className='button-edit-s'>GUARDAR CAMBIOS</button>
+                    <button onClick={handleAdd} className='button-edit-a'>GUARDAR CAMBIOS</button>
 
                 </div>
 
