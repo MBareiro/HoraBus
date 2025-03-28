@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { clearHorariosOp, setAccess, setHorariosOp, setMessage, setMyStops, setNewSchedule, 
+import { clearHorariosOp, setAccess, setDeletedSchedule, setHorariosOp, setMessage, setMyStops, setNewSchedule, 
   setNewStop, setOperadorData, setQuitarStop, setRecoverPassword, setScheduleData, setStops, 
   setUpdatedState} from '../../slices/operadorSlice';
 import { getToken } from '../../../hooks/token';
@@ -281,4 +281,22 @@ export const updateState = (updateItem) => async (dispatch) => {
     console.log(error)
     }
   
+}
+
+export const deleteSchedule = (scheduleId) => async (dispatch) =>{
+  console.log(scheduleId)
+try{
+  const response = await axios.delete(
+    `${api}/schedules/${scheduleId}`,
+    {
+      headers: {
+        Authorization: `Bearer ${getToken()}`,
+      },
+    }
+  );
+  console.log(response)
+dispatch(setDeletedSchedule(scheduleId))
+} catch (error){
+  console.error(error)
+}
 }

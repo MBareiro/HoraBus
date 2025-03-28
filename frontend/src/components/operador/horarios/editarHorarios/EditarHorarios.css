@@ -61,6 +61,7 @@
     border-radius: 5px;
     cursor: pointer;
     border: none;
+    margin-top: 3vh;
     margin-bottom: 3vh;
     padding: 6px 9px;
 }

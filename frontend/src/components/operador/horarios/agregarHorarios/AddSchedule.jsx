@@ -20,7 +20,7 @@ export const AddSchedule = ({ origin, destination, isOpen, setIsOpen, company_id
         destination: destination,
         company_id: company_id,
         status: "on_time",
-        enabled: true
+        enabled: false
     })
 
     const handleChange = (e) => {
@@ -53,12 +53,12 @@ export const AddSchedule = ({ origin, destination, isOpen, setIsOpen, company_id
                 <div className='conteiner-edit-h-i'>
                     <h1 className="h1-add">AGREGAR HORARIO</h1>
 
-                    <h2 className="h2">
+                    <h2 className="h2-add">
                         {origin} <FontAwesomeIcon icon={faArrowRight} style={{ color: "#ffc107", }} /> {destination}</h2>
 
                     <label className='edit-label-s'>Horario de salida</label>
                     <input
-                        type="text"
+                        type="time"
                         name="departure_time"
                         value={addScheduleData.departure_time}
                         onChange={handleChange}
@@ -67,7 +67,7 @@ export const AddSchedule = ({ origin, destination, isOpen, setIsOpen, company_id
 
                     <label className='edit-label-s'>Horario de llegada</label>
                     <input
-                        type="text"
+                        type="time"
                         name="arrival_time"
                         value={addScheduleData.arrival_time}
                         onChange={handleChange}

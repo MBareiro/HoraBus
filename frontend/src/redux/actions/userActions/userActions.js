@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import { setHorarios, setParadas, clearHorarios, setFrecuencias, filterFrequencies, setFilters, setErrorFilter } from '../../slices/userSlice';
 import axios from 'axios';
 
-const api = 'https://horabus.onrender.com/api'
+const api = 'https://hora-bus-backend.vercel.app/api'
 
 export const getHorarios = (origen, destino) => async (dispatch) => {
   try {
@@ -69,6 +69,8 @@ export const getFilteredFrequencies = (paramFilterHorarios) => async (dispatch) 
         frequency: frequencyParam,
       }
     })
+
+    console.log(horaMin, horaMax)
    
     const filterByFrequencies = response.data.map(item => ({
       id: item.id,

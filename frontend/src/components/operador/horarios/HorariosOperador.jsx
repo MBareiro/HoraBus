@@ -45,12 +45,13 @@ export const HorariosOperador = ({ origen, destino, handleBuscarHorarios }) => {
   const handleCheckboxChange = (id) => {
     if (!selectedItems.includes(id)) {
       setSelectedItems((prev) => [...prev, id]);
-      setSelectedItemsData(horarios.filter((horario) => horario.id === id))
+      setSelectedItemsData((prev) => [...prev, horarios.find((horario) => horario.id === id)])
     } else {
       setSelectedItems((prev) => prev.filter((item) => item !== id));
     }
   };
 
+  console.log(selectedItemsData)
   return (
     loading ? (
       <div className="loading-container-op">
@@ -81,7 +82,7 @@ export const HorariosOperador = ({ origen, destino, handleBuscarHorarios }) => {
         <div className="conteiner-opciones-h">
           <OpcionesHorarios company_id={companyId} origin={origen} destination={destino}
           selectedItemsData={selectedItemsData} setSelectedItems={setSelectedItems}
-          setSelectedItemsData={setSelectedItemsData}/>
+          setSelectedItemsData={setSelectedItemsData} selectedItems={selectedItems}/>
         </div>
         <table className="tabla">
           <thead>

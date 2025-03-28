@@ -14,11 +14,12 @@
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
     font-size: 24px;
     color: #333;
+    margin-bottom: 0px;
 }
 .button-edit-a{
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
     color:#fefefe;
-    font-size: 20px;
+    font-size: 22px;
     background-color: #6a6c6d ;
     border-radius: 5px;
     cursor: pointer;
@@ -48,3 +49,10 @@
 option:disabled {
     font-size: 14px;
   }
+.h2-add{
+    color:#1b1b1b;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    background-color: #d6d6d6 ;
+    border-radius: 8px; 
+    padding: 6px 10px;
+}
