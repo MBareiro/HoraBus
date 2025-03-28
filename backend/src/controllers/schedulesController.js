@@ -355,14 +355,15 @@ exports.updateSchedule = async (req, res) => {
 
     // Formatear la respuesta
     const response = {
+      id: updatedSchedule.id,
       departure_time: updatedSchedule.departure_time,
       arrival_time: updatedSchedule.arrival_time,
       frequency: updatedSchedule.frequency?.name || null,
       origin: updatedSchedule.route?.originStop?.name || null,
       destination: updatedSchedule.route?.destinationStop?.name || null,
       company: updatedSchedule.company?.name || null,
-      status: updatedSchedule.status, // Incluyendo el estado actualizado
-      enabled: updatedSchedule.enabled, // Incluyendo el estado de habilitación
+      status: updatedSchedule.status, 
+      enabled: updatedSchedule.enabled, 
     };
 
     res.status(200).json(response);
