@@ -223,7 +223,7 @@ exports.createSchedule = async (req, res) => {
       route_id: route.id,
       company_id,  
       status: status || 'on_time', 
-      enabled: enabled !== undefined ? enabled : true, 
+      enabled: enabled !== undefined ? enabled : false, 
     });
 
     // Responder con la información, incluyendo el nombre de la frecuencia

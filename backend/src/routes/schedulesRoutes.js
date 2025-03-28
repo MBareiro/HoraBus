@@ -211,7 +211,7 @@ router.get('/:id', scheduleValidator.getScheduleByIdValidator, validationErrorHa
  *               enabled:
  *                 type: boolean
  *                 description: Estado de habilitación del horario.
- *                 example: true
+ *                 example: false
  *     responses:
  *       201:
  *         description: Horario y ruta creados exitosamente.

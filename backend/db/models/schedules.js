@@ -24,7 +24,7 @@ module.exports = function (sequelize, DataTypes) {
       enabled: {
         type: DataTypes.BOOLEAN,
         allowNull: false,
-        defaultValue: true,
+        defaultValue: false,
       },
       route_id: {
         type: DataTypes.INTEGER,
