@@ -6,7 +6,8 @@ import './AddSchedule.css'
 import { useDispatch, useSelector } from 'react-redux';
 import { addSchedule } from '../../../../redux/actions/operadorActions/operadorActions';
 
-export const AddSchedule = ({ origin, destination, isOpen, setIsOpen, company_id }) => {
+export const AddSchedule = ({ origin, destination, isOpen, setIsOpen, company_id, setOpenModal, setAddingState
+ }) => {
 
     const dispatch = useDispatch()
     const frequencies = useSelector((state) => state.user.frecuencias)
@@ -33,8 +34,10 @@ export const AddSchedule = ({ origin, destination, isOpen, setIsOpen, company_id
     }
 
     const handleAdd = () => {
-        dispatch(addSchedule(addScheduleData))
+        setAddingState(true)
         setIsOpen(false)
+        setOpenModal(false)
+        dispatch(addSchedule(addScheduleData)) 
     }
 
     return (
@@ -90,8 +93,6 @@ export const AddSchedule = ({ origin, destination, isOpen, setIsOpen, company_id
                     <button onClick={handleAdd} className='button-edit-a'>GUARDAR CAMBIOS</button>
 
                 </div>
-
-
 
             </div>
         </Modal>

@@ -1,7 +1,7 @@
 import { useSelector } from "react-redux"
 import { OpcionesHorarios } from "../opcionesHorarios/OpcionesHorarios"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSquareXmark, faSquareCheck, faPenToSquare} from "@fortawesome/free-solid-svg-icons";
+import { faSquareXmark, faSquareCheck, faPenToSquare } from "@fortawesome/free-solid-svg-icons";
 import Filtros from "../../filtros/Filtros/Filtros";
 import LimpiarFiltros from "../../filtros/LimpiarFiltros/LimpiarFiltros";
 import { useEffect, useState } from "react";
@@ -9,19 +9,21 @@ import './HorariosOperador.css'
 import loadingGif from '../../../pictures/loading.gif'
 import { EditarHorarios } from "./editarHorarios/EditarHorarios";
 
-export const HorariosOperador = ({ origen, destino, handleBuscarHorarios }) => {
+export const HorariosOperador = ({ origen, destino, handleBuscarHorarios, addScheduleModal,
+  setAddScheduleModal, companyId, addingState, setAddingState
+}) => {
 
   const horarios = useSelector((state) => state.operador.schedules)
-  const operatorData = useSelector((state) => state.operador.data)
+
 
   const [loading, setLoading] = useState(true)
   const [filtrosOn, setFiltrosOn] = useState(false)
   const [openFiltrosModal, setOpenFiltrosModal] = useState(false)
   const [openModalEdit, setOpenModalEdit] = useState(false)
   const [horario, setHorario] = useState(null)
-  const [companyId, setCompanyId] = useState(null)
   const [selectedItems, setSelectedItems] = useState([]);
   const [selectedItemsData, setSelectedItemsData] = useState([])
+  const [deletingState, setDeletingState] = useState(false)
 
 
   useEffect(() => {
@@ -29,12 +31,9 @@ export const HorariosOperador = ({ origen, destino, handleBuscarHorarios }) => {
       setOpenFiltrosModal(false)
       setLoading(false)
     }
+    setAddingState(false)
+    setDeletingState(false)
   }, [horarios])
-
-  
-  useEffect(()=>{
-    setCompanyId(operatorData.company_id)
-      }, [operatorData])    
 
 
   const handleEdit = (item) => {
@@ -51,9 +50,8 @@ export const HorariosOperador = ({ origen, destino, handleBuscarHorarios }) => {
     }
   };
 
-  console.log(selectedItemsData)
   return (
-    loading ? (
+    deletingState || loading ? (
       <div className="loading-container-op">
         <img src={loadingGif} alt="Cargando..." className="loading-gif" />
       </div>
@@ -81,8 +79,10 @@ export const HorariosOperador = ({ origen, destino, handleBuscarHorarios }) => {
         </div>
         <div className="conteiner-opciones-h">
           <OpcionesHorarios company_id={companyId} origin={origen} destination={destino}
-          selectedItemsData={selectedItemsData} setSelectedItems={setSelectedItems}
-          setSelectedItemsData={setSelectedItemsData} selectedItems={selectedItems}/>
+            selectedItemsData={selectedItemsData} setSelectedItems={setSelectedItems}
+            setSelectedItemsData={setSelectedItemsData} selectedItems={selectedItems}
+            addScheduleModal={addScheduleModal} setAddScheduleModal={setAddScheduleModal}
+            addingState={addingState} setAddingState={setAddingState} setDeletingState={setDeletingState}/>
         </div>
         <table className="tabla">
           <thead>
@@ -114,11 +114,11 @@ export const HorariosOperador = ({ origen, destino, handleBuscarHorarios }) => {
                   <td>{item.frequency}</td>
                   <td>
                     {item.enabled ?
-                    <FontAwesomeIcon icon={faSquareCheck} style={{ color: "#6eaf82", fontSize: "26px" }} /> :
-                    <FontAwesomeIcon
-                    icon={faSquareXmark}
-                    style={{ color: "#e94e56", fontSize: "26px" }}
-                  />
+                      <FontAwesomeIcon icon={faSquareCheck} style={{ color: "#6eaf82", fontSize: "26px" }} /> :
+                      <FontAwesomeIcon
+                        icon={faSquareXmark}
+                        style={{ color: "#e94e56", fontSize: "26px" }}
+                      />
                     }
                   </td>
                   <td key={item.id}>
@@ -130,10 +130,17 @@ export const HorariosOperador = ({ origen, destino, handleBuscarHorarios }) => {
                   </td>
                   <td>
                     <input type="checkbox" checked={selectedItems.includes(item.id)}
-                    onChange={(e) => handleCheckboxChange(item.id, e.target.checked)} />
+                      onChange={(e) => handleCheckboxChange(item.id, e.target.checked)} />
                   </td>
                 </tr>
               ))}
+              {addingState && (
+    <tr>
+      <td colSpan={7}>
+        <img src={loadingGif} alt="Cargando..." className="loading-gif" style={{ width: "40px", height: "40px" }} />
+      </td>
+    </tr>
+  )}
           </tbody>
         </table>
         {openModalEdit && (

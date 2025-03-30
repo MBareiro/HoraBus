@@ -133,6 +133,7 @@ export const getHorariosOp = (origen, destino) => async (dispatch) => {
     dispatch(setHorariosOp(horarios));
   } catch (error) {
     console.error("Error fetching horarios:", error);
+    dispatch(setHorariosOp(null))
   }
 };
 
@@ -246,6 +247,7 @@ export const editSchedule = (scheduleId, datos) => async (dispatch) =>{
 }
 
 export const addSchedule = (dataSchedule) => async (dispatch) => {
+  console.log(dataSchedule)
  
   try {
     const response = await axios.post(

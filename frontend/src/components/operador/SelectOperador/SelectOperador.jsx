@@ -1,24 +1,29 @@
 import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import './SelectOperador.css'
 import { setFilters } from "../../../redux/slices/userSlice";
 import { HorariosOperador } from "../horarios/HorariosOperador";
 import { getHorariosOp } from "../../../redux/actions/operadorActions/operadorActions";
+import { EmptySchedulesModal } from "./emptySchedules/EmptySchedulesModal";
+import loadingGif from '../../../pictures/loading.gif'
 
 
 export const SelectOperador = () => {
 
     const dispatch = useDispatch();
-
-    const paradas =  [
-        { value: "Capiovi", label: "Capioví" },
-        { value: "Puerto Rico", label: "Puerto Rico" }
-      ]
+    const stops = useSelector((state) => state.operador.stops)
+    const schedules = useSelector((state) => state.operador.schedules)
+    const operatorData = useSelector((state) => state.operador.data)
 
     const [origen, setOrigen] = useState(''); 
     const [destino, setDestino] = useState('');
     const [showHorarios, setShowHorarios] = useState(false)
     const [showError, setShowError] = useState(false)
+    const [openEmptySchedules, setOpenEmptySchedules] = useState(false)
+    const [addScheduleModal, setAddScheduleModal] = useState(false)
+    const [companyId, setCompanyId] = useState(null)
+    const [addingState, setAddingState] = useState(false)
+  
 
 const handleDestinoChange = (event) =>{
     setDestino(event.target.value)
@@ -50,29 +55,37 @@ setDestino('')
 setShowHorarios(false)
 }, [origen])
 
+useEffect(() =>{
+  schedules === null && setOpenEmptySchedules(true)
+}, [schedules])
+
+useEffect(()=>{
+  setCompanyId(operatorData.company_id)
+    }, [operatorData]) 
+
     return(
     <div className="select-container-op">
     <div className="select-container-buttons-op">
     <select className="selector" id="origen" value={origen} onChange={handleOrigenChange}>
       <option value="" disabled>ORIGEN</option>
-      {paradas.map((parada) => (
+      {stops.map((stop) => (
         <option 
-        key={parada.value} 
-        value={parada.value}>
-          {parada.label.toUpperCase()}
+        key={stop.name} 
+        value={stop.name}>
+          {stop.name.toUpperCase()}
         </option>
       ))}
     </select>
 
     <select className="selector" id="destino" value={destino} onChange={handleDestinoChange}>
 <option value="" disabled>DESTINO</option>
-{paradas.map((parada) => (
-  origen !== parada.value && (
+{stops.map((stop) => (
+  origen !== stop.name && (
     <option 
-      key={parada.value} 
-      value={parada.value}
+      key={stop.name} 
+      value={stop.name}
     >
-      {parada.label.toUpperCase()}
+      {stop.name.toUpperCase()}
     </option>
   )
 ))}
@@ -81,12 +94,24 @@ setShowHorarios(false)
   <button className="selector" onClick={handleBuscarHorarios}>BUSCAR</button>
 
     </div>
-    
-{showHorarios && 
-<HorariosOperador origen={origen} destino={destino} handleBuscarHorarios={handleBuscarHorarios}/> }
+    {schedules === null && addingState &&
+    <div className="loading-container-op">
+    <img src={loadingGif} alt="Cargando..." className="loading-gif" />
+  </div>
+    }
+     
+{schedules!== null && showHorarios && 
+<HorariosOperador origen={origen} destino={destino} handleBuscarHorarios={handleBuscarHorarios}
+addScheduleModal={addScheduleModal} setAddScheduleModal={setAddScheduleModal} companyId={companyId}
+addingState={addingState} setAddingState={setAddingState}/> }
 {showError && <p className="error">
 POR FAVOR, SELECCIONE EL ORIGEN Y EL DESTINO CORRECTAMENTE
 </p>}
+
+{openEmptySchedules &&
+<EmptySchedulesModal isOpen={openEmptySchedules} setIsOpen={setOpenEmptySchedules}
+setAddScheduleModal={setAddScheduleModal} addScheduleModal={addScheduleModal} 
+origin={origen} destination={destino} companyId={companyId} setAddingState={setAddingState} />}
 </div>
     )
 }

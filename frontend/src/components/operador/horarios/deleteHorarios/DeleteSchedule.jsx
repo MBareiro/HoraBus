@@ -6,7 +6,7 @@ import { deleteSchedule } from '../../../../redux/actions/operadorActions/operad
 import './DeleteSchedule.css'
 
 export const DeleteSchedule = ({ setIsOpen, isOpen, selectedItems, origin, destination,
-    setSelectedItems, setSelectedItemsData, selectedItemsData
+    setSelectedItems, setSelectedItemsData, setDeletingState
 }) => {
 
     console.log(selectedItems)
@@ -17,6 +17,7 @@ export const DeleteSchedule = ({ setIsOpen, isOpen, selectedItems, origin, desti
         for (let i = 0; i < selectedItems.length; i++) {
             dispatch(deleteSchedule(selectedItems[i].id));
         }
+        setDeletingState(true)
         setSelectedItems([])
         setSelectedItemsData([])
 

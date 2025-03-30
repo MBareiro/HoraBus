@@ -6,18 +6,17 @@ import { useDispatch, useSelector } from 'react-redux'
 import { DeleteSchedule } from '../horarios/deleteHorarios/DeleteSchedule'
 
 export const OpcionesHorarios = ({company_id, origin, destination, selectedItemsData, setSelectedItems,
-    setSelectedItemsData, selectedItems
+    setSelectedItemsData, addScheduleModal, setAddScheduleModal, addingState, setAddingState,
+    setDeletingState
 }) => {
-
-    console.log(selectedItems)
 
     const dispatch = useDispatch()
 
     const horarios = useSelector((state) => state.operador.schedules)
-
-    const [addScheduleModal, setAddScheduleModal] = useState(false)
+    
     const [openModalDelete, setOpenModalDelete] = useState(false)
     const [selectAllOn, setSelectAllOn] = useState(false)
+
 
     const handleEnabled = ()=>{
         const updatedItems = selectedItemsData.map((item) => ({
@@ -56,12 +55,13 @@ export const OpcionesHorarios = ({company_id, origin, destination, selectedItems
 
             {addScheduleModal && 
             <AddSchedule isOpen={addScheduleModal} setIsOpen={setAddScheduleModal}
-            company_id={company_id} origin={origin} destination={destination}/>}
+            company_id={company_id} origin={origin} destination={destination}
+            addingState={addingState} setAddingState={setAddingState}/>}
             {openModalDelete && 
             <DeleteSchedule isOpen={openModalDelete} setIsOpen={setOpenModalDelete}
             selectedItems={selectedItemsData} origin={origin} destination={destination}
             setSelectedItems={setSelectedItems} setSelectedItemsData={setSelectedItemsData}
-            selectedItemsData={selectedItemsData}/>}
+            selectedItemsData={selectedItemsData} setDeletingState={setDeletingState}/>}
 
         </div>
     )

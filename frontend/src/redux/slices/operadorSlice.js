@@ -53,7 +53,7 @@ const operadorSlice = createSlice({
     state.schedules = []; 
   },
   setNewSchedule: (state, action) =>{
-    state.schedules = [...state.schedules, action.payload]
+    state.schedules = Array.isArray(state.schedules) ? [...state.schedules, action.payload] : [action.payload]
   },
   setUpdatedState: (state, action) => {
     state.schedules = state.schedules.map((item) => 
