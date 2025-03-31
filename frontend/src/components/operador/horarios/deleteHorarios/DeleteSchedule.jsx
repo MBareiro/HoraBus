@@ -46,8 +46,7 @@ export const DeleteSchedule = ({ setIsOpen, isOpen, selectedItems, origin, desti
                 <table  className="tabla-delete">
                     <thead>
                         <tr>
-                            <th>{origin.toUpperCase()}</th>
-                            <th>{destination.toUpperCase()}</th>
+                        <th colSpan={2}>{origin.toUpperCase()} <FontAwesomeIcon icon={faArrowRight} style={{ color: "#ffc107", }} /> {destination.toUpperCase()}</th>
                         </tr>
                         <tr>
                         <th>Horario de salida</th>
@@ -64,8 +63,8 @@ export const DeleteSchedule = ({ setIsOpen, isOpen, selectedItems, origin, desti
                     </tbody>
                 </table>
                 <div className='conteiner-buttons-confirm'>
-                <button onClick={handleDelete} className='button-no'>SI</button>
-                <button className='button-no' onClick={handleNoDelete}>NO</button>
+                <button onClick={handleDelete} className='button-no-change'>Sí, estoy seguro</button>
+                <button className='button-no-change' onClick={handleNoDelete}>No, no estoy seguro</button>
                 </div>
                 
             </div>
