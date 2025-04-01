@@ -33,14 +33,14 @@ exports.getUserById = async (req, res) => {
 };
 
 exports.createUser = async (req, res) => {
-  const { name, dni, email, password, role, company_id } = req.body;
+  const { name, dni, email, password, role_id, company_id } = req.body;
   console.log(email);
   
   try {
-    const company = await Company.findByPk(company_id);
+    /* const company = await Company.findByPk(company_id);
     if (!company) {
       return res.status(400).json({ error: 'La compañía especificada no existe.' });
-    }
+    } */
 
     const existingUser = await User.findOne({ where: { email } });
     if (existingUser) {
@@ -48,7 +48,7 @@ exports.createUser = async (req, res) => {
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = await User.create({ name, dni, email, password: hashedPassword, role, company_id });
+    const newUser = await User.create({ name, dni, email, password: hashedPassword, role_id, company_id });
 
     res.status(201).json({
       message: 'Usuario creado exitosamente.',
@@ -57,7 +57,7 @@ exports.createUser = async (req, res) => {
         name: newUser.name,
         dni: newUser.dni,
         email: newUser.email,
-        role: newUser.role,
+        role_id: newUser.role_id,
         company_id: newUser.company_id,
       },
     });
@@ -69,7 +69,7 @@ exports.createUser = async (req, res) => {
 
 
 exports.updateUser = async (req, res) => {
-  const { name, dni, email, role, company_id } = req.body;
+  const { name, dni, email, role_id, company_id } = req.body;
   const userId = req.params.id;
 
   try {
@@ -85,7 +85,7 @@ exports.updateUser = async (req, res) => {
     if (name) updatedFields.name = name;
     if (dni) updatedFields.dni = dni;
     if (email) updatedFields.email = email;
-    if (role) updatedFields.role = role;
+    if (role_id) updatedFields.role_id = role_id;
     if (company_id) updatedFields.company_id = company_id;
 
     const [updated] = await User.update(updatedFields, { where: { id: userId } });

@@ -44,6 +44,10 @@ module.exports = function (sequelize, DataTypes) {
       allowNull: false,
       defaultValue: DataTypes.NOW 
     }
+  },
+  {
+    tableName: 'stops',
+    timestamps: true
   });
 
   Stop.associate = function (models) {

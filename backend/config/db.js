@@ -20,8 +20,9 @@ const PasswordReset = require('../db/models/passwordReset')(sequelize, Sequelize
 const Route = require('../db/models/routes')(sequelize, Sequelize.DataTypes);
 const Schedule = require('../db/models/schedules')(sequelize, Sequelize.DataTypes);
 const CompaniesStops = require('../db/models/companiesStops')(sequelize, Sequelize.DataTypes);
-const Subscription = require('../db/models/subscription')(sequelize, Sequelize.DataTypes);
+const Subscription = require('../db/models/subscriptions')(sequelize, Sequelize.DataTypes);
 const User = require('../db/models/users')(sequelize, Sequelize.DataTypes);
+const Role = require('../db/models/roles')(sequelize, Sequelize.DataTypes);
 
 // Función para sincronizar los modelos de Sequelize con la base de datos
 const syncDB = async () => {

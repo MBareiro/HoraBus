@@ -1,5 +1,5 @@
 const db = require('../../db/models');
-const Company = db.companies; // Accede al modelo 'companies'
+const Company = db.companies; 
 
 // Obtener todas las compañías
 exports.getAllCompanies = async (req, res) => {

@@ -11,6 +11,7 @@ const gpsRoutes = require('./gpsRoutes');
 const frequenciesRoutes = require('./frequenciesRoutes');
 const companiesStopsRoutes = require('./companiesStopsRoutes');
 const subscriptionsRoutes = require('./subscriptionsRoutes');
+const roleRoutes = require('./roleRoutes');
 
 
 router.use('/auth', authRoutes);
@@ -24,7 +25,8 @@ router.use('/users', usersRoutes);
 router.use('/gps', gpsRoutes);
 router.use('/frequencies', frequenciesRoutes);
 router.use('/subscriptions', subscriptionsRoutes);
-
+router.use('/subscriptions', subscriptionsRoutes);
+router.use('/roles', roleRoutes);
 
 module.exports = router;
 

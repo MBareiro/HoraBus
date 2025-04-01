@@ -18,17 +18,11 @@ module.exports = function (sequelize, DataTypes) {
           msg: 'El nombre de la empresa debe tener al menos 3 caracteres.'
         }
       }
-    },
-    createdAt: {
-      type: DataTypes.DATE,
-      allowNull: false,
-      defaultValue: DataTypes.NOW // Valor por defecto para la fecha de creación
-    },
-    updatedAt: {
-      type: DataTypes.DATE,
-      allowNull: false,
-      defaultValue: DataTypes.NOW // Valor por defecto para la fecha de actualización
-    }
+    },   
+  },
+  {
+    tableName: 'companies',
+    timestamps: true,
   });
 
   Company.associate = function (models) {

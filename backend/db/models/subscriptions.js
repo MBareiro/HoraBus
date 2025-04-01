@@ -5,7 +5,9 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         unique: true
       }
-    });
+    },
+    { tablename: 'subscriptions', timestamps: true }
+  );
   
     return Subscription;
   };

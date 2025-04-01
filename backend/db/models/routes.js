@@ -22,6 +22,9 @@ module.exports = function(sequelize, DataTypes) {
         key: 'id',
       },
     },
+  }, {
+    tableName: 'routes',
+    timestamps: true,
   });
 
   // Relación con 'Stop' para 'origin' y 'destination'

@@ -10,8 +10,8 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
     },
   }, {
-    tableName: 'frequencies', // Nombre de la tabla en la base de datos
-    timestamps: true, // Crea columnas createdAt y updatedAt automáticamente
+    tableName: 'frequencies', 
+    timestamps: true,
   });
 
   // Relación inversa con Schedule

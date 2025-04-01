@@ -28,21 +28,21 @@ const verifyToken = require('../middleware/verifyToken');
  *               items:
  *                 type: object
  *                 properties:
- *               name:
- *                 type: string
- *                 description: Nombre del usuario
- *               email:
- *                 type: string
- *                 description: Correo electrónico del usuario
- *               password:
- *                 type: string
- *                 description: Contraseña del usuario
- *               role:
- *                 type: string
- *                 description: Rol del usuario
- *               company_id:
- *                 type: integer
- *                 description: ID de la compania
+ *                   name:
+ *                     type: string
+ *                     description: Nombre del usuario
+ *                   email:
+ *                     type: string
+ *                     description: Correo electrónico del usuario
+ *                   password:
+ *                     type: string
+ *                     description: Contraseña del usuario
+ *                   role_id:
+ *                     type: integer
+ *                     description: ID del rol del usuario
+ *                   company_id:
+ *                     type: integer
+ *                     description: ID de la compañía
  *       500:
  *         description: Error en el servidor
  */
@@ -69,21 +69,21 @@ router.get('/', usersController.getAllUsers);
  *             schema:
  *               type: object
  *               properties:
- *               name:
- *                 type: string
- *                 description: Nombre del usuario
- *               email:
- *                 type: string
- *                 description: Correo electrónico del usuario
- *               password:
- *                 type: string
- *                 description: Contraseña del usuario
- *               role:
- *                 type: string
- *                 description: Rol del usuario
- *               company_id:
- *                 type: integer
- *                 description: ID de la compania
+ *                 name:
+ *                   type: string
+ *                   description: Nombre del usuario
+ *                 email:
+ *                   type: string
+ *                   description: Correo electrónico del usuario
+ *                 password:
+ *                   type: string
+ *                   description: Contraseña del usuario
+ *                 role_id:
+ *                   type: integer
+ *                   description: ID del rol del usuario
+ *                 company_id:
+ *                   type: integer
+ *                   description: ID de la compañía
  *       404:
  *         description: Usuario no encontrado
  *       500:
@@ -108,6 +108,7 @@ router.get('/:id', userValidator.getUserByIdValidator, validationErrorHandler, u
  *               - dni
  *               - email
  *               - password
+ *               - role_id
  *             properties:
  *               name:
  *                 type: string
@@ -121,12 +122,12 @@ router.get('/:id', userValidator.getUserByIdValidator, validationErrorHandler, u
  *               password:
  *                 type: string
  *                 description: Contraseña del usuario
- *               role:
- *                 type: string
- *                 description: Rol del usuario
+ *               role_id:
+ *                 type: integer
+ *                 description: ID del rol del usuario
  *               company_id:
  *                 type: integer
- *                 description: ID de la compania
+ *                 description: ID de la compañía
  *     responses:
  *       201:
  *         description: Usuario creado exitosamente
@@ -135,7 +136,7 @@ router.get('/:id', userValidator.getUserByIdValidator, validationErrorHandler, u
  *       500:
  *         description: Error en el servidor
  */
-router.post('/',  userValidator.createUserValidator, validationErrorHandler, usersController.createUser);
+router.post('/', userValidator.createUserValidator, validationErrorHandler, usersController.createUser);
 
 /**
  * @swagger
@@ -166,9 +167,9 @@ router.post('/',  userValidator.createUserValidator, validationErrorHandler, use
  *               email:
  *                 type: string
  *                 description: Correo electrónico del usuario
- *               role:
- *                 type: string
- *                 description: Rol del usuario
+ *               role_id:
+ *                 type: integer
+ *                 description: ID del rol del usuario
  *               company_id:
  *                 type: integer
  *                 description: ID de la compañía
@@ -222,7 +223,6 @@ router.put('/:id', userValidator.updateUserValidator, validationErrorHandler, us
  */
 router.put('/:id/update-password', userValidator.updatePasswordValidator, validationErrorHandler, usersController.updatePassword);
 
-
 /**
  * @swagger
  * /api/users/{id}:
@@ -247,8 +247,3 @@ router.put('/:id/update-password', userValidator.updatePasswordValidator, valida
 router.delete('/:id', userValidator.deleteUserValidator, validationErrorHandler, usersController.deleteUser);
 
 module.exports = router;
-
-
-
-
-

@@ -63,9 +63,8 @@ module.exports = function (sequelize, DataTypes) {
       },
     },
     {
+      tableName: 'schedules',
       timestamps: true,
-      createdAt: 'createdAt',
-      updatedAt: 'updatedAt',
     }
   );
 
