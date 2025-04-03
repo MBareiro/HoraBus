@@ -2,6 +2,8 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
   paradas: [],
+  origins: [],
+  destinations: [],
   horarios: [],
   frecuencias: [],
   filtros: {
@@ -19,6 +21,12 @@ const userSlice = createSlice({
     },
     setHorarios: (state,action) => {
         state.horarios = action.payload
+    },
+    setOrigins: (state, action) =>{
+      state.origins = action.payload
+    },
+    setDestinations: (state, action) =>{
+      state.destinations = action.payload
     },
     clearHorarios: (state) => {
       state.horarios = []; 
@@ -42,7 +50,7 @@ const userSlice = createSlice({
 });
 
 export const {setParadas, setHorarios, clearHorarios, filterHorarios, setFrecuencias, filterFrequencies, setFilters,
-  setErrorFilter
+  setErrorFilter, setDestinations, setOrigins
 } = userSlice.actions;
 
 export default userSlice.reducer;

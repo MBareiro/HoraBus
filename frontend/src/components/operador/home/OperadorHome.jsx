@@ -7,7 +7,7 @@ import { setSignIn } from '../../../redux/slices/operadorSlice';
 import { Menu } from '../menu/Menu';
 import { useNavigate } from 'react-router-dom';
 import { UserPanelOp } from '../userPanel/UserPanelOp';
-import { getOperadorData, getStops } from '../../../redux/actions/operadorActions/operadorActions';
+import { getMyStops, getOperadorData, getStops } from '../../../redux/actions/operadorActions/operadorActions';
 import { getFrequencies } from '../../../redux/actions/userActions/userActions';
 
 export const OperadorHome = () => {

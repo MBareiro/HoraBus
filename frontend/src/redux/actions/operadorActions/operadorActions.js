@@ -239,6 +239,8 @@ export const editSchedule = (scheduleId, datos) => async (dispatch) =>{
           Authorization: `Bearer ${getToken()}`,
       },
   })
+
+  dispatch(setUpdatedState(response.data))
   
   }
   catch(error){

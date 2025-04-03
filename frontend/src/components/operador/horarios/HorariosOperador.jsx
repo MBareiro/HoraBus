@@ -1,4 +1,4 @@
-import { useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { OpcionesHorarios } from "../opcionesHorarios/OpcionesHorarios"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSquareXmark, faSquareCheck, faPenToSquare } from "@fortawesome/free-solid-svg-icons";
@@ -10,8 +10,9 @@ import loadingGif from '../../../pictures/loading.gif'
 import { EditarHorarios } from "./editarHorarios/EditarHorarios";
 
 export const HorariosOperador = ({ origen, destino, handleBuscarHorarios, addScheduleModal,
-  setAddScheduleModal, companyId, addingState, setAddingState
+  setAddScheduleModal, companyId, addingState, setAddingState, setOpenEmptySchedules
 }) => {
+
 
   const horarios = useSelector((state) => state.operador.schedules)
 
@@ -24,6 +25,9 @@ export const HorariosOperador = ({ origen, destino, handleBuscarHorarios, addSch
   const [selectedItems, setSelectedItems] = useState([]);
   const [selectedItemsData, setSelectedItemsData] = useState([])
   const [deletingState, setDeletingState] = useState(false)
+  const [changingState, setChangingState] = useState(false)
+  const [editingState, setEditingState] = useState(false)
+  const [editingRow, setEditingRow] = useState(null);
 
 
   useEffect(() => {
@@ -33,6 +37,9 @@ export const HorariosOperador = ({ origen, destino, handleBuscarHorarios, addSch
     }
     setAddingState(false)
     setDeletingState(false)
+    setChangingState(false)
+    setEditingState(false)
+    setEditingRow(null)
   }, [horarios])
 
 
@@ -49,9 +56,8 @@ export const HorariosOperador = ({ origen, destino, handleBuscarHorarios, addSch
       setSelectedItems((prev) => prev.filter((item) => item !== id));
     }
   };
-
   return (
-    deletingState || loading ? (
+    changingState || deletingState || loading ? (
       <div className="loading-container-op">
         <img src={loadingGif} alt="Cargando..." className="loading-gif" />
       </div>
@@ -82,7 +88,8 @@ export const HorariosOperador = ({ origen, destino, handleBuscarHorarios, addSch
             selectedItemsData={selectedItemsData} setSelectedItems={setSelectedItems}
             setSelectedItemsData={setSelectedItemsData} selectedItems={selectedItems}
             addScheduleModal={addScheduleModal} setAddScheduleModal={setAddScheduleModal}
-            addingState={addingState} setAddingState={setAddingState} setDeletingState={setDeletingState}/>
+            addingState={addingState} setAddingState={setAddingState} setDeletingState={setDeletingState}
+            setChangingState={setChangingState} setOpenEmptySchedules={setOpenEmptySchedules} />
         </div>
         <table className="tabla">
           <thead>
@@ -101,47 +108,63 @@ export const HorariosOperador = ({ origen, destino, handleBuscarHorarios, addSch
               .slice()
               .sort((a, b) => a.departure_time.localeCompare(b.departure_time))
               .map((item) => (
-                <tr key={item.id}>
-                  <td>{item.departure_time}</td>
-                  <td>{item.arrival_time}</td>
-                  <td>
-                    <select className="select-state">
-                      <option value="on-time">A tiempo</option>
-                      <option value="delayed">Demorado</option>
-                      <option value="cancelled">Cancelado</option>
-                    </select></td>
 
-                  <td>{item.frequency}</td>
-                  <td>
-                    {item.enabled ?
-                      <FontAwesomeIcon icon={faSquareCheck} style={{ color: "#6eaf82", fontSize: "26px" }} /> :
-                      <FontAwesomeIcon
-                        icon={faSquareXmark}
-                        style={{ color: "#e94e56", fontSize: "26px" }}
+                editingRow === item.id && editingState ? (
+
+                  <tr key={item.id}>
+                    <td colSpan={7} style={{ textAlign: "center" }}>
+                      <img src={loadingGif} alt="Cargando..." className="loading-gif" style={{ width: "40px", height: "40px" }} />
+                    </td>
+                  </tr>
+                ) 
+                : 
+                (
+                  <tr key={item.id}>
+                    <td>{item.departure_time}</td>
+                    <td>{item.arrival_time}</td>
+                    <td>
+                      <select className="select-state">
+                        <option value="on-time">A tiempo</option>
+                        <option value="delayed">Demorado</option>
+                        <option value="cancelled">Cancelado</option>
+                      </select>
+                    </td>
+                    <td>{item.frequency}</td>
+                    <td>
+                      {item.enabled ? (
+
+                        <FontAwesomeIcon icon={faSquareCheck} style={{ color: "#6eaf82", fontSize: "26px" }} />
+                      ) 
+                      : 
+                      (
+                        <FontAwesomeIcon icon={faSquareXmark} style={{ color: "#e94e56", fontSize: "26px" }} />
+                      )}
+                    </td>
+                    <td>
+                      <button className="opciones-tabla-h" onClick={() => handleEdit(item)}>
+                        <FontAwesomeIcon icon={faPenToSquare} style={{ color: "#ffc107", fontSize: "22px" }} />
+                      </button>
+                    </td>
+                    <td>
+                      <input
+                        type="checkbox"
+                        checked={selectedItems.includes(item.id)}
+                        onChange={(e) => handleCheckboxChange(item.id, e.target.checked)}
                       />
-                    }
-                  </td>
-                  <td key={item.id}>
-                    <button className="opciones-tabla-h"
-                      onClick={() => handleEdit(item)}>
-                      <FontAwesomeIcon icon={faPenToSquare} style={{ color: "#ffc107", fontSize: "22px" }} />
-                    </button>
-
-                  </td>
-                  <td>
-                    <input type="checkbox" checked={selectedItems.includes(item.id)}
-                      onChange={(e) => handleCheckboxChange(item.id, e.target.checked)} />
-                  </td>
-                </tr>
+                    </td>
+                  </tr>
+                )
               ))}
-              {addingState && (
-    <tr>
-      <td colSpan={7}>
-        <img src={loadingGif} alt="Cargando..." className="loading-gif" style={{ width: "40px", height: "40px" }} />
-      </td>
-    </tr>
-  )}
+
+            {addingState && (
+              <tr>
+                <td colSpan={7} style={{ textAlign: "center" }}>
+                  <img src={loadingGif} alt="Cargando..." className="loading-gif" style={{ width: "40px", height: "40px" }} />
+                </td>
+              </tr>
+            )}
           </tbody>
+
         </table>
         {openModalEdit && (
           <EditarHorarios
@@ -150,6 +173,8 @@ export const HorariosOperador = ({ origen, destino, handleBuscarHorarios, addSch
             origin={origen}
             destination={destino}
             horario={horario}
+            setEditingRow={setEditingRow}
+            setEditingState={setEditingState}
           />
         )}
       </div>

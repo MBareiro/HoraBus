@@ -2,11 +2,17 @@ import Modal from 'react-modal'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRight, faSquareXmark, faSquareCheck } from "@fortawesome/free-solid-svg-icons";
 import './ChangeStateSchedules.css'
+import { useDispatch } from 'react-redux';
+import { updateState } from '../../../../redux/actions/operadorActions/operadorActions';
 
 export const ChangeStateSchedules = ({ isOpen, setIsOpen, selectedItems, origin, destination,
-    setSelectedItems, setSelectedItemsData, selectedItemsData }) => {
+    setSelectedItems, setSelectedItemsData, selectedItemsData, setSelectAllOn,
+setChangingState }) => {
+    
+    const dispatch = useDispatch()
 
     const handleEnabled = () => {
+        setChangingState(true)
         const updatedItems = selectedItemsData.map((item) => ({
             ...item,
             enabled: !item.enabled
@@ -15,14 +21,18 @@ export const ChangeStateSchedules = ({ isOpen, setIsOpen, selectedItems, origin,
         for (let i = 0; i < updatedItems.length; i++) {
             dispatch(updateState(updatedItems[i]));
         }
+        setIsOpen(false)
+        setSelectAllOn(false)
         setSelectedItems([])
         setSelectedItemsData([])
     }
 
     const handleNo = () => {
         setIsOpen(false)
+        setSelectAllOn(false)
         setSelectedItems([])
         setSelectedItemsData([])
+
     }
 
     return (

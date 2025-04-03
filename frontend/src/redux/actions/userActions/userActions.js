@@ -1,9 +1,7 @@
-// src/redux/actions/userActions/userActions.js
-import { useSelector } from 'react-redux';
-import { setHorarios, setParadas, clearHorarios, setFrecuencias, filterFrequencies, setFilters, setErrorFilter } from '../../slices/userSlice';
+import { setHorarios, setParadas, clearHorarios, setFrecuencias, filterFrequencies, setFilters, setErrorFilter, setOrigins, setDestinations } from '../../slices/userSlice';
 import axios from 'axios';
 
-const api = 'https://hora-bus-backend.vercel.app/api'
+const api = 'https://horabus.onrender.com/api'
 
 export const getHorarios = (origen, destino) => async (dispatch) => {
   try {
@@ -29,7 +27,7 @@ export const getHorarios = (origen, destino) => async (dispatch) => {
   }
 };
 
-export const getParadas = () => async (dispatch) => {
+/*/ export const getParadas = () => async (dispatch) => {
   try {
     const response = await axios.get(`${api}/stops`);
     
@@ -40,7 +38,7 @@ export const getParadas = () => async (dispatch) => {
   } catch (error) {
     console.error("Error fetching paradas:", error);
   }
-};
+};/*/
 
 export const getFrequencies = () => async (dispatch) => {
   try{
@@ -88,4 +86,23 @@ export const getFilteredFrequencies = (paramFilterHorarios) => async (dispatch) 
   }
 }
 
+export const getOriginStops = () => async (dispatch) =>{
+  try{
+    const response = await axios.get(`${api}/stops/origins`)
+    dispatch(setOrigins(response.data.origins))
+  }
+  catch(error){
+    console.error("Error:",error.status, error.message)
+  }
+}
+export const getDEstinationStops = (id) => async (dispatch) =>{
+
+  try{
+    const response = await axios.get(`${api}/stops/destinations/${id}`)
+    dispatch(setDestinations(response.data.destinations))
+  }
+  catch(error){
+    console.error("Error:",error.status, error.message)
+  }
+}
 

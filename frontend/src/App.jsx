@@ -3,7 +3,7 @@ import logo from './pictures/horabus3.png';
 import logoTekhne from './pictures/Fondo Transparente Letras Oscuras.png'
 import Select from './components/select/Select';
 import { useEffect } from 'react';
-import { getFrequencies, getParadas } from './redux/actions/userActions/userActions';
+import { getFrequencies, getOriginStops} from './redux/actions/userActions/userActions';
 import { useDispatch } from 'react-redux';
 import { UserAccess } from './components/userAccess/UserAccess';
 
@@ -13,8 +13,8 @@ function App() {
 const dispatch = useDispatch()
 
   useEffect(() => {
-    dispatch(getParadas());
     dispatch(getFrequencies())
+    dispatch(getOriginStops())
   }, [dispatch]);
 
   return (

@@ -8,7 +8,7 @@ import { ChangeStateSchedules } from '../horarios/cambiarEstado/ChangeStateSched
 
 export const OpcionesHorarios = ({company_id, origin, destination, selectedItemsData, setSelectedItems,
     setSelectedItemsData, addScheduleModal, setAddScheduleModal, addingState, setAddingState,
-    setDeletingState
+    setDeletingState, setChangingState, setOpenEmptySchedules
 }) => {
 
     const dispatch = useDispatch()
@@ -22,11 +22,13 @@ export const OpcionesHorarios = ({company_id, origin, destination, selectedItems
 
     const handleSelectAll = () => {
         setSelectedItems(horarios.map((horario) => horario.id));
+        setSelectedItemsData(horarios.map((horario) => horario))
         setSelectAllOn(true)
     }
 
     const handleWithDrawSelection = () =>{
         setSelectedItems([]);
+        setSelectedItemsData([])
         setSelectAllOn(false)
     }
 
@@ -45,7 +47,7 @@ export const OpcionesHorarios = ({company_id, origin, destination, selectedItems
             {addScheduleModal && 
             <AddSchedule isOpen={addScheduleModal} setIsOpen={setAddScheduleModal}
             company_id={company_id} origin={origin} destination={destination}
-            addingState={addingState} setAddingState={setAddingState}/>}
+            addingState={addingState} setAddingState={setAddingState} setOpenModal={setOpenEmptySchedules}/>}
             {openModalDelete && 
             <DeleteSchedule isOpen={openModalDelete} setIsOpen={setOpenModalDelete}
             selectedItems={selectedItemsData} origin={origin} destination={destination}
@@ -55,7 +57,8 @@ export const OpcionesHorarios = ({company_id, origin, destination, selectedItems
             <ChangeStateSchedules isOpen={openChangeStateModal} setIsOpen={setOpenChangeStateModal}
             selectedItems={selectedItemsData} origin={origin} destination={destination}
             setSelectedItems={setSelectedItems} setSelectedItemsData={setSelectedItemsData}
-            selectedItemsData={selectedItemsData}/>}
+            selectedItemsData={selectedItemsData} setSelectAllOn={setSelectAllOn}
+            setChangingState={setChangingState}/>}
         </div>
     )
 }

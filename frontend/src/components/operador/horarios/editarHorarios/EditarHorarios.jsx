@@ -6,7 +6,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark, faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import './EditarHorarios.css'
 
-export const EditarHorarios = ({ isOpen, setOpenModalEdit, origin, destination, horario
+export const EditarHorarios = ({ isOpen, setOpenModalEdit, origin, destination, horario, setEditingRow,
+    setEditingState
 }) => {
     const dispatch = useDispatch()
 
@@ -49,7 +50,15 @@ export const EditarHorarios = ({ isOpen, setOpenModalEdit, origin, destination, 
             arrival_time: updatedArrivalTime 
         }));
 
+        setEditingRow(horarioId)
+
         dispatch(editSchedule(horarioId, dataEdit))
+
+        console.log(dataEdit)
+        
+        setEditingState(true)
+
+        setOpenModalEdit(false)
     }
 
     return (
