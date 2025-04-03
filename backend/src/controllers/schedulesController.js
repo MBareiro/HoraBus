@@ -1,7 +1,7 @@
 const db = require("../../db/models");
 const { Op } = require("sequelize");
 const { schedules, routes, stops, companies, frequencies } = db;
-
+const moment = require("moment");
 
 exports.getSchedules = async (req, res) => {
   const { from, to, horaMin, horaMax, frequency, company, status, enabled } = req.query;
@@ -85,7 +85,7 @@ exports.getSchedules = async (req, res) => {
           model: companies,
           as: "company",
           attributes: ["name"],
-          where: company ? { id: company } : undefined // Filtra solo si se especifica
+          where: company ? { id: company } : undefined
         },
         {
           model: frequencies,
@@ -97,14 +97,18 @@ exports.getSchedules = async (req, res) => {
 
     const formattedSchedules = schedulesData.map(schedule => ({
       id: schedule.id,
-      departure_time: schedule.departure_time,
-      arrival_time: schedule.arrival_time,
+      departure_time: schedule.departure_time
+        ? moment(schedule.departure_time, "HH:mm:ss").format("HH:mm")
+        : null,
+      arrival_time: schedule.arrival_time
+        ? moment(schedule.arrival_time, "HH:mm:ss").format("HH:mm")
+        : null,
       frequency: schedule.frequency?.name,
       company: schedule.company?.name,
       status: schedule.status,
       enabled: schedule.enabled,
-    }));
-
+    }));  
+    
     if (formattedSchedules.length === 0) {
       return res.status(404).json({
         message: "No se encontraron horarios para los filtros proporcionados.",
@@ -217,17 +221,17 @@ exports.createSchedule = async (req, res) => {
 
     // Crear el nuevo horario
     const newSchedule = await schedules.create({
-      frequency_id: frequencyRecord.id, 
+      frequency_id: frequencyRecord.id,
       departure_time,
       arrival_time,
       route_id: route.id,
-      company_id,  
-      status: status || 'on_time', 
-      enabled: enabled !== undefined ? enabled : false, 
+      company_id,
+      status: status || 'on_time',
+      enabled: enabled !== undefined ? enabled : false,
     });
 
     // Responder con la información, incluyendo el nombre de la frecuencia
-    res.status(201).json({ 
+    res.status(201).json({
       message: "Horario y ruta creados exitosamente.",
       schedule: {
         id: newSchedule.id,
@@ -362,8 +366,8 @@ exports.updateSchedule = async (req, res) => {
       origin: updatedSchedule.route?.originStop?.name || null,
       destination: updatedSchedule.route?.destinationStop?.name || null,
       company: updatedSchedule.company?.name || null,
-      status: updatedSchedule.status, 
-      enabled: updatedSchedule.enabled, 
+      status: updatedSchedule.status,
+      enabled: updatedSchedule.enabled,
     };
 
     res.status(200).json(response);
