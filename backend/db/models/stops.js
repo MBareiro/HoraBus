@@ -26,7 +26,7 @@ module.exports = function (sequelize, DataTypes) {
     state: {
       type: DataTypes.STRING,
       allowNull: false,
-      defaultValue: "enabled", 
+      defaultValue: "enabled",
       validate: {
         isIn: {
           args: [['enabled', 'disabled']],
@@ -37,15 +37,14 @@ module.exports = function (sequelize, DataTypes) {
     createdAt: {
       type: DataTypes.DATE,
       allowNull: false,
-      defaultValue: DataTypes.NOW 
+      defaultValue: DataTypes.NOW
     },
     updatedAt: {
       type: DataTypes.DATE,
       allowNull: false,
-      defaultValue: DataTypes.NOW 
+      defaultValue: DataTypes.NOW
     }
-  },
-  {
+  }, {
     tableName: 'stops',
     timestamps: true
   });
@@ -57,6 +56,10 @@ module.exports = function (sequelize, DataTypes) {
       otherKey: 'company_id',
       as: 'companies'
     });
+
+    // 🔹 Agregamos las asociaciones con 'routes'
+    Stop.hasMany(models.routes, { foreignKey: 'origin', as: 'originRoutes' });
+    Stop.hasMany(models.routes, { foreignKey: 'destination', as: 'destinationRoutes' });
   };
 
   return Stop;

@@ -40,8 +40,8 @@ router.get('/', stopsController.getAllStops);
  *       404:
  *         description: Parada no encontrada
  */
-router.get('/:id', stopsController.getStopById);
-
+/* router.get('/:id', stopsController.getStopById);
+ */
 /**
  * @swagger
  * /api/stops:

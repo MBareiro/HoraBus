@@ -17,6 +17,8 @@ exports.getAllStops = async (req, res) => {
 };
 
 exports.getStopById = async (req, res) => {
+  console.log("abbbbb");
+  
   try {
     const stop = await Stop.findByPk(req.params.id);
     if (stop) {
@@ -176,21 +178,25 @@ exports.updateStopState = async (req, res) => {
 exports.getAvailableOrigins = async (req, res) => {
   try {
     const origins = await stops.findAll({
+      attributes: ['id', 'name'],
       include: [
         {
           model: routes,
-          as: 'originRoutes',
+          as: 'originRoutes', // 🔹 Alias de la relación con stops
+          required: true,
+          attributes: [],
           include: [
             {
               model: schedules,
-              where: { state: 'enabled' }, 
-              attributes: ['id']
+              as: 'schedules', // 🔹 Usa el alias correcto de la relación en routes.js
+              required: true,
+              where: { enabled: true },
+              attributes: []
             }
           ]
         }
       ],
-      attributes: ['id', 'name'],
-      group: ['stops.id'] 
+      distinct: true
     });
 
     return res.status(200).json({ origins });
@@ -199,6 +205,8 @@ exports.getAvailableOrigins = async (req, res) => {
     return res.status(500).json({ message: 'Error al obtener las paradas de origen.' });
   }
 };
+
+
 
 exports.getDestinationsByOrigin = async (req, res) => {
   const { originId } = req.params;
@@ -213,12 +221,14 @@ exports.getDestinationsByOrigin = async (req, res) => {
           include: [
             {
               model: schedules,
-              where: { state: 'enabled' },
+              as: 'schedules',
+              where: { enabled: true },
               attributes: ['id']
             }
           ]
         }
       ],
+      distinct: true,      
       attributes: ['id', 'name'],
       group: ['stops.id']
     });
