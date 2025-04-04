@@ -96,15 +96,11 @@ exports.getSchedules = async (req, res) => {
     });
 
     const formattedSchedules = schedulesData.map(schedule => ({
-      id: schedule.id,
-      departure_time: schedule.departure_time
-        ? moment(schedule.departure_time, "HH:mm:ss").format("HH:mm")
-        : null,
-      arrival_time: schedule.arrival_time
-        ? moment(schedule.arrival_time, "HH:mm:ss").format("HH:mm")
-        : null,
-      frequency: schedule.frequency?.name,
-      company: schedule.company?.name,
+      id: schedule.id,      
+      departure_time: moment(schedule.departure_time, "HH:mm:ss").format("HH:mm"),
+      arrival_time: moment(schedule.arrival_time, "HH:mm:ss").format("HH:mm"),
+      frequency: schedule.frequency.name,
+      company: schedule.company.name,
       status: schedule.status,
       enabled: schedule.enabled,
     }));  
@@ -154,8 +150,8 @@ exports.getScheduleById = async (req, res) => {
 
     // Formatear la respuesta de forma eficiente
     const formattedSchedule = {
-      departure_time: schedule.departure_time,
-      arrival_time: schedule.arrival_time,
+      departure_time: moment(schedule.departure_time, "HH:mm:ss").format("HH:mm"),
+      arrival_time: moment(schedule.arrival_time, "HH:mm:ss").format("HH:mm"),
       status: schedule.status, // Incluyendo el estado
       enabled: schedule.enabled, // Incluyendo el estado de habilitación
       frequency: schedule.frequency ? schedule.frequency.name : null,
@@ -235,9 +231,9 @@ exports.createSchedule = async (req, res) => {
       message: "Horario y ruta creados exitosamente.",
       schedule: {
         id: newSchedule.id,
-        departure_time: newSchedule.departure_time,
-        arrival_time: newSchedule.arrival_time,
-        frequency: frequencyRecord.name,  // Se devuelve el nombre en lugar del ID
+        departure_time: moment(newSchedule.departure_time, "HH:mm:ss").format("HH:mm"),
+        arrival_time: moment(newSchedule.arrival_time, "HH:mm:ss").format("HH:mm"),
+        frequency: frequencyRecord.name,  
         company_id: newSchedule.company_id,
         status: newSchedule.status,
         enabled: newSchedule.enabled
@@ -360,8 +356,8 @@ exports.updateSchedule = async (req, res) => {
     // Formatear la respuesta
     const response = {
       id: updatedSchedule.id,
-      departure_time: updatedSchedule.departure_time,
-      arrival_time: updatedSchedule.arrival_time,
+      departure_time: moment(updatedSchedule.departure_time, "HH:mm:ss").format("HH:mm"),
+      arrival_time: moment(updatedSchedule.arrival_time, "HH:mm:ss").format("HH:mm"),
       frequency: updatedSchedule.frequency?.name || null,
       origin: updatedSchedule.route?.originStop?.name || null,
       destination: updatedSchedule.route?.destinationStop?.name || null,
